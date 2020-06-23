@@ -36,7 +36,8 @@
         <configuration>
           <!-- TODO: set project ID. -->
           <deploy.projectId>YOUR_PROJECT_ID_HERE</deploy.projectId>
-          <deploy.version>1</deploy.version>
+	  <deploy.version>1</deploy.version>
+	  <devserver.port>8888</devserver.port>
         </configuration>
       </plugin>
     </plugins>

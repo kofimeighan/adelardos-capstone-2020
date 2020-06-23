@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Google Student Training in Engineering Program
 
 This repo contains the projects you'll work on for the first half of STEP.
@@ -11,3 +12,7 @@ To get started:
   - If the tutorial panel does not open or display the walkthrough contents, try refreshing the page.
 
 Then follow the on-screen instructions to set up your repo.
+=======
+# adelardos-capstone-2020
+Bria, Kofi, and Jacob's 2020 STEP capstone project
+>>>>>>> a00af8dece52b3f4437ebcc51e92e9c10e4d8628

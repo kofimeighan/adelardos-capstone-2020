@@ -19,7 +19,7 @@ Gray - #6c757d
 header.masthead {
   color: #fff;
   background-image: url('../assets/img/header.jpg');
-  background-size: cover
+  background-size: cover;
 }
 
 .btn-primary {

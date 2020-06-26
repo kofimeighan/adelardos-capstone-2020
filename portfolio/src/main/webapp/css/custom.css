@@ -1,0 +1,95 @@
+@charset "UTF-8";
+/*!
+* Start Bootstrap - Agency v6.0.2 (https://startbootstrap.com/template-overviews/agency)
+* Copyright 2013-2020 Start Bootstrap
+* Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-agency/blob/master/LICENSE)
+*/
+/*!
+ * Bootstrap v4.5.0 (https://getbootstrap.com/)
+ * Copyright 2011-2020 The Bootstrap Authors
+ * Copyright 2011-2020 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+header.masthead {
+  color: #fff;
+  background-image: url('../assets/img/header.jpg');
+  background-size: cover;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #006600;
+  border-color: #006600;
+}
+
+.btn-primary:hover {
+  color: #fff;
+  background-color: #004d00;
+  border-color: #004d00;
+}
+
+.btn-primary:focus,
+.btn-primary.focus {
+  color: #fff;
+  background-color: #006600;
+  border-color: #004d00;
+  box-shadow: 0 0 0 0.2rem rgba(254, 216, 84, 0.5);
+}
+
+.btn-primary.disabled,
+.btn-primary:disabled {
+  color: #fff;
+  background-color: #006600;
+  border-color: #006600;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active,
+.btn-primary:not(:disabled):not(.disabled).active,
+.show > .btn-primary.dropdown-toggle {
+  color: #fff;
+  background-color: #004d00;
+  border-color: #006600;
+}
+
+.text-primary {
+  color: #006600 !important;
+}
+
+#portfolio .portfolio-item .portfolio-link .portfolio-hover {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(72, 75, 71, 0.747);
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity ease-in-out 0.25s;
+}
+
+::selection {
+  background: #11110f;
+  text-shadow: none;
+}
+
+a {
+  color: #006600;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+a:hover {
+  color: #6c757d;
+  text-decoration: none;
+  font-weight: bolder;
+}
+
+.timeline > li .timeline-image {
+  background-color: #6c757d;
+}
+
+#mainNav .navbar-toggler {
+  color: #fff;
+  text-transform: uppercase;
+  background-color: #006600;
+}

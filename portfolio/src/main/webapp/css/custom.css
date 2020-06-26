@@ -10,12 +10,6 @@
  * Copyright 2011-2020 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
-/* button  - #006600
-Button hover -  #004d00
-Button outline - #003300
-Text color -  #006600
-Gray - #6c757d
-*/
 header.masthead {
   color: #fff;
   background-image: url('../assets/img/header.jpg');
@@ -27,11 +21,13 @@ header.masthead {
   background-color: #006600;
   border-color: #006600;
 }
+
 .btn-primary:hover {
   color: #fff;
   background-color: #004d00;
   border-color: #004d00;
 }
+
 .btn-primary:focus,
 .btn-primary.focus {
   color: #fff;
@@ -39,12 +35,14 @@ header.masthead {
   border-color: #004d00;
   box-shadow: 0 0 0 0.2rem rgba(254, 216, 84, 0.5);
 }
+
 .btn-primary.disabled,
 .btn-primary:disabled {
   color: #fff;
   background-color: #006600;
   border-color: #006600;
 }
+
 .btn-primary:not(:disabled):not(.disabled):active,
 .btn-primary:not(:disabled):not(.disabled).active,
 .show > .btn-primary.dropdown-toggle {

@@ -15,8 +15,12 @@
 /* exported codeAddress */
 /* exported marker */
 /* Global variables */
+/* Neccessary constants or else variables will return as
+'undefined' in lint checks */
 let map;
 let geocoder;
+let marker;
+const google = window.google;
 const INITIAL_LAT = 37.421903;
 const INITIAL_LNG = -122.084674;
 
@@ -24,9 +28,6 @@ function onLoad() {
   initMap();
 }
 
-/* Neccessary constant or else google will return as
-'undefined' in lint checks */
-const google = window.google;
 function initMap() {
   geocoder = new google.maps.Geocoder();
   map = new google.maps.Map(document.getElementById('map'), {
@@ -34,7 +35,7 @@ function initMap() {
     zoom: 18,
     mapTypeId: 'satellite'});
 }
-let marker;
+
 function codeAddress(address) {
   geocoder.geocode({'address': address}, function(results, status) {
     if (status == 'OK') {

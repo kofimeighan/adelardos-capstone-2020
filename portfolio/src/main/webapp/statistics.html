@@ -6,6 +6,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Silence is Violence</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1-tF-xSHj-B0xK0csG2UlySsDFH19H4w"></script>
     <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
     <!-- Font Awesome icons (free version)-->
     <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
@@ -19,8 +20,9 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet" />
+    <link href="css/custom.css" rel="stylesheet" />
   </head>
-  <body id="page-top">
+  <body id="page-top" onload="onLoad()">
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
       <div class="container">
@@ -105,9 +107,54 @@
           <h3 class="section-subheading text-muted">
             Find the locations of historically black sites, recent protests, and police brutality victims.
           </h3>
+          <div class="dropdown">
+            <button
+              type="button"
+              class="btn btn-primary dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Where martyrs have died
+            </button>
+            <ul class="dropdown-menu">
+              <li><a onclick="codeAddress('Minneapolis, Minnesota')">George Floyd</a></li>
+              <li><a onclick="codeAddress('Brunswick, Georgia')">Ahmaud Arbery</a></li>
+              <li><a onclick="codeAddress('Louisville, Kentucky')">Breonna Taylor</a></li>
+              <li><a onclick="codeAddress('Atlanta, Georgia')">Rayshard Brooks</a></li>
+              <li><a onclick="codeAddress('Palmdale, California')">Robert Fuller</a></li>
+              <li><a onclick="codeAddress('Omaha, Nebraska')">James Scurlock</a></li>
+              <li><a onclick="codeAddress('Aurora, Colorado')">Elijah McClain</a></li>
+            </ul>
+          </div>
+          <div class="dropdown">
+            <button
+              type="button"
+              class="btn btn-primary dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Iconic Protests
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a onclick="codeAddress('California State Capitol, 1315 10th St room b-27, Sacramento, CA 95814')"
+                  >Black panthers storming the California capitol</a
+                >
+              </li>
+              <li><a onclick="codeAddress('Washington, D.C.')">Martin Luther King's march on washington</a></li>
+              <li>
+                <a onclick="codeAddress('Washington, D.C.')"
+                  >Rev. Al Sharpton's march on Washington on August 28th, 2020</a
+                >
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
+    <div id="map"></div>
     <!-- Charts-->
     <section class="page-section" id="charts">
       <div class="container">
@@ -152,5 +199,6 @@
     <script src="assets/mail/contact_me.js"></script>
     <!-- Core theme JS-->
     <script src="js/scripts.js"></script>
+    <script src="js/custom-script.js"></script>
   </body>
 </html>

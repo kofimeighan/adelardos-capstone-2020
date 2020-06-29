@@ -19,14 +19,4 @@ function insertSearch() {
   searchBar.appendChild(searchDiv);
 
   document.getElementById('mainNav').appendChild(searchBar);
-
-  // console.log(document.body.innerText);
-  // var elements = Array.from(document.body.childNodes);
-  // elements.forEach(function(item){
-  //   var val = item.innerText;
-  //   if(val) {
-  //     item.scrollIntoView()
-  //     console.log(val);
-  //   }
-  // })
 }

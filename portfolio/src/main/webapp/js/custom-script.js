@@ -20,9 +20,8 @@ let map;
 let geocoder;
 let marker;
 const google = window.google;
-// Center points to Minneapolis, Minnesota
-const INITIAL_LAT = 44.9778;
-const INITIAL_LNG = -93.2650;
+const MNPLS_LAT = 44.9778;
+const MNPLS_LNG = -93.2650;
 
 function onLoad() {
   loadMap();
@@ -31,7 +30,7 @@ function onLoad() {
 function loadMap() {
   geocoder = new google.maps.Geocoder();
   map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: INITIAL_LAT, lng: INITIAL_LNG},
+    center: {lat: MNPLS_LAT, lng: MNPLS_LNG},
     zoom: 18,
     mapTypeId: 'satellite',
   });

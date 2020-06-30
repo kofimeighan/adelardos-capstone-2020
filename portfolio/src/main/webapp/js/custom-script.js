@@ -17,7 +17,8 @@
 /* Global variables */
 /* eslint comma-dangle: ["error", "always-multiline"] */
 /* Neccessary constants or else variables will return as
-'undefined' in lint checks */
+/* 'undefined' in lint checks */
+
 let map;
 let geocoder;
 let marker;

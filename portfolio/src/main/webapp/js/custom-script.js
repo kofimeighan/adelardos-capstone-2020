@@ -15,6 +15,7 @@
 /* exported codeAddress */
 /* exported marker */
 /* Global variables */
+/* eslint comma-dangle: ["error", "always-multiline"] */
 /* Neccessary constants or else variables will return as
 'undefined' in lint checks */
 let map;
@@ -33,7 +34,7 @@ function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: INITIAL_LAT, lng: INITIAL_LNG},
     zoom: 18,
-    mapTypeId: 'satellite'
+    mapTypeId: 'satellite',
   });
 }
 

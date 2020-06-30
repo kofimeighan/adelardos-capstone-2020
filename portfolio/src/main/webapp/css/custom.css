@@ -79,6 +79,18 @@ a {
   background-color: transparent;
 }
 
+a.interactive-pics {
+  color: black;
+  text-decoration: underline;
+  background-color: transparent;
+}
+
+a.interactive-pics:hover {
+  color: #ff3333;
+  text-decoration: underline;
+  background-color: transparent;
+}
+
 a:hover {
   color: #a6a6a6;
   text-decoration: none;
@@ -258,8 +270,18 @@ header.about .about-heading {
   }
 }
 
-.img-thumbnail {
+.img-size {
   height: 350px;
-  width: 400px;
-  overflow: hidden;
+  width: 357px;
+  object-fit: cover;
+}
+
+@media (min-width: 992px) {
+  #mainNav {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    border: none;
+    background-color: black;
+    transition: padding-top 0.3s ease-in-out, padding-bottom 0.3s ease-in-out;
+  }
 }

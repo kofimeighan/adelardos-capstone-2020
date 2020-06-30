@@ -10,49 +10,50 @@
  * Copyright 2011-2020 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
+
 header.masthead {
   color: #fff;
-  background-image: url('../assets/img/header.jpg');
+  background-image: url('../assets/img/header_images/header.jpg');
   background-size: cover;
 }
 
 .btn-primary {
   color: #fff;
-  background-color: #006600;
-  border-color: #006600;
+  background-color: #bfbfbf;
+  border-color: #bfbfbf;
 }
 
 .btn-primary:hover {
   color: #fff;
-  background-color: #004d00;
-  border-color: #004d00;
+  background-color: #b3b3b3;
+  border-color: #a6a6a6;
 }
 
 .btn-primary:focus,
 .btn-primary.focus {
   color: #fff;
-  background-color: #006600;
-  border-color: #004d00;
+  background-color: #bfbfbf;
+  border-color: #a6a6a6;
   box-shadow: 0 0 0 0.2rem rgba(254, 216, 84, 0.5);
 }
 
 .btn-primary.disabled,
 .btn-primary:disabled {
   color: #fff;
-  background-color: #006600;
-  border-color: #006600;
+  background-color: #bfbfbf;
+  border-color: #bfbfbf;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active,
 .btn-primary:not(:disabled):not(.disabled).active,
 .show > .btn-primary.dropdown-toggle {
   color: #fff;
-  background-color: #004d00;
-  border-color: #006600;
+  background-color: #a6a6a6;
+  border-color: #a6a6a6;
 }
 
 .text-primary {
-  color: #006600 !important;
+  color: #a6a6a6 !important;
 }
 
 #portfolio .portfolio-item .portfolio-link .portfolio-hover {
@@ -73,23 +74,192 @@ header.masthead {
 }
 
 a {
-  color: #006600;
+  color: white;
   text-decoration: none;
   background-color: transparent;
 }
 
 a:hover {
-  color: #6c757d;
+  color: #a6a6a6;
   text-decoration: none;
   font-weight: bolder;
 }
 
 .timeline > li .timeline-image {
-  background-color: #6c757d;
+  background-color: #a6a6a6;
 }
 
 #mainNav .navbar-toggler {
   color: #fff;
   text-transform: uppercase;
-  background-color: #006600;
+  background-color: #bfbfbf;
+}
+
+#mainNav .navbar-brand {
+  color: white;
+  font-family: 'Montserrat', system-ui, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  font-weight: 700;
+  letter-spacing: 0.0625em;
+  text-transform: uppercase;
+}
+
+header.statistics {
+  padding-top: 10.5rem;
+  padding-bottom: 6rem;
+  text-align: center;
+  color: #fff;
+  background-image: url('../assets/img/header_images/statisticsheader.jpg');
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
+  background-size: cover;
+}
+
+header.statistics .statistics-subheading {
+  font-size: 1.5rem;
+  font-style: italic;
+  line-height: 1.5rem;
+  margin-bottom: 25px;
+  font-family: 'Droid Serif', system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+header.statistics .statistics-heading {
+  font-size: 3.25rem;
+  font-weight: 700;
+  line-height: 3.25rem;
+  margin-bottom: 2rem;
+  font-family: 'Montserrat', system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+@media (min-width: 768px) {
+  header.statistics {
+    padding-top: 17rem;
+    padding-bottom: 12.5rem;
+  }
+  header.statistics .statistics-subheading {
+    font-size: 2.25rem;
+    font-style: italic;
+    line-height: 2.25rem;
+    margin-bottom: 2rem;
+  }
+  header.statistics .statistics-heading {
+    font-size: 4.5rem;
+    font-weight: 700;
+    line-height: 4.5rem;
+    margin-bottom: 4rem;
+  }
+}
+
+header.support {
+  padding-top: 10.5rem;
+  padding-bottom: 6rem;
+  text-align: center;
+  color: #fff;
+  background-image: url('../assets/img/header_images/supportheader.jpg');
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
+  background-size: cover;
+}
+
+header.support .support-subheading {
+  font-size: 1.5rem;
+  font-style: italic;
+  line-height: 1.5rem;
+  margin-bottom: 25px;
+  font-family: 'Droid Serif', system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+header.support .support-heading {
+  font-size: 3.25rem;
+  font-weight: 700;
+  line-height: 3.25rem;
+  margin-bottom: 2rem;
+  font-family: 'Montserrat', system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+@media (min-width: 768px) {
+  header.support {
+    padding-top: 17rem;
+    padding-bottom: 12.5rem;
+  }
+  header.support .support-subheading {
+    font-size: 2.25rem;
+    font-style: italic;
+    line-height: 2.25rem;
+    margin-bottom: 2rem;
+  }
+  header.support .support-heading {
+    font-size: 4.5rem;
+    font-weight: 700;
+    line-height: 4.5rem;
+    margin-bottom: 4rem;
+  }
+}
+
+header.about {
+  padding-top: 10.5rem;
+  padding-bottom: 6rem;
+  text-align: center;
+  color: #fff;
+  background-image: url('../assets/img/header_images/aboutheader.jpg');
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
+  background-size: cover;
+}
+
+header.about .about-subheading {
+  font-size: 1.5rem;
+  font-style: italic;
+  line-height: 1.5rem;
+  margin-bottom: 25px;
+  font-family: 'Droid Serif', system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+header.about .about-heading {
+  font-size: 3.25rem;
+  font-weight: 700;
+  line-height: 3.25rem;
+  margin-bottom: 2rem;
+  font-family: 'Montserrat', system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+@media (min-width: 768px) {
+  header.about {
+    padding-top: 17rem;
+    padding-bottom: 12.5rem;
+  }
+  header.about .about-subheading {
+    font-size: 2.25rem;
+    font-style: italic;
+    line-height: 2.25rem;
+    margin-bottom: 2rem;
+  }
+  header.about .about-heading {
+    font-size: 4.5rem;
+    font-weight: 700;
+    line-height: 4.5rem;
+    margin-bottom: 4rem;
+  }
+}
+
+.img-thumbnail {
+  height: 350px;
+  width: 400px;
+  overflow: hidden;
 }

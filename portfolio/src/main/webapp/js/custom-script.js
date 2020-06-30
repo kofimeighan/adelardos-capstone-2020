@@ -33,7 +33,8 @@ function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: INITIAL_LAT, lng: INITIAL_LNG},
     zoom: 18,
-    mapTypeId: 'satellite'});
+    mapTypeId: 'satellite'
+  });
 }
 
 function codeAddress(address) {

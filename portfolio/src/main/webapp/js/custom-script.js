@@ -14,16 +14,13 @@
 /* exported onLoad */
 /* exported codeAddress */
 /* exported marker */
-/* Global variables */
-/* eslint comma-dangle: ["error", "always-multiline"] */
-/* Neccessary constants or else variables will return as
-/* 'undefined' in lint checks */
-
+// Neccessary constants or else variables will return as
+// 'undefined' in lint checks
 let map;
 let geocoder;
 let marker;
 const google = window.google;
-/* Center points to the middle of the United States */
+// Center points to the middle of the United States
 const INITIAL_LAT = 39.8283;
 const INITIAL_LNG = -98.5795;
 

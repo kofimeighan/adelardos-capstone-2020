@@ -57,8 +57,3 @@ function toggleBounce() {
     marker.setAnimation(google.maps.Animation.BOUNCE);
   }
 }
-
-function authenticationStatus() {
-  const response = fetch('/login');
-  if(response.ok) {}
-}

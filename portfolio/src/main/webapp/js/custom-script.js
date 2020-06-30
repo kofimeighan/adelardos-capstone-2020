@@ -23,18 +23,19 @@ let map;
 let geocoder;
 let marker;
 const google = window.google;
-const INITIAL_LAT = 37.421903;
-const INITIAL_LNG = -122.084674;
+/* Center points to the middle of the United States */
+const INITIAL_LAT = 39.8283;
+const INITIAL_LNG = -98.5795;
 
 function onLoad() {
-  initMap();
+  loadMap();
 }
 
-function initMap() {
+function loadMap() {
   geocoder = new google.maps.Geocoder();
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: INITIAL_LAT, lng: INITIAL_LNG},
-    zoom: 18,
+    zoom: 4,
     mapTypeId: 'satellite',
   });
 }

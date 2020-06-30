@@ -163,3 +163,25 @@ body {
 .dropdown:hover .dropbtn {
   background-color: #6ab5cc;
 }
+
+#map-container {
+  width: 100%;
+  margin: auto;
+}
+#login-box {
+  width: 30%;
+  float: left;
+  height: 300px;
+}
+#map-box{
+  width: 70%;
+  float: left;
+  height: 500px;
+}
+#clear {
+  clear: both;
+}
+
+.page-section {
+  padding-bottom: 10px;
+}

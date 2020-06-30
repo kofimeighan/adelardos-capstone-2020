@@ -20,9 +20,9 @@ let map;
 let geocoder;
 let marker;
 const google = window.google;
-// Center points to the middle of the United States
-const INITIAL_LAT = 39.8283;
-const INITIAL_LNG = -98.5795;
+// Center points to Minneapolis, Minnesota
+const INITIAL_LAT = 44.9778;
+const INITIAL_LNG = -93.2650;
 
 function onLoad() {
   loadMap();
@@ -32,7 +32,7 @@ function loadMap() {
   geocoder = new google.maps.Geocoder();
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: INITIAL_LAT, lng: INITIAL_LNG},
-    zoom: 4,
+    zoom: 18,
     mapTypeId: 'satellite',
   });
 }
@@ -42,9 +42,23 @@ function codeAddress(address) {
     if (status == 'OK') {
       map.setCenter(results[0].geometry.location);
       marker = new google.maps.Marker(
-          {map: map, position: results[0].geometry.location});
+          {map: map, position: results[0].geometry.location, animation: google.maps.Animation.DROP});
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
     }
   });
+  marker.addListener('click', toggleBounce);
+}
+
+function toggleBounce() {
+  if (marker.getAnimation() !== null) {
+    marker.setAnimation(null);
+  } else {
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+  }
+}
+
+function authenticationStatus() {
+  const response = fetch('/login');
+  if(response.ok) {}
 }

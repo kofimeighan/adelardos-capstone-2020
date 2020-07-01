@@ -23,7 +23,8 @@ const INITIAL_LAT = 39.8283;
 const INITIAL_LNG = -98.5795;
 
 function loadMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
+  const geocoder = new google.maps.Geocoder();
+  const map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: INITIAL_LAT, lng: INITIAL_LNG},
     zoom: 4,
     mapTypeId: 'satellite',
@@ -31,10 +32,11 @@ function loadMap() {
 }
 
 function codeAddress(address) {
+  const geocoder = new google.maps.Geocoder();
   geocoder.geocode({'address': address}, function(results, status) {
     if (status == 'OK') {
       map.setCenter(results[0].geometry.location);
-      marker = new google.maps.Marker(
+      const marker = new google.maps.Marker(
           {map: map, position: results[0].geometry.location});
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
@@ -64,8 +66,6 @@ function onLoad() {
       'Rev. Al Sharpton\'s march on Washington on August 28th, 2020',
       'Washington, D.C.'],
   ];
-  let map = new Map();
-  console.log(map);
 
   loadMap();
   // loadMap();

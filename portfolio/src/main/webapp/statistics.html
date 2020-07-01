@@ -96,7 +96,7 @@
       <div id="map-box"><div id="map"></div></div>
       <div id="login-box">
         <!--Place Pin Form-->
-        <form action="/map" id="form" enctype="multipart/form-data" name="sentMessage">
+        <form action="/map" method="post" id="form" enctype="multipart/form-data" name="sentMessage">
           <h4>Leave a marker on the map for protests you will be attending!</h4>
           <div class="row align-items-stretch mb-5">
             <div class="col-md-6">
@@ -104,6 +104,7 @@
                 <input
                   class="form-control"
                   id="name"
+                  name="name"
                   type="text"
                   placeholder="Your Name *"
                   required
@@ -115,6 +116,7 @@
                 <input
                   class="form-control"
                   id="phone"
+                  name="phone"
                   type="tel"
                   placeholder="Your Phone *"
                   required
@@ -128,6 +130,7 @@
                 <input
                   class="form-control"
                   id="location"
+                  name="location"
                   type="text"
                   placeholder="Location of protest *"
                   required
@@ -139,6 +142,7 @@
                 <textarea
                   class="form-control"
                   id="description"
+                  name="description"
                   placeholder="Description of protest *"
                   required
                   data-validation-required-message="Please enter a description."

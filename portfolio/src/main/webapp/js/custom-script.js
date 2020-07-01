@@ -23,106 +23,104 @@
 // TODO(kofimeighan): Try and figure out how to decrease
 // the scope of these variables. maybe within a new class?
 
-(function() {
-  let map;
-  let geocoder;
-  window.onLoad = onLoad;
-  window.insertSearch = insertSearch;
-  const INITIAL_LAT = 39.8283;
-  const INITIAL_LNG = -98.5795;
+let map;
+let geocoder;
+window.onLoad = onLoad;
+window.insertSearch = insertSearch;
+const INITIAL_LAT = 39.8283;
+const INITIAL_LNG = -98.5795;
 
-  // TODO(kofimeighan): add an event listener to when
-  // the page is loaded and call
-  // onLoad();
-  function onLoad() {
-    const martyrData = [
-      ['George Floyd', 'Minneapolis, Minnesota'],
-      ['Ahmaud Arbery', 'Brunswick, Georgia'],
-      ['Breonna Taylor', 'Louisville, Kentucky'],
-      ['Rayshard Brooks', 'Atlanta, Georgia'],
-      ['Robert Fuller', 'Palmdale, California'],
-      ['James Scurlock', 'Omaha, Nebraska'],
-      ['Elijah McClain', 'Aurora, Colorado'],
-      ['Placeholder', 'Mountain View, CA'],
-      ['Placeholder', 'Mountain View, CA'],
-    ];
+// TODO(kofimeighan): add an event listener to when
+// the page is loaded and call
+// onLoad();
+function onLoad() {
+  const martyrData = [
+    ['George Floyd', 'Minneapolis, Minnesota'],
+    ['Ahmaud Arbery', 'Brunswick, Georgia'],
+    ['Breonna Taylor', 'Louisville, Kentucky'],
+    ['Rayshard Brooks', 'Atlanta, Georgia'],
+    ['Robert Fuller', 'Palmdale, California'],
+    ['James Scurlock', 'Omaha, Nebraska'],
+    ['Elijah McClain', 'Aurora, Colorado'],
+    ['Placeholder', 'Mountain View, CA'],
+    ['Placeholder', 'Mountain View, CA'],
+  ];
 
-    const ipData = [
-      [
-        'Black panthers storming the California capitol',
-        'California State Capitol, 1315 10th St room b-27,' +
-            'Sacramento, CA 95814',
-      ],
-      ['Martin Luther King\'s march on Washington', 'Washington, D.C.'],
-      [
-        'Rev. Al Sharpton\'s march on Washington on August 28th, 2020',
-        'Washington, D.C.',
-      ],
-    ];
+  const ipData = [
+    [
+      'Black panthers storming the California capitol',
+      'California State Capitol, 1315 10th St room b-27,' +
+          'Sacramento, CA 95814',
+    ],
+    ['Martin Luther King\'s march on Washington', 'Washington, D.C.'],
+    [
+      'Rev. Al Sharpton\'s march on Washington on August 28th, 2020',
+      'Washington, D.C.',
+    ],
+  ];
 
-    loadMap();
-    populateDropdown(martyrData, 'martyr-dropdown-menu');
-    populateDropdown(ipData, 'IP-dropdown-menu');
-  }
+  loadMap();
+  populateDropdown(martyrData, 'martyr-dropdown-menu');
+  populateDropdown(ipData, 'IP-dropdown-menu');
+}
 
-  function loadMap() {
-    geocoder = new google.maps.Geocoder();
-    map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: INITIAL_LAT, lng: INITIAL_LNG},
-      zoom: 4,
-      mapTypeId: 'satellite',
+function loadMap() {
+  geocoder = new google.maps.Geocoder();
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: INITIAL_LAT, lng: INITIAL_LNG},
+    zoom: 4,
+    mapTypeId: 'satellite',
+  });
+}
+
+function codeAddress(address) {
+  geocoder.geocode({'address': address}, function(results, status) {
+    if (status == 'OK') {
+      map.setCenter(results[0].geometry.location);
+      new google.maps.Marker(
+          {map: map, position: results[0].geometry.location});
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+}
+
+function populateDropdown(list, ID) {
+  const dropDownMenu = document.getElementById(ID);
+  list.forEach((nameAndLocation) => {
+    const listElement = document.createElement('li');
+    listElement.innerText = nameAndLocation[0];
+
+    const titleElement = document.createElement('a');
+    titleElement.innerText = '';
+    listElement.appendChild(titleElement);
+
+    listElement.addEventListener('click', () => {
+      codeAddress(nameAndLocation[1]);
     });
-  }
 
-  function codeAddress(address) {
-    geocoder.geocode({'address': address}, function(results, status) {
-      if (status == 'OK') {
-        map.setCenter(results[0].geometry.location);
-        new google.maps.Marker(
-            {map: map, position: results[0].geometry.location});
-      } else {
-        alert('Geocode was not successful for the following reason: ' + status);
-      }
-    });
-  }
+    dropDownMenu.appendChild(listElement);
+  });
+}
 
-  function populateDropdown(list, ID) {
-    const dropDownMenu = document.getElementById(ID);
-    list.forEach((nameAndLocation) => {
-      const listElement = document.createElement('li');
-      listElement.innerText = nameAndLocation[0];
+function insertSearch() {
+  const searchBar = document.createElement('form');
+  searchBar.className = 'form-inline mr-auto';
 
-      const titleElement = document.createElement('a');
-      titleElement.innerText = '';
-      listElement.appendChild(titleElement);
+  const searchDiv = document.createElement('div');
+  searchDiv.className = 'md-form my-0';
 
-      listElement.addEventListener('click', () => {
-        codeAddress(nameAndLocation[1]);
-      });
+  const searchInput = document.createElement('input');
+  searchInput.className = 'form-control form-inline';
+  searchInput.type = 'text';
+  searchInput.placeholder = 'Search';
 
-      dropDownMenu.appendChild(listElement);
-    });
-  }
+  const searchI = document.createElement('i');
+  searchI.className = 'fas fa-search text-white ml-3 mr-auto';
 
-  function insertSearch() {
-    const searchBar = document.createElement('form');
-    searchBar.className = 'form-inline mr-auto';
+  searchDiv.appendChild(searchInput);
+  searchDiv.appendChild(searchI);
+  searchBar.appendChild(searchDiv);
 
-    const searchDiv = document.createElement('div');
-    searchDiv.className = 'md-form my-0';
-
-    const searchInput = document.createElement('input');
-    searchInput.className = 'form-control form-inline';
-    searchInput.type = 'text';
-    searchInput.placeholder = 'Search';
-
-    const searchI = document.createElement('i');
-    searchI.className = 'fas fa-search text-white ml-3 mr-auto';
-
-    searchDiv.appendChild(searchInput);
-    searchDiv.appendChild(searchI);
-    searchBar.appendChild(searchDiv);
-
-    document.getElementById('mainNav').appendChild(searchBar);
-  }
-})();
+  document.getElementById('mainNav').appendChild(searchBar);
+}

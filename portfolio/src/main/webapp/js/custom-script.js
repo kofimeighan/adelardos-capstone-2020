@@ -49,7 +49,8 @@ function onLoad() {
     ['Martin Luther King\'s march on Washington', 'Washington, D.C.'],
     [
       'Rev. Al Sharpton\'s march on Washington on August 28th, 2020',
-      'Washington, D.C.'],
+      'Washington, D.C.'
+    ],
   ];
 
   loadMap();

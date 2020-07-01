@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +15,7 @@
 /* exported onLoad */
 /* exported codeAddress */
 /* exported marker */
+/* exported insertSearch */
 /* global google */
 // Neccessary constants or else variables will return as
 // 'undefined' in lint checks
@@ -92,4 +94,26 @@ function populateDropdown(list, ID) {
 
     dropDownMenu.appendChild(listElement);
   });
+
+function insertSearch() {
+  const searchBar = document.createElement('form');
+  searchBar.className = 'form-inline mr-auto';
+
+  const searchDiv = document.createElement('div');
+  searchDiv.className = 'md-form my-0';
+
+  const searchInput = document.createElement('input');
+  searchInput.className = 'form-control form-inline';
+  searchInput.type = 'text';
+  searchInput.placeholder = 'Search';
+
+  const searchI = document.createElement('i');
+  searchI.className = 'fas fa-search text-white ml-3 mr-auto';
+
+  searchDiv.appendChild(searchInput);
+  searchDiv.appendChild(searchI);
+  searchBar.appendChild(searchDiv);
+
+  document.getElementById('mainNav').appendChild(searchBar);
 }
+

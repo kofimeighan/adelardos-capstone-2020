@@ -51,13 +51,17 @@ public class MapServlet extends HttpServlet {
     String location = request.getParameter(LOCATION);
     String description = request.getParameter(DESCRIPTION);
     long timeStamp = System.currentTimeMillis();
+    System.out.println(name);
+    System.out.println(phone);
+    System.out.println(location);
+    System.out.println(description);
 
     Entity pinEntity = new Entity(TABLE_NAME);
     pinEntity.setProperty("Name", name);
-    pinEntity.setProperty("Phone #", phone);
+    pinEntity.setProperty("Phone", phone);
     pinEntity.setProperty("Address", location);
-    pinEntity.setProperty("Description/Info", description);
-    pinEntity.setProperty("Time Submitted", timeStamp);
+    pinEntity.setProperty("Description", description);
+    pinEntity.setProperty("TimeStamp", timeStamp);
     datastore.put(pinEntity);
 
     response.setContentType("text/html");

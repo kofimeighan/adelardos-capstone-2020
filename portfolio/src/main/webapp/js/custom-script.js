@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,7 +48,7 @@ function onLoad() {
     ['Martin Luther King\'s march on Washington', 'Washington, D.C.'],
     [
       'Rev. Al Sharpton\'s march on Washington on August 28th, 2020',
-      'Washington, D.C.'
+      'Washington, D.C.',
     ],
   ];
 
@@ -95,6 +94,7 @@ function populateDropdown(list, ID) {
 
     dropDownMenu.appendChild(listElement);
   });
+}
 
 function insertSearch() {
   const searchBar = document.createElement('form');
@@ -117,4 +117,3 @@ function insertSearch() {
 
   document.getElementById('mainNav').appendChild(searchBar);
 }
-

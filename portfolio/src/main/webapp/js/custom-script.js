@@ -22,6 +22,26 @@
 const INITIAL_LAT = 39.8283;
 const INITIAL_LNG = -98.5795;
 
+function loadMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: INITIAL_LAT, lng: INITIAL_LNG},
+    zoom: 4,
+    mapTypeId: 'satellite',
+  });
+}
+
+function codeAddress(address) {
+  geocoder.geocode({'address': address}, function(results, status) {
+    if (status == 'OK') {
+      map.setCenter(results[0].geometry.location);
+      marker = new google.maps.Marker(
+          {map: map, position: results[0].geometry.location});
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+}
+
 function onLoad() {
   const martyrData = [
     ['George Floyd', 'Minneapolis, Minnesota'],
@@ -47,33 +67,10 @@ function onLoad() {
   let map = new Map();
   console.log(map);
 
-  map.loadMap()
-  //loadMap();
+  loadMap();
+  // loadMap();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
   populateDropdown(ipData, 'IP-dropdown-menu');
-}
-
-function loadMap() { 
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: INITIAL_LAT, lng: INITIAL_LNG},
-    zoom: 4,
-    mapTypeId: 'satellite',
-  });
-
-  
-}
-
-function codeAddress(address) {
-
-  geocoder.geocode({'address': address}, function(results, status) {
-    if (status == 'OK') {
-      map.setCenter(results[0].geometry.location);
-      marker = new google.maps.Marker(
-          {map: map, position: results[0].geometry.location});
-    } else {
-      alert('Geocode was not successful for the following reason: ' + status);
-    }
-  });
 }
 
 function populateDropdown(list, ID) {

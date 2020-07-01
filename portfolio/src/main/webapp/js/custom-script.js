@@ -44,7 +44,8 @@ function onLoad() {
   const ipData = [
     [
       'Black panthers storming the California capitol',
-      'California State Capitol, 1315 10th St room b-27, Sacramento, CA 95814'],
+      'California State Capitol, 1315 10th St room b-27, Sacramento, CA 95814',
+    ],
     ['Martin Luther King\'s march on Washington', 'Washington, D.C.'],
     [
       'Rev. Al Sharpton\'s march on Washington on August 28th, 2020',

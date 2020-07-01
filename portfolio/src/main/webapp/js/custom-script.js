@@ -1,12 +1,12 @@
 /* exported insertSearch */
 function insertSearch() {
   const searchVisual = createSearch();
-  var indexPageText = document.body.innerText.toLowerCase();
-  searchVisual.onkeyup = function(){
-    var resultArray = searchPages(indexPageText);
+  const elementArray = Array.from(document.body.childNodes);
+  searchVisual.onkeyup = function() {
+    const resultArray = searchPages(elementArray);
     console.log(resultArray);
     showResults(resultArray);
-    };
+  };
   document.getElementById('mainNav').appendChild(searchVisual);
 }
 
@@ -19,7 +19,7 @@ function createSearch() {
 
   const searchInput = document.createElement('input');
   searchInput.className = 'form-control form-inline';
-  searchInput.id = "userSearch"
+  searchInput.id = 'userSearch';
   searchInput.type = 'text';
   searchInput.placeholder = 'Search';
 
@@ -28,7 +28,7 @@ function createSearch() {
 
   const searchResults = document.createElement('ul');
   searchResults.id = 'searchResults';
-  
+
   searchDiv.appendChild(searchInput);
   searchDiv.appendChild(searchI);
   searchBar.appendChild(searchDiv);
@@ -37,35 +37,32 @@ function createSearch() {
   return searchBar;
 }
 
-function searchPages(indexPageText) {
-  var wantedWords = document.getElementById('userSearch').value.toLowerCase();
+function searchPages(elementArray) {
+  const wantedWords = document.getElementById('userSearch').value.toLowerCase();
+  const arrayLength = elementArray.length;
 
-  const elementArray = Array.from(document.body.childNodes)
-  arrayLength = elementArray.length;
-  
   const resultArray = [];
   const backArray = [];
-  if(wantedWords.length > 0) {
-      for(let i = 0; i < arrayLength/2; i++) {
+  if (wantedWords.length > 0) {
+    for (let i = 0; i < arrayLength / 2; i++) {
+      const frontElement = elementArray[i];
+      let frontElementText = frontElement.innerText;
+      if (frontElementText) {
+        frontElementText = frontElementText.toLowerCase();
+        if (frontElementText.includes(wantedWords)) {
+          resultArray.push(frontElement);
+        }
+      }
 
-    frontElement = elementArray[i];
-    frontElementText = frontElement.innerText;
-    if(frontElementText){
-      frontElementText = frontElementText.toLowerCase();
-      if(frontElementText.includes(wantedWords)){
-        resultArray.push(frontElement)
+      const backElement = elementArray[arrayLength - 1 - i];
+      let backElementText = backElement.innerText;
+      if (backElementText) {
+        backElementText = backElementText.toLowerCase();
+        if (backElementText.includes(wantedWords)) {
+          backArray.unshift(backElement);
+        }
       }
     }
-
-    backElement = elementArray[arrayLength-1-i];
-    backElementText = backElement.innerText;
-    if(backElementText){
-      backElementText = backElementText.toLowerCase();
-      if(backElementText.includes(wantedWords)){
-        backArray.unshift(backElement)
-      }
-    }
-  } 
   }
 
   resultArray.concat(backArray);
@@ -73,8 +70,8 @@ function searchPages(indexPageText) {
 }
 
 function showResults(resultArray) {
-  searchResults = document.getElementById('searchResults');
-  searchResults.innerHTML = "";
+  const searchResults = document.getElementById('searchResults');
+  searchResults.innerHTML = '';
 
   resultArray.forEach(function(result) {
     const textElement = document.createElement('li');
@@ -82,12 +79,8 @@ function showResults(resultArray) {
 
     textElement.onclick = function() {
       result.scrollIntoView();
-    }
+    };
 
     searchResults.prepend(textElement);
-  })
-}
-
-function insertAfter(newNode, referenceNode) {
-    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+  });
 }

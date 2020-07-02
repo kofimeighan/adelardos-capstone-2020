@@ -13,7 +13,6 @@
 // limitations under the License.let map;
 /* exported onLoad */
 /* exported codeAddress */
-/* exported marker */
 /* exported insertSearch */
 /* global google */
 // Neccessary constants or else variables will return as

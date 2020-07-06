@@ -128,7 +128,7 @@ function insertSearch() {
 }
 
 async function addUserComments() {
-  const response = await fetch('/map');
+  const response = await fetch('/submitted-comments');
   const userComments = await response.json();
   const commentData = [];
 

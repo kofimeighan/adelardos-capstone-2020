@@ -32,8 +32,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/map")
-public class MapServlet extends HttpServlet {
+@WebServlet("/submitted-comments")
+public class UserSubmittedCommentsServlet extends HttpServlet {
   private static final String NAME = "name";
   private static final String PHONE = "phone";
   private static final String LOCATION = "location";
@@ -49,7 +49,7 @@ public class MapServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    List<UserComment> userCommentsList = new ArrayList<UserComment>();
+    List<UserComment> userComments = new ArrayList<UserComment>();
     for (Entity entity : results.asIterable()) {
       String name = (String) entity.getProperty(NAME);
       String phone = (String) entity.getProperty(PHONE);
@@ -59,12 +59,11 @@ public class MapServlet extends HttpServlet {
       long id = entity.getKey().getId();
 
       UserComment userComment = new UserComment(name, phone, location, description, timeStamp, id);
-      userCommentsList.add(userComment);
+      userComments.add(userComment);
     }
-    System.out.println(userCommentsList);
 
     response.setContentType("application/json");
-    response.getWriter().println(new Gson().toJson(userCommentsList));
+    response.getWriter().println(new Gson().toJson(userComments));
   }
 
   @Override

@@ -358,15 +358,16 @@ body {
 
 #map-container {
   width: 100%;
-  margin: auto;
 }
 #login-box {
   width: 30%;
   float: left;
   height: 300px;
+  justify-content: center;
 }
+
 #map-box {
-  width: 70%;
+  width: 65%;
   float: left;
   height: 500px;
 }

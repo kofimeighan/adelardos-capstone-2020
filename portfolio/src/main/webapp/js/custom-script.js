@@ -23,7 +23,6 @@
 
 let map;
 let geocoder;
-let marker;
 const google = window.google;
 const MNPLS_LAT = 44.9778;
 const MNPLS_LNG = -93.2650;
@@ -61,6 +60,7 @@ function onLoad() {
   loadMap();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
   populateDropdown(ipData, 'IP-dropdown-menu');
+  addUserComments();
 }
 
 function loadMap() {
@@ -85,15 +85,6 @@ function codeAddress(address) {
       alert('Geocode was not successful for the following reason: ' + status);
     }
   });
-  marker.addListener('click', toggleBounce);
-}
-
-function toggleBounce() {
-  if (marker.getAnimation() !== null) {
-    marker.setAnimation(null);
-  } else {
-    marker.setAnimation(google.maps.Animation.BOUNCE);
-  }
 }
 
 function populateDropdown(list, ID) {
@@ -134,4 +125,17 @@ function insertSearch() {
   searchBar.appendChild(searchDiv);
 
   document.getElementById('mainNav').appendChild(searchBar);
+}
+
+async function addUserComments() {
+  const response = await fetch('/map');
+  const userComments = await response.json();
+  const commentData = [];
+
+  userComments.forEach((comment) => {
+    const tempArray = [comment.name, comment.location];
+    commentData.push(tempArray);
+  });
+
+  populateDropdown(commentData, 'user-submitted-dropdown-menu');
 }

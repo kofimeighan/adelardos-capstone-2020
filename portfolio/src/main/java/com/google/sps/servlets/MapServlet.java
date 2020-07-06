@@ -40,10 +40,35 @@ public class MapServlet extends HttpServlet {
   private static final String DESCRIPTION = "description";
   private static final String TABLE_NAME = "Pins";
   private static final String TIME_STAMP = "timestamp";
+  private static final String ID = "id";
+
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    UserService userService = UserServiceFactory.getUserService();
+    Query query = new Query(TABLE_NAME);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    List<UserComment> userCommentsList = new ArrayList<UserComment>();
+    for (Entity entity : results.asIterable()) {
+      String name = (String) entity.getProperty(NAME);
+      String phone = (String) entity.getProperty(PHONE);
+      String location = (String) entity.getProperty(LOCATION);
+      String description = (String) entity.getProperty(DESCRIPTION);
+      long timeStamp = (long) entity.getProperty(TIME_STAMP);
+      long id = entity.getKey().getId();
+
+      UserComment userComment = new UserComment(name, phone, location, description, timeStamp, id);
+      userCommentsList.add(userComment);
+    }
+    System.out.println(userCommentsList);
+
+    response.setContentType("application/json");
+    response.getWriter().println(new Gson().toJson(userCommentsList));
+  }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    System.out.println("IN DO POST----------------------------------");
     UserService userService = UserServiceFactory.getUserService();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     String name = request.getParameter(NAME);
@@ -51,21 +76,16 @@ public class MapServlet extends HttpServlet {
     String location = request.getParameter(LOCATION);
     String description = request.getParameter(DESCRIPTION);
     long timeStamp = System.currentTimeMillis();
-    System.out.println(name);
-    System.out.println(phone);
-    System.out.println(location);
-    System.out.println(description);
 
     Entity pinEntity = new Entity(TABLE_NAME);
-    pinEntity.setProperty("Name", name);
-    pinEntity.setProperty("Phone", phone);
-    pinEntity.setProperty("Address", location);
-    pinEntity.setProperty("Description", description);
-    pinEntity.setProperty("TimeStamp", timeStamp);
+    pinEntity.setProperty(NAME, name);
+    pinEntity.setProperty(PHONE, phone);
+    pinEntity.setProperty(LOCATION, location);
+    pinEntity.setProperty(DESCRIPTION, description);
+    pinEntity.setProperty(TIME_STAMP, timeStamp);
     datastore.put(pinEntity);
 
     response.setContentType("text/html");
-    response.getWriter().println("TEST");
     response.sendRedirect("/statistics.html");
   }
 }

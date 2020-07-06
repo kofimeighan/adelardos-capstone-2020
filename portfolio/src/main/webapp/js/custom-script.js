@@ -102,6 +102,7 @@ function populateDropdown(list, ID) {
   });
 }
 
+// inserts a functioning searchbar into the navigation bar of a page.
 function insertSearch() {
   const searchVisual = createSearch();
   const elementArray = Array.from(document.body.childNodes);
@@ -113,6 +114,7 @@ function insertSearch() {
   document.getElementById('mainNav').appendChild(searchVisual);
 }
 
+// creates the html search skeleton that the user interacts with
 function createSearch() {
   const searchBar = document.createElement('form');
   searchBar.className = 'form-inline mr-auto';
@@ -140,6 +142,8 @@ function createSearch() {
   return searchBar;
 }
 
+// searches each child Node of the page in the elementArray and retains the
+// elements that contain the wanted word
 function searchPages(elementArray) {
   const wantedWords = document.getElementById('userSearch').value.toLowerCase();
   const arrayLength = elementArray.length;
@@ -172,6 +176,8 @@ function searchPages(elementArray) {
   return resultArray;
 }
 
+// populates the search skeleton with the results and sets the functionality to
+// navigate to the result by clicking on it.
 function showResults(resultArray) {
   const searchResults = document.getElementById('searchResults');
   searchResults.innerHTML = '';

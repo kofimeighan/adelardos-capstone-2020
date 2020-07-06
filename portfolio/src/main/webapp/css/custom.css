@@ -355,3 +355,9 @@ body {
 .dropdown:hover .dropbtn {
   background-color: #6ab5cc;
 }
+
+.rounded-circle {
+  border-radius: 50% !important;
+  height: 100%;
+  width: 100%;
+}

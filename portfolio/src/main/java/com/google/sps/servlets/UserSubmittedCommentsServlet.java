@@ -84,7 +84,6 @@ public class UserSubmittedCommentsServlet extends HttpServlet {
     pinEntity.setProperty(TIME_STAMP, timeStamp);
     datastore.put(pinEntity);
 
-    response.setContentType("text/html");
     response.sendRedirect("/statistics.html");
   }
 }

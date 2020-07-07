@@ -44,7 +44,7 @@ function onLoad() {
     ['Placeholder', 'Mountain View, CA'],
   ];
 
-  const ipData = [
+  const iconicProtestData = [
     [
       'Black panthers storming the California capitol',
       'California State Capitol, 1315 10th St room b-27,' +
@@ -59,9 +59,10 @@ function onLoad() {
 
   loadMap();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
-  populateDropdown(ipData, 'IP-dropdown-menu');
-  console.log(test());
-  populateDropdown(test(), 'user-submitted-dropdown-menu');
+  populateDropdown(iconicProtestData, 'IP-dropdown-menu');
+  fetchUserSubmittedLocations().then(
+      (locationData) =>
+        populateDropdown(locationData, 'user-submitted-dropdown-menu'));
 }
 
 function loadMap() {
@@ -138,19 +139,5 @@ async function fetchUserSubmittedLocations() {
     commentData.push(tempArray);
   });
 
-  return commentData;
-}
-
-function test() {
-  var commentData = [];
-  fetch('/submitted-locations')
-      .then(response => response.json())
-      .then(userComments => {
-        userComments.forEach((comment) => {
-          const tempArray = [comment.name, comment.location];
-          commentData.push(tempArray);
-        });
-      });
-  populateDropdown(commentData, 'user-submitted-dropdown-menu');
   return commentData;
 }

@@ -32,8 +32,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/submitted-comments")
-public class UserSubmittedCommentsServlet extends HttpServlet {
+@WebServlet("/submitted-locations")
+public class UserSubmittedLocationsServlet extends HttpServlet {
   private static final String NAME = "name";
   private static final String PHONE = "phone";
   private static final String LOCATION = "location";
@@ -84,6 +84,7 @@ public class UserSubmittedCommentsServlet extends HttpServlet {
     pinEntity.setProperty(TIME_STAMP, timeStamp);
     datastore.put(pinEntity);
 
+    //TODO(kofimeighan): Find workaround to prevent a redirect after every comment submit
     response.sendRedirect("/statistics.html");
   }
 }

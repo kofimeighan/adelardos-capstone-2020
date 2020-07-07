@@ -57,10 +57,11 @@ function onLoad() {
     ],
   ];
 
+  const locationData = fetchUserSubmittedLocations();
   loadMap();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
   populateDropdown(ipData, 'IP-dropdown-menu');
-  addUserComments();
+  populateDropdown(locationData, 'user-submitted-dropdown-menu');
 }
 
 function loadMap() {
@@ -127,8 +128,8 @@ function insertSearch() {
   document.getElementById('mainNav').appendChild(searchBar);
 }
 
-async function addUserComments() {
-  const response = await fetch('/submitted-comments');
+async function fetchUserSubmittedLocations() {
+  const response = await fetch('/submitted-locations');
   const userComments = await response.json();
   const commentData = [];
 
@@ -137,5 +138,5 @@ async function addUserComments() {
     commentData.push(tempArray);
   });
 
-  populateDropdown(commentData, 'user-submitted-dropdown-menu');
+  return commentData;
 }

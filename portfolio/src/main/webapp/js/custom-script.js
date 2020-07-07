@@ -60,9 +60,8 @@ function onLoad() {
   loadMap();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
   populateDropdown(iconicProtestData, 'IP-dropdown-menu');
-  fetchUserSubmittedLocations().then(
-      (locationData) =>
-        populateDropdown(locationData, 'user-submitted-dropdown-menu'));
+  fetchUserSubmittedLocations().then((locationData) =>
+    populateDropdown(locationData, 'user-submitted-dropdown-menu'));
 }
 
 function loadMap() {

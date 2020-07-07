@@ -56,7 +56,7 @@ function onLoad() {
       'Washington, D.C.',
     ],
   ];
-  
+
   loadMap();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
   populateDropdown(ipData, 'IP-dropdown-menu');
@@ -137,19 +137,20 @@ async function fetchUserSubmittedLocations() {
     const tempArray = [comment.name, comment.location];
     commentData.push(tempArray);
   });
-  
+
   return commentData;
 }
 
 function test() {
   var commentData = [];
-  fetch('/submitted-locations').then(response => response.json()).then(userComments => {
-
-    userComments.forEach((comment) => {
-      const tempArray = [comment.name, comment.location];
-      commentData.push(tempArray);
-    }); 
-  });
+  fetch('/submitted-locations')
+      .then(response => response.json())
+      .then(userComments => {
+        userComments.forEach((comment) => {
+          const tempArray = [comment.name, comment.location];
+          commentData.push(tempArray);
+        });
+      });
   populateDropdown(commentData, 'user-submitted-dropdown-menu');
   return commentData;
 }

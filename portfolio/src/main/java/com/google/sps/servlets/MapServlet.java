@@ -43,7 +43,6 @@ public class MapServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    System.out.println("IN DO POST----------------------------------");
     UserService userService = UserServiceFactory.getUserService();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     String name = request.getParameter(NAME);
@@ -51,21 +50,16 @@ public class MapServlet extends HttpServlet {
     String location = request.getParameter(LOCATION);
     String description = request.getParameter(DESCRIPTION);
     long timeStamp = System.currentTimeMillis();
-    System.out.println(name);
-    System.out.println(phone);
-    System.out.println(location);
-    System.out.println(description);
 
     Entity pinEntity = new Entity(TABLE_NAME);
-    pinEntity.setProperty("Name", name);
-    pinEntity.setProperty("Phone", phone);
-    pinEntity.setProperty("Address", location);
-    pinEntity.setProperty("Description", description);
-    pinEntity.setProperty("TimeStamp", timeStamp);
+    pinEntity.setProperty(NAME, name);
+    pinEntity.setProperty(PHONE, phone);
+    pinEntity.setProperty(LOCATION, location);
+    pinEntity.setProperty(DESCRIPTION, description);
+    pinEntity.setProperty(TIME_STAMP, timeStamp);
     datastore.put(pinEntity);
 
     response.setContentType("text/html");
-    response.getWriter().println("TEST");
     response.sendRedirect("/statistics.html");
   }
 }

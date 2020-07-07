@@ -60,7 +60,7 @@ function onLoad() {
   loadMap();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
   populateDropdown(iconicProtestData, 'IP-dropdown-menu');
-  fetchUserSubmittedLocations().then((locationData) =>
+  fetchSubmittedLocations().then((locationData) =>
     populateDropdown(locationData, 'user-submitted-dropdown-menu'));
 }
 
@@ -128,7 +128,7 @@ function insertSearch() {
   document.getElementById('mainNav').appendChild(searchBar);
 }
 
-async function fetchUserSubmittedLocations() {
+async function fetchSubmittedLocations() {
   const response = await fetch('/submitted-locations');
   const userComments = await response.json();
   const commentData = [];

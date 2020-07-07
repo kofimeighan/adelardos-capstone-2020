@@ -84,7 +84,7 @@ public class UserSubmittedLocationsServlet extends HttpServlet {
     pinEntity.setProperty(TIME_STAMP, timeStamp);
     datastore.put(pinEntity);
 
-    //TODO(kofimeighan): Find workaround to prevent a redirect after every comment submit
+    // TODO(kofimeighan): Find workaround to prevent a redirect after every comment submit
     response.sendRedirect("/statistics.html");
   }
 }

@@ -357,7 +357,7 @@ body {
 }
 
 .rounded-circle {
-  border-radius: 50% !important;
+  object-fit: cover;
   height: 100%;
   width: 100%;
 }

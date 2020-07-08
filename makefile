@@ -8,7 +8,7 @@ node_modules:
 	npm install clang-format prettier css-validator html-validate eslint eslint-config-google
 
 pretty: node_modules
-	$(PRETTIER) --write portfolio/src/main/webapp/*.html
+	$(PRETTIER) --write portfolio/src/main/webapp/*.html --html-whitespace-sensitivity ignore
 	$(PRETTIER) --write portfolio/src/main/webapp/css/custom.css
 	find portfolio/src/main/java -iname *.java | xargs $(CLANG_FORMAT) -i
 	find portfolio/src/main/webapp/js -iname *.js | xargs $(CLANG_FORMAT) -i

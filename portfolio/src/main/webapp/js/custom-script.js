@@ -64,6 +64,11 @@ function onLoad() {
   populateDropdown(ipData, 'IP-dropdown-menu');
 }
 
+function indexOnLoad() {
+  insertSearch();
+  authenticationStatus();
+}
+
 function loadMap() {
   geocoder = new google.maps.Geocoder();
   map = new google.maps.Map(document.getElementById('map'), {
@@ -123,4 +128,12 @@ function insertSearch() {
   searchBar.appendChild(searchDiv);
 
   document.getElementById('mainNav').appendChild(searchBar);
+}
+
+async function authenticationStatus() {
+  const response = await fetch('/login');
+  const welcomeMessage = await response.text();
+
+  const navBar = document.getElementById("navBar");
+  navBar.appendChild(welcomeMessage);
 }

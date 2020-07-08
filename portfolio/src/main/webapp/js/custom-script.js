@@ -13,9 +13,7 @@
 // limitations under the License.let map;
 /* exported onLoad */
 /* exported codeAddress */
-/* exported marker */
 /* exported insertSearch */
-/* global google */
 // Neccessary constants or else variables will return as
 // 'undefined' in lint checks
 
@@ -25,10 +23,10 @@
 
 let map;
 let geocoder;
-window.onLoad = onLoad;
-window.insertSearch = insertSearch;
-const INITIAL_LAT = 39.8283;
-const INITIAL_LNG = -98.5795;
+const google = window.google;
+const MNPLS_LAT = 44.9778;
+const MNPLS_LNG = -93.2650;
+
 
 // TODO(kofimeighan): add an event listener to when
 // the page is loaded and call
@@ -46,7 +44,7 @@ function onLoad() {
     ['Placeholder', 'Mountain View, CA'],
   ];
 
-  const ipData = [
+  const iconicProtestData = [
     [
       'Black panthers storming the California capitol',
       'California State Capitol, 1315 10th St room b-27,' +
@@ -61,7 +59,10 @@ function onLoad() {
 
   loadMap();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
-  populateDropdown(ipData, 'IP-dropdown-menu');
+  populateDropdown(iconicProtestData, 'IP-dropdown-menu');
+  fetchSubmittedLocations().then((locationData) => {
+    populateDropdown(locationData, 'user-submitted-dropdown-menu');
+  });
 }
 
 function indexOnLoad() {
@@ -72,8 +73,8 @@ function indexOnLoad() {
 function loadMap() {
   geocoder = new google.maps.Geocoder();
   map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: INITIAL_LAT, lng: INITIAL_LNG},
-    zoom: 4,
+    center: {lat: MNPLS_LAT, lng: MNPLS_LNG},
+    zoom: 18,
     mapTypeId: 'satellite',
   });
 }
@@ -82,8 +83,11 @@ function codeAddress(address) {
   geocoder.geocode({'address': address}, function(results, status) {
     if (status == 'OK') {
       map.setCenter(results[0].geometry.location);
-      new google.maps.Marker(
-          {map: map, position: results[0].geometry.location});
+      new google.maps.Marker({
+        map: map,
+        position: results[0].geometry.location,
+        animation: google.maps.Animation.DROP,
+      });
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
     }
@@ -136,4 +140,17 @@ async function authenticationStatus() {
 
   const navBar = document.getElementById("navBar");
   navBar.appendChild(welcomeMessage);
+}
+
+async function fetchSubmittedLocations() {
+  const response = await fetch('/submitted-locations');
+  const userComments = await response.json();
+  const commentData = [];
+
+  userComments.forEach((comment) => {
+    const tempArray = [comment.name, comment.location];
+    commentData.push(tempArray);
+  });
+
+  return commentData;
 }

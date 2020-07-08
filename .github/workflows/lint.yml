@@ -24,7 +24,7 @@ jobs:
       run: node_modules/eslint/bin/eslint.js portfolio/src/main/webapp/js/custom-script.js
     - name: Check HTML Formatting
       if: always()
-      run: node_modules/prettier/bin-prettier.js -c portfolio/src/main/webapp/*.html
+      run: node_modules/prettier/bin-prettier.js -c portfolio/src/main/webapp/*.html --html-whitespace-sensitivity ignore
     - name: Check CSS Formatting
       if: always()
       run: node_modules/prettier/bin-prettier.js -c portfolio/src/main/webapp/css/custom.css

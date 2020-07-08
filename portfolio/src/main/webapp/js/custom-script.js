@@ -23,7 +23,6 @@
 
 let map;
 let geocoder;
-let marker;
 const google = window.google;
 const MNPLS_LAT = 44.9778;
 const MNPLS_LNG = -93.2650;
@@ -45,7 +44,7 @@ function onLoad() {
     ['Placeholder', 'Mountain View, CA'],
   ];
 
-  const ipData = [
+  const iconicProtestData = [
     [
       'Black panthers storming the California capitol',
       'California State Capitol, 1315 10th St room b-27,' +
@@ -60,7 +59,10 @@ function onLoad() {
 
   loadMap();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
-  populateDropdown(ipData, 'IP-dropdown-menu');
+  populateDropdown(iconicProtestData, 'IP-dropdown-menu');
+  fetchSubmittedLocations().then((locationData) => {
+    populateDropdown(locationData, 'user-submitted-dropdown-menu');
+  });
 }
 
 function loadMap() {
@@ -85,15 +87,6 @@ function codeAddress(address) {
       alert('Geocode was not successful for the following reason: ' + status);
     }
   });
-  marker.addListener('click', toggleBounce);
-}
-
-function toggleBounce() {
-  if (marker.getAnimation() !== null) {
-    marker.setAnimation(null);
-  } else {
-    marker.setAnimation(google.maps.Animation.BOUNCE);
-  }
 }
 
 function populateDropdown(list, ID) {
@@ -134,4 +127,17 @@ function insertSearch() {
   searchBar.appendChild(searchDiv);
 
   document.getElementById('mainNav').appendChild(searchBar);
+}
+
+async function fetchSubmittedLocations() {
+  const response = await fetch('/submitted-locations');
+  const userComments = await response.json();
+  const commentData = [];
+
+  userComments.forEach((comment) => {
+    const tempArray = [comment.name, comment.location];
+    commentData.push(tempArray);
+  });
+
+  return commentData;
 }

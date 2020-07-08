@@ -16,7 +16,6 @@
 /* exported insertSearch */
 // Neccessary constants or else variables will return as
 // 'undefined' in lint checks
-
 // Center points to the middle of the United States
 // TODO(kofimeighan): Try and figure out how to decrease
 // the scope of these variables. maybe within a new class?
@@ -27,11 +26,14 @@ const google = window.google;
 const MNPLS_LAT = 44.9778;
 const MNPLS_LNG = -93.2650;
 
-
 // TODO(kofimeighan): add an event listener to when
 // the page is loaded and call
-// onLoad();
 function onLoad() {
+  insertSearch();
+  authenticationStatus();
+}
+
+function statisticsOnLoad() {
   const martyrData = [
     ['George Floyd', 'Minneapolis, Minnesota'],
     ['Ahmaud Arbery', 'Brunswick, Georgia'],
@@ -58,16 +60,13 @@ function onLoad() {
   ];
 
   loadMap();
+  insertSearch();
+  authenticationStatus();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
   populateDropdown(iconicProtestData, 'IP-dropdown-menu');
   fetchSubmittedLocations().then((locationData) => {
     populateDropdown(locationData, 'user-submitted-dropdown-menu');
   });
-}
-
-function indexOnLoad() {
-  insertSearch();
-  authenticationStatus();
 }
 
 function loadMap() {
@@ -139,14 +138,11 @@ async function authenticationStatus() {
   const authenticationURL = await response.text();
 
   const navBar = document.getElementById("navBar");
+
   const welcomeListElement = document.createElement('li');
   welcomeListElement.className = 'nav-item';
+  welcomeListElement.innerHTML = authenticationURL;
 
-  const welcomeContent = document.createElement('a');
-  welcomeContent.setAttribute('href', authenticationURL);
-  welcomeContent.innerText = 'TEST';
-
-  welcomeListElement.appendChild(welcomeContent);
   navBar.appendChild(welcomeListElement);
 }
 
@@ -161,4 +157,12 @@ async function fetchSubmittedLocations() {
   });
 
   return commentData;
+}
+
+function allowUserSubmit() {
+  fetch('/allow-user-submit').then(response => response.json()).then((isUserLoggedIn) => {
+    if(!isUserLoggedIn) {
+      alert('Please login to place a pin!');
+    }
+  });
 }

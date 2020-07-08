@@ -22,27 +22,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/login")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/allow-user-submit")
+public class AllowUserSubmitServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         UserService userService = UserServiceFactory.getUserService();
-        response.setContentType("text/html");
+        response.setContentType("application/json");
 
         if(userService.isUserLoggedIn()) {
-          String userEmail = userService.getCurrentUser().getEmail();
-          String urlToRedirectToAfterUserLogsOut = "/index.html";
-          String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
-
-          response.getWriter().println("<a href=\""+logoutUrl+"\">Logout</a>");
-      } 
-      else{
-          //TODO(kofimieghan): invesitgate whethere it's possible to pass in the page the user was currently on after the user logs in?
-          String urlToRedirectToAfterUserLogsIn = "/index.html";
-          String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
-
-          response.getWriter().println("<a href=\""+loginUrl+"\">Login</a>");
+          response.getWriter().println(true);
+        } 
+        else{
+          response.getWriter().println(false);
       }
     }
 }

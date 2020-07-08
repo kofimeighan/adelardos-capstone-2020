@@ -70,21 +70,31 @@ public class UserSubmittedLocationsServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     UserService userService = UserServiceFactory.getUserService();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    String name = request.getParameter(NAME);
-    String phone = request.getParameter(PHONE);
-    String location = request.getParameter(LOCATION);
-    String description = request.getParameter(DESCRIPTION);
-    long timeStamp = System.currentTimeMillis();
 
-    Entity pinEntity = new Entity(TABLE_NAME);
-    pinEntity.setProperty(NAME, name);
-    pinEntity.setProperty(PHONE, phone);
-    pinEntity.setProperty(LOCATION, location);
-    pinEntity.setProperty(DESCRIPTION, description);
-    pinEntity.setProperty(TIME_STAMP, timeStamp);
-    datastore.put(pinEntity);
+    if(userService.isUserLoggedIn()){
+      String name = request.getParameter(NAME);
+      String phone = request.getParameter(PHONE);
+      String location = request.getParameter(LOCATION);
+      String description = request.getParameter(DESCRIPTION);
+      long timeStamp = System.currentTimeMillis();
 
-    // TODO(kofimeighan): Find workaround to prevent a redirect after every comment submit
-    response.sendRedirect("/statistics.html");
+      Entity pinEntity = new Entity(TABLE_NAME);
+      pinEntity.setProperty(NAME, name);
+      pinEntity.setProperty(PHONE, phone);
+      pinEntity.setProperty(LOCATION, location);
+      pinEntity.setProperty(DESCRIPTION, description);
+      pinEntity.setProperty(TIME_STAMP, timeStamp);
+      datastore.put(pinEntity);
+
+      // TODO(kofimeighan): Find workaround to prevent a redirect after every comment submit
+      response.sendRedirect("/statistics.html");
+    }
+    else {
+      response.setContentType("text/html");
+      response.getWriter().println("<script type=\"text/javascript\">");
+      response.getWriter().println("alert('Please login first!');");
+      response.getWriter().println("</script>");
+      response.sendRedirect("/statistics.html");
+    }
   }
 }

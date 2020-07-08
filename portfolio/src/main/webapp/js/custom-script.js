@@ -136,10 +136,18 @@ function insertSearch() {
 
 async function authenticationStatus() {
   const response = await fetch('/login');
-  const welcomeMessage = await response.text();
+  const authenticationURL = await response.text();
 
   const navBar = document.getElementById("navBar");
-  navBar.appendChild(welcomeMessage);
+  const welcomeListElement = document.createElement('li');
+  welcomeListElement.className = 'nav-item';
+
+  const welcomeContent = document.createElement('a');
+  welcomeContent.setAttribute('href', authenticationURL);
+  welcomeContent.innerText = 'TEST';
+
+  welcomeListElement.appendChild(welcomeContent);
+  navBar.appendChild(welcomeListElement);
 }
 
 async function fetchSubmittedLocations() {

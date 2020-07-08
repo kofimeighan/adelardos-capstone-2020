@@ -35,14 +35,16 @@ public class LoginServlet extends HttpServlet {
           String urlToRedirectToAfterUserLogsOut = "/index.html";
           String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
 
-          response.getWriter().println("<li class=\"nav-item\"><a href=\""+logoutUrl+"\"statistics.html\">Logout</a></li>");
+          response.getWriter().println(logoutUrl);
+          //response.getWriter().println("<a href=\""+logoutUrl+"\"statistics.html\">Logout</a>");
       } 
       else{
           //TODO(kofimieghan): invesitgate whethere it's possible to pass in the page the user was currently on after the user logs in?
-          String urlToRedirectToAfterUserLogsIn = "/";
+          String urlToRedirectToAfterUserLogsIn = "/index.html";
           String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
 
-          response.getWriter().println("<li class=\"nav-item\"><a href=\""+loginUrl+"\"statistics.html\">Login</a></li>");
+          response.getWriter().println(loginUrl);
+          //response.getWriter().println("<a href=\""+loginUrl+"\"statistics.html\">Login</a>");
       }
     }
 }

@@ -14,18 +14,21 @@
 
 package com.google.sps.servlets;
 
-import java.io.IOException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+public final class UserComment {
+  private final String name;
+  private final String phone;
+  private final String location;
+  private final String description;
+  private final long timeStamp;
+  private final long id;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/maps")
-public class MapServlet extends HttpServlet {
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/html;");
-    response.getWriter().println("<h1>Hello world!</h1>");
+  public UserComment(
+      String name, String phone, String location, String description, long timeStamp, long id) {
+    this.name = name;
+    this.phone = phone;
+    this.location = location;
+    this.description = description;
+    this.timeStamp = timeStamp;
+    this.id = id;
   }
 }

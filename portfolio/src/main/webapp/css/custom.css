@@ -355,3 +355,32 @@ body {
 .dropdown:hover .dropbtn {
   background-color: #6ab5cc;
 }
+
+.rounded-circle {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+#map-container {
+  width: 100%;
+}
+#login-box {
+  width: 30%;
+  float: left;
+  height: 300px;
+  justify-content: center;
+}
+
+#map-box {
+  width: 65%;
+  float: left;
+  height: 500px;
+}
+#clear {
+  clear: both;
+}
+
+.page-section {
+  padding-bottom: 10px;
+}

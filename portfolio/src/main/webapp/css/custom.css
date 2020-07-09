@@ -365,6 +365,7 @@ body {
 #map-container {
   width: 100%;
 }
+
 #login-box {
   width: 30%;
   float: left;
@@ -377,10 +378,15 @@ body {
   float: left;
   height: 500px;
 }
+
 #clear {
   clear: both;
 }
 
 .page-section {
   padding-bottom: 10px;
+}
+
+#chart-container {
+  display: inline-block;
 }

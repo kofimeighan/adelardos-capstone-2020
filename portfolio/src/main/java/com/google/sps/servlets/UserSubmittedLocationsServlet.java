@@ -71,7 +71,7 @@ public class UserSubmittedLocationsServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-    if(userService.isUserLoggedIn()){
+    if (userService.isUserLoggedIn()) {
       String name = request.getParameter(NAME);
       String phone = request.getParameter(PHONE);
       String location = request.getParameter(LOCATION);
@@ -85,16 +85,9 @@ public class UserSubmittedLocationsServlet extends HttpServlet {
       pinEntity.setProperty(DESCRIPTION, description);
       pinEntity.setProperty(TIME_STAMP, timeStamp);
       datastore.put(pinEntity);
+    }
 
-      // TODO(kofimeighan): Find workaround to prevent a redirect after every comment submit
-      response.sendRedirect("/statistics.html");
-    }
-    else {
-      response.setContentType("text/html");
-      response.getWriter().println("<script type=\"text/javascript\">");
-      response.getWriter().println("alert('Please login first!');");
-      response.getWriter().println("</script>");
-      response.sendRedirect("/statistics.html");
-    }
+    // Stretch TODO(kofimeighan): Find workaround to prevent a redirect after every comment submit
+    response.sendRedirect("/statistics.html");
   }
 }

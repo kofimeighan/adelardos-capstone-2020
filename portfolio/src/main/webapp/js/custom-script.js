@@ -14,6 +14,8 @@
 /* exported onLoad */
 /* exported codeAddress */
 /* exported insertSearch */
+/* exported allowUserSubmit */
+/* exported statisticsOnLoad */
 // Neccessary constants or else variables will return as
 // 'undefined' in lint checks
 // Center points to the middle of the United States
@@ -137,13 +139,13 @@ async function authenticationStatus() {
   const response = await fetch('/login');
   const authenticationURL = await response.text();
 
-  const navBar = document.getElementById("navBar");
+  const navBar = document.getElementById('navBar');
 
-  const welcomeListElement = document.createElement('li');
-  welcomeListElement.className = 'nav-item';
-  welcomeListElement.innerHTML = authenticationURL;
+  const welcomeElement = document.createElement('li');
+  welcomeElement.className = 'nav-item';
+  welcomeElement.innerHTML = authenticationURL;
 
-  navBar.appendChild(welcomeListElement);
+  navBar.appendChild(welcomeElement);
 }
 
 async function fetchSubmittedLocations() {
@@ -160,9 +162,11 @@ async function fetchSubmittedLocations() {
 }
 
 function allowUserSubmit() {
-  fetch('/allow-user-submit').then(response => response.json()).then((isUserLoggedIn) => {
-    if(!isUserLoggedIn) {
-      alert('Please login to place a pin!');
-    }
-  });
+  fetch('/allow-user-submit')
+      .then((response) => response.json())
+      .then((isUserLoggedIn) => {
+        if (!isUserLoggedIn) {
+          alert('Please login to place a pin!');
+        }
+      });
 }

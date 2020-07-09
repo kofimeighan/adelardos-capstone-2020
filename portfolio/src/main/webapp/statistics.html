@@ -22,7 +22,7 @@
     <link href="css/styles.css" rel="stylesheet" />
     <link href="css/custom.css" rel="stylesheet" />
   </head>
-  <body id="page-top" onload="onLoad()">
+  <body id="page-top" onload="statisticsOnLoad()">
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
       <div class="container">
@@ -40,7 +40,7 @@
           <i class="fas fa-bars ml-1"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav text-uppercase ml-auto">
+          <ul class="navbar-nav text-uppercase ml-auto" id="navBar">
             <li class="nav-item"><a href="index.html">Home</a></li>
             <li class="nav-item"><a href="statistics.html">Statistics</a></li>
             <li class="nav-item"><a href="support.html">Support</a></li>
@@ -164,8 +164,15 @@
             </div>
           </div>
           <div class="text-center">
+            <div id="allowed-to-submit"></div>
             <div id="success"></div>
-            <button class="btn btn-primary btn-xl text-uppercase" id="placePinButton" type="submit" value="Place Pin">
+            <button
+              class="btn btn-primary btn-xl text-uppercase"
+              id="placePinButton"
+              type="submit"
+              value="Place Pin"
+              onclick="allowUserSubmit();"
+            >
               Place Pin
             </button>
           </div>

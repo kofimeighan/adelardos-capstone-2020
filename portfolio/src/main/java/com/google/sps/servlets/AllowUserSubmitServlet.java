@@ -24,17 +24,15 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/allow-user-submit")
 public class AllowUserSubmitServlet extends HttpServlet {
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    UserService userService = UserServiceFactory.getUserService();
+    response.setContentType("application/json");
 
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        UserService userService = UserServiceFactory.getUserService();
-        response.setContentType("application/json");
-
-        if(userService.isUserLoggedIn()) {
-          response.getWriter().println(true);
-        } 
-        else{
-          response.getWriter().println(false);
-      }
+    if (userService.isUserLoggedIn()) {
+      response.getWriter().println(true);
+    } else {
+      response.getWriter().println(false);
     }
+  }
 }

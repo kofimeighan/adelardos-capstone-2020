@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.let map;
 
-/** 
- * Neccessary constants or else variables will return as 'undefined' in lint checks 
- * exported onLoad 
- * exported codeAddress 
- * exported insertSearch 
- */
+/**
+ * Neccessary constants or else variables will return as 'undefined' in lint
+   checks
+*/
+/* exported onLoad */
+/* exported codeAddress */
+/* exported insertSearch */
 
 /**
  * Center points to the middle of the United Statesd
@@ -128,7 +129,8 @@ function insertSearch() {
   const searchElement = createSearchElement();
   const docElements = Array.from(document.body.childNodes);
   searchElement.onkeyup = function() {
-    const wantedWords = document.getElementById('searchQuery').value.toLowerCase();
+    const wantedWords =
+        document.getElementById('searchQuery').value.toLowerCase();
     const resultElements = searchPages(docElements, wantedWords);
     showResults(resultElements, wantedWords);
   };
@@ -198,18 +200,20 @@ function showResults(resultElements, wantedWords) {
   const searchResults = document.getElementById('searchResults');
   searchResults.innerHTML = '';
 
-  resultElements.forEach(result => {
-    if(result.getAttribute('aria-hidden') == 'true' || result.id == 'mainNav'){
-       return;
+  resultElements.forEach((result) => {
+    if (result.getAttribute('aria-hidden') == 'true' ||
+        result.id == 'mainNav') {
+      return;
     }
 
     const textElement = document.createElement('li');
     let resultText = result.innerText.replace(/\s\s+/g, ' ').trim();
     resultText = resultText.replace(/[\n\r]/g, ' ');
     const searchPos = resultText.toLowerCase().indexOf(wantedWords);
-    textElement.innerText = '...' + resultText.substring(searchPos-10, searchPos).replace(/^\s+/g, '') +
-      resultText.substring(searchPos, searchPos+20).trim() + '...';
-    
+    textElement.innerText = '...' +
+        resultText.substring(searchPos - 10, searchPos).replace(/^\s+/g, '') +
+        resultText.substring(searchPos, searchPos + 20).trim() + '...';
+
     textElement.onclick = function() {
       result.scrollIntoView();
     };

@@ -11,26 +11,29 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.let map;
-/* exported onLoad */
-/* exported codeAddress */
-/* exported insertSearch */
-// Neccessary constants or else variables will return as
-// 'undefined' in lint checks
 
-// Center points to the middle of the United States
-// TODO(kofimeighan): Try and figure out how to decrease
-// the scope of these variables. maybe within a new class?
+/** 
+ * Neccessary constants or else variables will return as 'undefined' in lint checks 
+ * exported onLoad 
+ * exported codeAddress 
+ * exported insertSearch 
+ */
 
+/**
+ * Center points to the middle of the United Statesd
+ * TODO(kofimeighan): Try and figure out how to decrease the scope of
+   these variables. maybe within a new class?
+ */
 let map;
 let geocoder;
 const google = window.google;
 const MNPLS_LAT = 44.9778;
 const MNPLS_LNG = -93.2650;
 
-
-// TODO(kofimeighan): add an event listener to when
-// the page is loaded and call
-// onLoad();
+/**
+ * TODO(kofimeighan): add an event listener to when the page is loaded and
+   call onLoad();
+ */
 function onLoad() {
   const martyrData = [
     ['George Floyd', 'Minneapolis, Minnesota'],
@@ -107,20 +110,33 @@ function populateDropdown(list, ID) {
   });
 }
 
-// inserts a functioning searchbar into the navigation bar of a page.
-function insertSearch() {
-  const searchVisual = createSearch();
-  const elementArray = Array.from(document.body.childNodes);
-  searchVisual.onkeyup = function() {
-    const resultArray = searchPages(elementArray);
-    console.log(resultArray);
-    showResults(resultArray);
-  };
-  document.getElementById('mainNav').appendChild(searchVisual);
+async function fetchSubmittedLocations() {
+  const response = await fetch('/submitted-locations');
+  const userComments = await response.json();
+  const commentData = [];
+
+  userComments.forEach((comment) => {
+    const tempArray = [comment.name, comment.location];
+    commentData.push(tempArray);
+  });
+
+  return commentData;
 }
 
-// creates the html search skeleton that the user interacts with
-function createSearch() {
+/* inserts a functioning searchbar into the navigation bar of a page. */
+function insertSearch() {
+  const searchElement = createSearchElement();
+  const docElements = Array.from(document.body.childNodes);
+  searchElement.onkeyup = function() {
+    const wantedWords = document.getElementById('searchQuery').value.toLowerCase();
+    const resultElements = searchPages(docElements, wantedWords);
+    showResults(resultElements, wantedWords);
+  };
+  document.getElementById('mainNav').appendChild(searchElement);
+}
+
+/* creates the html search skeleton that the user interacts with */
+function createSearchElement() {
   const searchBar = document.createElement('form');
   searchBar.className = 'form-inline mr-auto';
 
@@ -129,7 +145,7 @@ function createSearch() {
 
   const searchInput = document.createElement('input');
   searchInput.className = 'form-control form-inline';
-  searchInput.id = 'userSearch';
+  searchInput.id = 'searchQuery';
   searchInput.type = 'text';
   searchInput.placeholder = 'Search';
 
@@ -147,67 +163,57 @@ function createSearch() {
   return searchBar;
 }
 
-// searches each child Node of the page in the elementArray and retains the
-// elements that contain the wanted word
-function searchPages(elementArray) {
-  const wantedWords = document.getElementById('userSearch').value.toLowerCase();
-  const arrayLength = elementArray.length;
+/**
+ * searches each child Node of the page in the docElements and retains the
+   elements that contain the wanted word.
+ */
+function searchPages(docElements, wantedWords) {
+  const numElements = docElements.length;
+  const resultElements = [];
 
-  const resultArray = [];
-  const backArray = [];
-  if (wantedWords.length > 0) {
-    for (let i = 0; i < arrayLength / 2; i++) {
-      const frontElement = elementArray[i];
-      let frontElementText = frontElement.innerText;
-      if (frontElementText) {
-        frontElementText = frontElementText.toLowerCase();
-        if (frontElementText.includes(wantedWords)) {
-          resultArray.push(frontElement);
-        }
-      }
+  if (wantedWords.length <= 0) {
+    return resultElements;
+  }
 
-      const backElement = elementArray[arrayLength - 1 - i];
-      let backElementText = backElement.innerText;
-      if (backElementText) {
-        backElementText = backElementText.toLowerCase();
-        if (backElementText.includes(wantedWords)) {
-          backArray.unshift(backElement);
-        }
+  for (let i = 0; i < numElements; i++) {
+    const frontElement = docElements[i];
+    let frontElementText = frontElement.innerText;
+
+    if (frontElementText) {
+      frontElementText = frontElementText.toLowerCase();
+      if (frontElementText.includes(wantedWords)) {
+        resultElements.push(frontElement);
       }
     }
   }
 
-  resultArray.concat(backArray);
-  return resultArray;
+  return resultElements;
 }
 
-// populates the search skeleton with the results and sets the functionality to
-// navigate to the result by clicking on it.
-function showResults(resultArray) {
+/**
+ * populates the search skeleton with the results and sets the functionality to
+   navigate to the result by clicking on it.
+ */
+function showResults(resultElements, wantedWords) {
   const searchResults = document.getElementById('searchResults');
   searchResults.innerHTML = '';
 
-  resultArray.forEach(function(result) {
-    const textElement = document.createElement('li');
-    textElement.innerText = result.innerText.substring(0, 10);
+  resultElements.forEach(result => {
+    if(result.getAttribute('aria-hidden') == 'true' || result.id == 'mainNav'){
+       return;
+    }
 
+    const textElement = document.createElement('li');
+    let resultText = result.innerText.replace(/\s\s+/g, ' ').trim();
+    resultText = resultText.replace(/[\n\r]/g, ' ');
+    const searchPos = resultText.toLowerCase().indexOf(wantedWords);
+    textElement.innerText = '...' + resultText.substring(searchPos-10, searchPos).replace(/^\s+/g, '') +
+      resultText.substring(searchPos, searchPos+20).trim() + '...';
+    
     textElement.onclick = function() {
       result.scrollIntoView();
     };
 
-    searchResults.prepend(textElement);
+    searchResults.append(textElement);
   });
-}
-
-async function fetchSubmittedLocations() {
-  const response = await fetch('/submitted-locations');
-  const userComments = await response.json();
-  const commentData = [];
-
-  userComments.forEach((comment) => {
-    const tempArray = [comment.name, comment.location];
-    commentData.push(tempArray);
-  });
-
-  return commentData;
 }

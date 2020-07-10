@@ -14,19 +14,18 @@
 /* exported onLoad */
 /* exported codeAddress */
 /* exported insertSearch */
+/* global google */
 // Neccessary constants or else variables will return as
 // 'undefined' in lint checks
 
 // Center points to the middle of the United States
-// TODO(kofimeighan): Try and figure out how to decrease
+// TODO(kofimeighan/briafassler): Try and figure out how to decrease
 // the scope of these variables. maybe within a new class?
 
 let map;
 let geocoder;
-const google = window.google;
 const MNPLS_LAT = 44.9778;
 const MNPLS_LNG = -93.2650;
-
 
 // TODO(kofimeighan): add an event listener to when
 // the page is loaded and call
@@ -140,4 +139,29 @@ async function fetchSubmittedLocations() {
   });
 
   return commentData;
+}
+
+google.charts.load('current', {'packages': ['corechart']});
+google.charts.setOnLoadCallback(drawStateIncarcerationChart);
+
+/** Creates chart and adds it to the page. */
+function drawStateIncarcerationChart() {
+  const stateData = new google.visualization.DataTable();
+  stateData.addColumn('string', 'Race');
+  stateData.addColumn('number', 'Count');
+  stateData.addRows([
+    ['Whites', 201],
+    ['Blacks', 1767],
+    ['Hispanics', 385],
+  ]);
+
+  const stateChartDimensions = {
+    'title': 'Incarceration Rates (per 100,000) by Race in California',
+    'width': 500,
+    'height': 400,
+  };
+
+  const chart = new google.visualization.PieChart(
+      document.getElementById('chart-container'));
+  chart.draw(stateData, stateChartDimensions);
 }

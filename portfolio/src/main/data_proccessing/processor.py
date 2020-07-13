@@ -32,6 +32,5 @@ for csv_column in csv_columns:
             columns_to_keep.append(csv_column)
             break
 
-df = df[columns_to_keep]
-        
+df = df[columns_to_keep]    
 df.to_csv('clean_data/police_killings_2013.csv', index = False)

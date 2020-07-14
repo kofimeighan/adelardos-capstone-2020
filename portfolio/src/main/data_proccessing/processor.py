@@ -19,7 +19,6 @@ import numpy as np
 # the raw_data directory
 COLUMNS_OF_INTEREST = ['name', 'race','date', 'address', 'city',
                      'state', 'zipcode',]
-PUNCTUATION = '''!()-[];:'"\,<>./?@#$%^&*_~'''
 df = pd.read_csv('raw_data/police_killings_2013.csv', index_col = 0)
 csv_columns = df.columns
 columns_to_keep = []

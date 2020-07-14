@@ -18,9 +18,9 @@ import numpy as np
 # TODO(kofimeighan): Create a function that can iterate over all files within 
 # the raw_data directory
 COLUMNS_OF_INTEREST = ['name', 'race','date', 'address', 'city',
-                     'state', 'zipcode',]
-df = pd.read_csv('raw_data/police_killings_2013.csv', index_col = 0)
-csv_columns = df.columns
+                       'state', 'zipcode',]
+dataframe = pd.read_csv('raw_data/police_killings_2013.csv', index_col = 0)
+csv_columns = dataframe.columns
 columns_to_keep = []
 
 # TODO(kofimeighan): save the zipcode as an int not a long within the database
@@ -31,5 +31,5 @@ for csv_column in csv_columns:
             columns_to_keep.append(csv_column)
             break
 
-df = df[columns_to_keep]    
-df.to_csv('clean_data/police_killings_2013.csv', index = False)
+dataframe = dataframe[columns_to_keep]    
+dataframe.to_csv('clean_data/police_killings_2013.csv', index = False)

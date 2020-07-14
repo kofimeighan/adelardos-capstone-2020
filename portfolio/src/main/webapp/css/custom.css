@@ -365,6 +365,7 @@ body {
 #map-container {
   width: 100%;
 }
+
 #login-box {
   width: 30%;
   float: left;
@@ -377,6 +378,7 @@ body {
   float: left;
   height: 500px;
 }
+
 #clear {
   clear: both;
 }
@@ -387,4 +389,8 @@ body {
 
 #searchResults {
   color: white;
+}
+
+#chart-container {
+  display: inline-block;
 }

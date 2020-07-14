@@ -19,15 +19,15 @@
 /* exported onLoad */
 /* exported codeAddress */
 /* exported insertSearch */
+/* global google */
 
 /**
  * Center points to the middle of the United Statesd
- * TODO(kofimeighan): Try and figure out how to decrease the scope of
-   these variables. maybe within a new class?
+ * TODO(kofimeighan/briafassler): Try and figure out how to decrease
+   the scope of these variables. maybe within a new class?
  */
 let map;
 let geocoder;
-const google = window.google;
 const MNPLS_LAT = 44.9778;
 const MNPLS_LNG = -93.2650;
 
@@ -170,24 +170,22 @@ function createSearchElement() {
    elements that contain the wanted word.
  */
 function searchPages(docElements, wantedWords) {
-  const numElements = docElements.length;
   const resultElements = [];
 
   if (wantedWords.length <= 0) {
     return resultElements;
   }
 
-  for (let i = 0; i < numElements; i++) {
-    const frontElement = docElements[i];
-    let frontElementText = frontElement.innerText;
+  docElements.forEach((element) => {
+    let elementText = element.innerText;
 
-    if (frontElementText) {
-      frontElementText = frontElementText.toLowerCase();
-      if (frontElementText.includes(wantedWords)) {
-        resultElements.push(frontElement);
+    if (elementText) {
+      elementText = elementText.toLowerCase();
+      if (elementText.includes(wantedWords)) {
+        resultElements.push(element);
       }
     }
-  }
+  });
 
   return resultElements;
 }
@@ -220,4 +218,29 @@ function showResults(resultElements, wantedWords) {
 
     searchResults.append(textElement);
   });
+}
+
+google.charts.load('current', {'packages': ['corechart']});
+google.charts.setOnLoadCallback(drawStateIncarcerationChart);
+
+/** Creates chart and adds it to the page. */
+function drawStateIncarcerationChart() {
+  const stateData = new google.visualization.DataTable();
+  stateData.addColumn('string', 'Race');
+  stateData.addColumn('number', 'Count');
+  stateData.addRows([
+    ['Whites', 201],
+    ['Blacks', 1767],
+    ['Hispanics', 385],
+  ]);
+
+  const stateChartDimensions = {
+    'title': 'Incarceration Rates (per 100,000) by Race in California',
+    'width': 500,
+    'height': 400,
+  };
+
+  const chart = new google.visualization.PieChart(
+      document.getElementById('chart-container'));
+  chart.draw(stateData, stateChartDimensions);
 }

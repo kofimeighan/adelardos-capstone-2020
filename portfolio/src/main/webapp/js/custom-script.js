@@ -153,8 +153,7 @@ async function fetchSubmittedLocations() {
   const userComments = await response.json();
   const commentData = [];
 
-  userComments.forEach((comment) => {
-    if (comment.key() != 'is_user_logged_in')
+  userComments['userComments'].forEach((comment) => {
     const tempArray = [comment.name, comment.location];
     commentData.push(tempArray);
   });
@@ -165,8 +164,8 @@ async function fetchSubmittedLocations() {
 function allowUserSubmit() {
   fetch('/submitted-locations')
       .then((response) => response.json())
-      .then((isUserLoggedIn) => {
-        if (!isUserLoggedIn['is_user_logged_in']) {
+      .then((payout) => {
+        if (!payout['isUserLoggedIn']) {
           alert('Please login to place a pin!');
         }
       });

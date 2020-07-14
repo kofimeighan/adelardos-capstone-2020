@@ -50,30 +50,21 @@ public class UserSubmittedLocationsServlet extends HttpServlet {
     PreparedQuery results = datastore.prepare(query);
     response.setContentType("application/json");
 
-
-    if(userService.isUserLoggedIn()) {
-      List<UserComment> userComments = new ArrayList<UserComment>();
-      for (Entity entity : results.asIterable()) {
-        String name = (String) entity.getProperty(NAME);
-        String phone = (String) entity.getProperty(PHONE);
-        String location = (String) entity.getProperty(LOCATION);
-        String description = (String) entity.getProperty(DESCRIPTION);
-        long timeStamp = (long) entity.getProperty(TIME_STAMP);
-        long id = entity.getKey().getId();
-
-        UserComment userComment = new UserComment(name, phone, location, description, timeStamp, id);
-        userComments.add(userComment);
-      }
-      System.out.println("-------------------------------------------");
-      System.out.println(new Gson().toJson(userComments));
-      JSONObject json = new Gson().toJson(userComments);
-      json.addProperty("is_user_logged_in", true);
-      response.getWriter().println(new Gson().toJson(userComments));
+    List<UserComment> userComments = new ArrayList<UserComment>();
+    for (Entity entity : results.asIterable()) {
+      String name = (String) entity.getProperty(NAME);
+      String phone = (String) entity.getProperty(PHONE);
+      String location = (String) entity.getProperty(LOCATION);
+      String description = (String) entity.getProperty(DESCRIPTION);
+      long timeStamp = (long) entity.getProperty(TIME_STAMP);
+      long id = entity.getKey().getId();
+      UserComment userComment = new UserComment(name, phone, location, description, timeStamp, id);
+      userComments.add(userComment);
     }
-    else{
-      JSONObject json = new JSONObject();
-      response.getWriter().println(json.put("is_user_logged_in", false));
-    }
+
+    UserSubmittedLocationsPayout payout =
+        new UserSubmittedLocationsPayout(userComments, userService.isUserLoggedIn());
+    response.getWriter().println(new Gson().toJson(payout));
   }
 
   @Override

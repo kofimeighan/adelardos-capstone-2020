@@ -32,7 +32,6 @@ public class LoginServlet extends HttpServlet {
     // TODO(kofimieghan): invesitgate whethere it's possible to pass in the page the user was
     // currently on after the user logs in?
     if (userService.isUserLoggedIn()) {
-      String userEmail = userService.getCurrentUser().getEmail();
       String urlToRedirectToAfterUserLogsOut = "/index.html";
       String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
       String loginHTML = "<a href=\"" + logoutUrl + "\">Logout</a>";

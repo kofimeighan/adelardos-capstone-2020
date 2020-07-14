@@ -32,7 +32,7 @@ const MNPLS_LNG = -93.2650;
 // the page is loaded and call
 function onLoad() {
   insertSearch();
-  authenticationStatus();
+  renderLoginButton();
 }
 
 function statisticsOnLoad() {
@@ -63,7 +63,7 @@ function statisticsOnLoad() {
 
   loadMap();
   insertSearch();
-  authenticationStatus();
+  renderLoginButton();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
   populateDropdown(iconicProtestData, 'IP-dropdown-menu');
   fetchSubmittedLocations().then((locationData) => {
@@ -135,7 +135,7 @@ function insertSearch() {
   document.getElementById('mainNav').appendChild(searchBar);
 }
 
-async function authenticationStatus() {
+async function renderLoginButton() {
   const response = await fetch('/login');
   const authenticationURL = await response.text();
 
@@ -154,6 +154,7 @@ async function fetchSubmittedLocations() {
   const commentData = [];
 
   userComments.forEach((comment) => {
+    if (comment.key() != 'is_user_logged_in')
     const tempArray = [comment.name, comment.location];
     commentData.push(tempArray);
   });
@@ -162,10 +163,10 @@ async function fetchSubmittedLocations() {
 }
 
 function allowUserSubmit() {
-  fetch('/allow-user-submit')
+  fetch('/submitted-locations')
       .then((response) => response.json())
       .then((isUserLoggedIn) => {
-        if (!isUserLoggedIn) {
+        if (!isUserLoggedIn['is_user_logged_in']) {
           alert('Please login to place a pin!');
         }
       });

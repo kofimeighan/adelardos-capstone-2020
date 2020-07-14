@@ -28,7 +28,7 @@
 // TODO(kofimeighan/briafassler): Try and figure out how to decrease
 // the scope of these variables. maybe within a new class?
 
-//Center points to the middle of the United Statesd
+// Center points to the middle of the United Statesd
 // TODO(kofimeighan/briafassler): Try and figure out how to decrease
 // the scope of these variables. maybe within a new class?
 let map;
@@ -122,19 +122,6 @@ function populateDropdown(list, ID) {
   });
 }
 
-async function fetchSubmittedLocations() {
-  const response = await fetch('/submitted-locations');
-  const userComments = await response.json();
-  const commentData = [];
-
-  userComments.forEach((comment) => {
-    const tempArray = [comment.name, comment.location];
-    commentData.push(tempArray);
-  });
-
-  return commentData;
-}
-
 /* inserts a functioning searchbar into the navigation bar of a page. */
 function insertSearch() {
   const searchElement = createSearchElement();
@@ -198,6 +185,8 @@ async function fetchSubmittedLocations() {
     const tempArray = [comment.name, comment.location];
     commentData.push(tempArray);
   });
+
+  return commentData;
 }
 
 /* searches each child Node of the page in the docElements and retains the

@@ -22,34 +22,23 @@
 /* exported allowUserSubmit */
 /* exported statisticsOnLoad */
 /* global google */
-<<<<<<< HEAD
 // Neccessary constants or else variables will return as
 // 'undefined' in lint checks
 // Center points to the middle of the United States
 // TODO(kofimeighan/briafassler): Try and figure out how to decrease
 // the scope of these variables. maybe within a new class?
-=======
->>>>>>> origin
 
-/**
- * Center points to the middle of the United Statesd
- * TODO(kofimeighan/briafassler): Try and figure out how to decrease
-   the scope of these variables. maybe within a new class?
- */
+//Center points to the middle of the United Statesd
+// TODO(kofimeighan/briafassler): Try and figure out how to decrease
+// the scope of these variables. maybe within a new class?
 let map;
 let geocoder;
 const MNPLS_LAT = 44.9778;
 const MNPLS_LNG = -93.2650;
 
-<<<<<<< HEAD
-// TODO(kofimeighan): add an event listener to when
-// the page is loaded and call
-=======
-/**
- * TODO(kofimeighan): add an event listener to when the page is loaded and
-   call onLoad();
- */
->>>>>>> origin
+// TODO(kofimeighan): add an event listener to when the page is loaded and
+// call onLoad();
+
 function onLoad() {
   insertSearch();
   renderLoginButton();

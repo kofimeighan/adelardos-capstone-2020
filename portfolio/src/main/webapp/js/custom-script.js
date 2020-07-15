@@ -53,8 +53,8 @@ function statisticsOnLoad() {
     ['Robert Fuller', 'Palmdale, California'],
     ['James Scurlock', 'Omaha, Nebraska'],
     ['Elijah McClain', 'Aurora, Colorado'],
-    ['Placeholder', 'Mountain View, CA'],
-    ['Placeholder', 'Mountain View, CA'],
+    ['Justin Howell', 'Austin, Texas'],
+    ['Jamel Floyd', 'Brooklyn, New York'],
   ];
 
   const iconicProtestData = [
@@ -107,18 +107,15 @@ function codeAddress(address) {
 function populateDropdown(list, ID) {
   const dropDownMenu = document.getElementById(ID);
   list.forEach((nameAndLocation) => {
-    const listElement = document.createElement('li');
-    listElement.innerText = nameAndLocation[0];
-
     const titleElement = document.createElement('a');
-    titleElement.innerText = '';
-    listElement.appendChild(titleElement);
+    titleElement.className = 'dropdown-item';
+    titleElement.innerText = nameAndLocation[0];
 
-    listElement.addEventListener('click', () => {
+    titleElement.addEventListener('click', () => {
       codeAddress(nameAndLocation[1]);
     });
 
-    dropDownMenu.appendChild(listElement);
+    dropDownMenu.appendChild(titleElement);
   });
 }
 

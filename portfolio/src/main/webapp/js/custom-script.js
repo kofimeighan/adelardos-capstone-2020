@@ -19,23 +19,32 @@
 /* exported onLoad */
 /* exported codeAddress */
 /* exported insertSearch */
+/* exported allowUserSubmit */
+/* exported statisticsOnLoad */
 /* global google */
+// Neccessary constants or else variables will return as
+// 'undefined' in lint checks
+// Center points to the middle of the United States
+// TODO(kofimeighan/briafassler): Try and figure out how to decrease
+// the scope of these variables. maybe within a new class?
 
-/**
- * Center points to the middle of the United Statesd
- * TODO(kofimeighan/briafassler): Try and figure out how to decrease
-   the scope of these variables. maybe within a new class?
- */
+// Center points to the middle of the United Statesd
+// TODO(kofimeighan/briafassler): Try and figure out how to decrease
+// the scope of these variables. maybe within a new class?
 let map;
 let geocoder;
 const MNPLS_LAT = 44.9778;
 const MNPLS_LNG = -93.2650;
 
-/**
- * TODO(kofimeighan): add an event listener to when the page is loaded and
-   call onLoad();
- */
+// TODO(kofimeighan): add an event listener to when the page is loaded and
+// call onLoad();
+
 function onLoad() {
+  insertSearch();
+  renderLoginButton();
+}
+
+function statisticsOnLoad() {
   const martyrData = [
     ['George Floyd', 'Minneapolis, Minnesota'],
     ['Ahmaud Arbery', 'Brunswick, Georgia'],
@@ -62,6 +71,8 @@ function onLoad() {
   ];
 
   loadMap();
+  insertSearch();
+  renderLoginButton();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
   populateDropdown(iconicProtestData, 'IP-dropdown-menu');
   fetchSubmittedLocations().then((locationData) => {
@@ -111,19 +122,6 @@ function populateDropdown(list, ID) {
   });
 }
 
-async function fetchSubmittedLocations() {
-  const response = await fetch('/submitted-locations');
-  const userComments = await response.json();
-  const commentData = [];
-
-  userComments.forEach((comment) => {
-    const tempArray = [comment.name, comment.location];
-    commentData.push(tempArray);
-  });
-
-  return commentData;
-}
-
 /* inserts a functioning searchbar into the navigation bar of a page. */
 function insertSearch() {
   const searchElement = createSearchElement();
@@ -165,10 +163,34 @@ function createSearchElement() {
   return searchBar;
 }
 
-/**
- * searches each child Node of the page in the docElements and retains the
-   elements that contain the wanted word.
- */
+async function renderLoginButton() {
+  const response = await fetch('/login');
+  const authenticationURL = await response.text();
+
+  const navBar = document.getElementById('navBar');
+
+  const welcomeElement = document.createElement('li');
+  welcomeElement.className = 'nav-item';
+  welcomeElement.innerHTML = authenticationURL;
+
+  navBar.appendChild(welcomeElement);
+}
+
+async function fetchSubmittedLocations() {
+  const response = await fetch('/submitted-locations');
+  const userComments = await response.json();
+  const commentData = [];
+
+  userComments['userComments'].forEach((comment) => {
+    const tempArray = [comment.name, comment.location];
+    commentData.push(tempArray);
+  });
+
+  return commentData;
+}
+
+/* searches each child Node of the page in the docElements and retains the
+   elements that contain the wanted word. */
 function searchPages(docElements, wantedWords) {
   const resultElements = [];
 
@@ -220,6 +242,15 @@ function showResults(resultElements, wantedWords) {
   });
 }
 
+function allowUserSubmit() {
+  fetch('/submitted-locations')
+      .then((response) => response.json())
+      .then((payout) => {
+        if (!payout['isUserLoggedIn']) {
+          alert('Please login to place a pin!');
+        }
+      });
+}
 google.charts.load('current', {'packages': ['corechart']});
 google.charts.setOnLoadCallback(drawStateIncarcerationChart);
 

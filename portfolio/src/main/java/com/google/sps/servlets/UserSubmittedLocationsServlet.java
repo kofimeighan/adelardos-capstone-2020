@@ -48,6 +48,7 @@ public class UserSubmittedLocationsServlet extends HttpServlet {
     Query query = new Query(TABLE_NAME);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
+    response.setContentType("application/json");
 
     List<UserComment> userComments = new ArrayList<UserComment>();
     for (Entity entity : results.asIterable()) {
@@ -57,34 +58,38 @@ public class UserSubmittedLocationsServlet extends HttpServlet {
       String description = (String) entity.getProperty(DESCRIPTION);
       long timeStamp = (long) entity.getProperty(TIME_STAMP);
       long id = entity.getKey().getId();
-
       UserComment userComment = new UserComment(name, phone, location, description, timeStamp, id);
       userComments.add(userComment);
     }
 
-    response.setContentType("application/json");
-    response.getWriter().println(new Gson().toJson(userComments));
+    UserSubmittedLocationsPayload payload =
+        new UserSubmittedLocationsPayload(userComments, userService.isUserLoggedIn());
+    response.getWriter().println(new Gson().toJson(payload));
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     UserService userService = UserServiceFactory.getUserService();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    String name = request.getParameter(NAME);
-    String phone = request.getParameter(PHONE);
-    String location = request.getParameter(LOCATION);
-    String description = request.getParameter(DESCRIPTION);
-    long timeStamp = System.currentTimeMillis();
 
-    Entity pinEntity = new Entity(TABLE_NAME);
-    pinEntity.setProperty(NAME, name);
-    pinEntity.setProperty(PHONE, phone);
-    pinEntity.setProperty(LOCATION, location);
-    pinEntity.setProperty(DESCRIPTION, description);
-    pinEntity.setProperty(TIME_STAMP, timeStamp);
-    datastore.put(pinEntity);
+    if (userService.isUserLoggedIn()) {
+      String name = request.getParameter(NAME);
+      String phone = request.getParameter(PHONE);
+      String location = request.getParameter(LOCATION);
+      String description = request.getParameter(DESCRIPTION);
+      long timeStamp = System.currentTimeMillis();
 
-    // TODO(kofimeighan): Find workaround to prevent a redirect after every comment submit
+      Entity pinEntity = new Entity(TABLE_NAME);
+      pinEntity.setProperty(NAME, name);
+      pinEntity.setProperty(PHONE, phone);
+      pinEntity.setProperty(LOCATION, location);
+      pinEntity.setProperty(DESCRIPTION, description);
+      pinEntity.setProperty(TIME_STAMP, timeStamp);
+      datastore.put(pinEntity);
+      response.getWriter().println(true);
+    }
+
+    // Stretch TODO(kofimeighan): Find workaround to prevent a redirect after every comment submit
     response.sendRedirect("/statistics.html");
   }
 }

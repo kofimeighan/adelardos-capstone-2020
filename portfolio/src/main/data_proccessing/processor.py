@@ -17,9 +17,11 @@ import numpy as np
 
 # TODO(kofimeighan): Create a function that can iterate over all files within 
 # the raw_data directory
+RAW_DATA_FILEPATH = 'raw_data/police_killings_2013.csv'
+CLEAN_DATA_FILEPATH = 'clean_data/police_killings_2013.csv'
 COLUMNS_OF_INTEREST = ['name', 'race','date', 'address', 'city',
                        'state', 'zipcode',]
-dataframe = pd.read_csv('raw_data/police_killings_2013.csv', index_col = 0)
+dataframe = pd.read_csv(RAW_DATA_FILEPATH, index_col=0)
 csv_columns = dataframe.columns
 columns_to_keep = []
 
@@ -32,4 +34,4 @@ for csv_column in csv_columns:
             break
 
 dataframe = dataframe[columns_to_keep]    
-dataframe.to_csv('clean_data/police_killings_2013.csv', index = False)
+dataframe.to_csv(CLEAN_DATA_FILEPATH, index=False)

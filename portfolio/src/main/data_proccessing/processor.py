@@ -19,7 +19,7 @@ import numpy as np
 # the raw_data directory
 RAW_DATA_FILEPATH = 'raw_data/police_killings_2013.csv'
 CLEAN_DATA_FILEPATH = 'clean_data/police_killings_2013.csv'
-COLUMNS_OF_INTEREST = ['name', 'race','date', 'address', 'city',
+COLUMNS_OF_INTEREST = ['name', 'race', 'date', 'address', 'city',
                        'state', 'zipcode',]
 dataframe = pd.read_csv(RAW_DATA_FILEPATH, index_col=0)
 csv_columns = dataframe.columns

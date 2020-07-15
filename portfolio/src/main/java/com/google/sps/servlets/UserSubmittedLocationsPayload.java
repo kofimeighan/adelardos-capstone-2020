@@ -15,11 +15,11 @@
 package com.google.sps.servlets;
 import java.util.*;
 
-public final class UserSubmittedLocationsPayout {
+public final class UserSubmittedLocationsPayload {
   private final List<UserComment> userComments;
   private final Boolean isUserLoggedIn;
 
-  public UserSubmittedLocationsPayout(List<UserComment> userComments, Boolean isUserLoggedIn) {
+  public UserSubmittedLocationsPayload(List<UserComment> userComments, Boolean isUserLoggedIn) {
     this.userComments = userComments;
     this.isUserLoggedIn = isUserLoggedIn;
   }

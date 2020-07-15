@@ -62,9 +62,9 @@ public class UserSubmittedLocationsServlet extends HttpServlet {
       userComments.add(userComment);
     }
 
-    UserSubmittedLocationsPayout payout =
-        new UserSubmittedLocationsPayout(userComments, userService.isUserLoggedIn());
-    response.getWriter().println(new Gson().toJson(payout));
+    UserSubmittedLocationsPayload payload =
+        new UserSubmittedLocationsPayload(userComments, userService.isUserLoggedIn());
+    response.getWriter().println(new Gson().toJson(payload));
   }
 
   @Override

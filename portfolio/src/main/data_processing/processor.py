@@ -44,7 +44,7 @@ def storeToDatabase(clean_file, columns_to_keep, kind):
   datastore_client = datastore.Client()
 
   for row in range(len(dataframe)):
-    has_race_gender_year_location = True
+    has_race = True
     violence_entity = datastore.Entity(key=datastore_client.key(kind))
     column_number = 0
     for column in columns_to_keep:
@@ -58,8 +58,8 @@ def storeToDatabase(clean_file, columns_to_keep, kind):
                                 dataframe.iloc[row, column_number]})
         column_number += 1
       else:
-        has_race_gender_year_location = False
-      if has_race_gender_year_location:
+        has_race = False
+      if has_race:
         datastore_client.put(violence_entity)
 
 # TODO(kofimeighan): iterate along files within the raw_data directory

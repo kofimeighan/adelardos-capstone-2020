@@ -36,8 +36,8 @@ def cleanData(raw_file, COLUMNS_OF_INTEREST):
 
 def storeToDatabase(clean_file, columns_to_keep, kind):
   RACE_CATAGORIES = ['American Indian', 'Alaska Native', 'Asian', 'Black',
-                       'African American', 'Native Hawaiian', 
-                       'Pacific Islander', 'White', 'Hispanic', 'Latino',]
+                     'African American', 'Native Hawaiian', 
+                     'Pacific Islander', 'White', 'Hispanic', 'Latino',]
   RACE = 'race'
   clean_file_path = 'clean_data/' + clean_file
   dataframe = pd.read_csv(clean_file_path)
@@ -60,7 +60,7 @@ def storeToDatabase(clean_file, columns_to_keep, kind):
       else:
         has_race_gender_year_location = False
       if has_race_gender_year_location:
-          datastore_client.put(violence_entity)
+        datastore_client.put(violence_entity)
 
 # TODO(kofimeighan): iterate along files within the raw_data directory
 def main():

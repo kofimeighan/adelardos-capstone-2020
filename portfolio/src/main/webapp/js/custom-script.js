@@ -62,7 +62,10 @@ function statisticsOnLoad() {
       'California State Capitol, 1315 10th St room b-27,' +
           'Sacramento, CA 95814',
     ],
-    ['Martin Luther King\'s March on Washington on August 28th, 1963', 'Washington, D.C.'],
+    [
+      'Martin Luther King\'s March on Washington on August 28th, 1963',
+      'Washington, D.C.'
+    ],
     [
       'Rev. Al Sharpton\'s March on Washington on August 28th, 2020',
       'Washington, D.C.',

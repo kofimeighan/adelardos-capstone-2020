@@ -27,10 +27,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /* Servlet to read chart data from data store and return it in doGet */
-@WebServlet("/chart-data")
-public class ChartServlet extends HttpServlet {
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+@WebServlet("/chart-data") public class ChartServlet extends HttpServlet {
+  @Override public void doGet(HttpServletRequest request,
+                              HttpServletResponse response) throws IOException {
     List<DataPair> dataPairs = new ArrayList<DataPair>();
 
     Gson gson = new Gson();

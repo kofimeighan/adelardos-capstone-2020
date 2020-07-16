@@ -285,7 +285,7 @@ async function loadChartData() {
 
   dataPairs.forEach((pair) => {
     chartData.push([pair.group, pair.percent]);
-    });
+  });
 
   return chartData;
 }

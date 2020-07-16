@@ -53,19 +53,18 @@ function statisticsOnLoad() {
     ['Robert Fuller', 'Palmdale, California'],
     ['James Scurlock', 'Omaha, Nebraska'],
     ['Elijah McClain', 'Aurora, Colorado'],
-    ['Justin Howell', 'Austin, Texas'],
     ['Jamel Floyd', 'Brooklyn, New York'],
   ];
 
   const iconicProtestData = [
     [
-      'Black panthers storming the California capitol',
+      'Black Panthers Storming the California Capitol on May 2nd, 1967',
       'California State Capitol, 1315 10th St room b-27,' +
           'Sacramento, CA 95814',
     ],
-    ['Martin Luther King\'s march on Washington', 'Washington, D.C.'],
+    ['Martin Luther King\'s March on Washington on August 28th, 1963', 'Washington, D.C.'],
     [
-      'Rev. Al Sharpton\'s march on Washington on August 28th, 2020',
+      'Rev. Al Sharpton\'s March on Washington on August 28th, 2020',
       'Washington, D.C.',
     ],
   ];

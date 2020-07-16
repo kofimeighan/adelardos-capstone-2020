@@ -14,8 +14,6 @@ stored within a database."""
 
 from google.cloud import datastore
 import pandas as pd
-import numpy as np
-import os
 
 def cleanData(raw_file, COLUMNS_OF_INTEREST):
   raw_file_path = 'raw_data/' + raw_file
@@ -50,7 +48,7 @@ def storeToDatabase(clean_file, columns_to_keep, kind):
     for column in columns_to_keep:
       if 'race' not in column:
         violence_entity.update({column : 
-                              dataframe.iloc[row, column_number]})
+                                dataframe.iloc[row, column_number]})
         column_number += 1
       elif 'race' in column and dataframe.iloc[row, column_number] \
                   in RACE_CATAGORIES:

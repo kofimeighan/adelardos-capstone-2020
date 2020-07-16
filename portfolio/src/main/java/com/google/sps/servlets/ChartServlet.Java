@@ -32,10 +32,8 @@ import javax.servlet.http.HttpServletResponse;
                               HttpServletResponse response) throws IOException {
     List<DataPair> dataPairs = new ArrayList<DataPair>();
 
-    Gson gson = new Gson();
-
     // Send the JSON as the response
     response.setContentType("application/json");
-    response.getWriter().println(gson.toJson(dataPairs));
+    response.getWriter().println(new Gson().toJson(dataPairs));
   }
 }

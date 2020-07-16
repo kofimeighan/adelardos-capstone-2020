@@ -279,7 +279,7 @@ function drawStateIncarcerationChart() {
 }
 
 async function loadChartData() {
-  const response = await fetch('/data');
+  const response = await fetch('/chart-data');
   const dataPairs = await response.json();
   const chartData = [];
 

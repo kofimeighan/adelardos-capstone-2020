@@ -64,7 +64,7 @@ function statisticsOnLoad() {
     ],
     [
       'Martin Luther King\'s March on Washington on August 28th, 1963',
-      'Washington, D.C.'
+      'Washington, D.C.',
     ],
     [
       'Rev. Al Sharpton\'s March on Washington on August 28th, 2020',

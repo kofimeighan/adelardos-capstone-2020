@@ -255,6 +255,8 @@ google.charts.setOnLoadCallback(drawStateIncarcerationChart);
 
 /** Creates chart and adds it to the page. */
 function drawStateIncarcerationChart() {
+  loadChartData;
+
   const stateData = new google.visualization.DataTable();
   stateData.addColumn('string', 'Race');
   stateData.addColumn('number', 'Count');
@@ -273,4 +275,16 @@ function drawStateIncarcerationChart() {
   const chart = new google.visualization.PieChart(
       document.getElementById('chart-container'));
   chart.draw(stateData, stateChartDimensions);
+}
+
+async function loadChartData() {
+  const response = await fetch('/chart-data');
+  const dataPairs = await response.json();
+  const chartData = [];
+
+  dataPairs.forEach((pair) => {
+    chartData.push([pair.group, pair.percent]);
+  });
+
+  return chartData;
 }

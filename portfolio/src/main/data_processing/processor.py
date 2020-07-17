@@ -58,7 +58,7 @@ def store_to_database(clean_file, kind):
     datastore_client.put(violence_entity)    
 
 def main(file, kind): 
-  columns_to_keep = clean_data(file)
+  clean_data(file)
   store_to_database(file, kind)
 
 # To clean and store specific CSV data, you have to enter

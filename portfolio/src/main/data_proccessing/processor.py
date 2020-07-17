@@ -21,7 +21,7 @@ CLEAN_TIME_PATH = 'clean_data/time_series.csv'
 TIME_COLUMNS = ['date', 'name']
 
 
-def load_csv_filter_and_frame(file_path, column_names):
+def load_and_filter_csv(file_path, column_names):
   '''
   args: (path to csv files, names of columns to retain)
   rets: pd.Dataframe containing desired columns from csv 
@@ -40,7 +40,7 @@ def load_csv_filter_and_frame(file_path, column_names):
 
 
 def count_deaths_by_year():
-  timeframe = load_csv_filter_and_frame(RAW_TIME_PATH, TIME_COLUMNS)
+  timeframe = load_and_filter_csv(RAW_TIME_PATH, TIME_COLUMNS)
   timeframe.columns = ['Totals', 'Date']
   timeframe['Date'] = pd.to_datetime(timeframe['Date'], format='%m/%d/%y',
                                      errors='ignore')

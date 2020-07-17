@@ -13,25 +13,37 @@ processor.py is used to clean csv's and create data suitable to be
 stored within a database."""
 
 import pandas as pd
-import numpy as np
 
 # TODO(kofimeighan): Create a function that can iterate over all files within 
 # the raw_data directory
-RAW_DATA_FILEPATH = 'raw_data/police_killings_2013.csv'
-CLEAN_DATA_FILEPATH = 'clean_data/police_killings_2013.csv'
-COLUMNS_OF_INTEREST = ['name', 'race', 'date', 'address', 'city',
-                       'state', 'zipcode',]
-dataframe = pd.read_csv(RAW_DATA_FILEPATH, index_col=0)
-csv_columns = dataframe.columns
-columns_to_keep = []
+RAW_TIME_PATH = 'raw_data/police_killings_2013.csv'
+CLEAN_TIME_PATH = 'clean_data/time_series.csv'
+TIME_COLUMNS = ['date', 'name']
 
-# TODO(kofimeighan): save the zipcode as an int not a long within the database
-for csv_column in csv_columns:
-    stripped_csv_column = csv_column.lower().replace("'", "")
-    for column_of_interest in COLUMNS_OF_INTEREST:
-        if column_of_interest.lower() in stripped_csv_column:
-            columns_to_keep.append(csv_column)
-            break
 
-dataframe = dataframe[columns_to_keep]    
-dataframe.to_csv(CLEAN_DATA_FILEPATH, index=False)
+def load_and_filter_csv(file_path, column_names):
+  '''
+  args: (path to csv files, names of columns to retain)
+  rets: pd.Dataframe containing desired columns from csv 
+  '''
+  tempframe = pd.read_csv(file_path)
+
+  columns_to_keep = []
+  for column in tempframe:
+    for column_of_interest in column_names:
+      if column_of_interest in column.lower():
+        columns_to_keep.append(column)
+        break
+
+  tempframe = tempframe[columns_to_keep]
+  return tempframe
+
+
+def count_deaths_by_year():
+  timeframe = load_and_filter_csv(RAW_TIME_PATH, TIME_COLUMNS)
+  timeframe.columns = ['Totals', 'Date']
+  timeframe['Date'] = pd.to_datetime(timeframe['Date'], format='%m/%d/%y',
+                                     errors='ignore')
+  timeframe['Date'] = pd.DatetimeIndex(timeframe['Date']).year
+  timeframe = timeframe.groupby(by='Date').count()
+  timeframe.to_csv(CLEAN_TIME_PATH)

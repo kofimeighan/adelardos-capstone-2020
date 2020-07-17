@@ -53,19 +53,21 @@ function statisticsOnLoad() {
     ['Robert Fuller', 'Palmdale, California'],
     ['James Scurlock', 'Omaha, Nebraska'],
     ['Elijah McClain', 'Aurora, Colorado'],
-    ['Placeholder', 'Mountain View, CA'],
-    ['Placeholder', 'Mountain View, CA'],
+    ['Jamel Floyd', 'Brooklyn, New York'],
   ];
 
   const iconicProtestData = [
     [
-      'Black panthers storming the California capitol',
+      'Black Panthers Storming the California Capitol on May 2nd, 1967',
       'California State Capitol, 1315 10th St room b-27,' +
           'Sacramento, CA 95814',
     ],
-    ['Martin Luther King\'s march on Washington', 'Washington, D.C.'],
     [
-      'Rev. Al Sharpton\'s march on Washington on August 28th, 2020',
+      'Martin Luther King\'s March on Washington on August 28th, 1963',
+      'Washington, D.C.',
+    ],
+    [
+      'Rev. Al Sharpton\'s March on Washington on August 28th, 2020',
       'Washington, D.C.',
     ],
   ];
@@ -107,18 +109,15 @@ function codeAddress(address) {
 function populateDropdown(list, ID) {
   const dropDownMenu = document.getElementById(ID);
   list.forEach((nameAndLocation) => {
-    const listElement = document.createElement('li');
-    listElement.innerText = nameAndLocation[0];
-
     const titleElement = document.createElement('a');
-    titleElement.innerText = '';
-    listElement.appendChild(titleElement);
+    titleElement.className = 'dropdown-item';
+    titleElement.innerText = nameAndLocation[0];
 
-    listElement.addEventListener('click', () => {
+    titleElement.addEventListener('click', () => {
       codeAddress(nameAndLocation[1]);
     });
 
-    dropDownMenu.appendChild(listElement);
+    dropDownMenu.appendChild(titleElement);
   });
 }
 
@@ -256,6 +255,8 @@ google.charts.setOnLoadCallback(drawStateIncarcerationChart);
 
 /** Creates chart and adds it to the page. */
 function drawStateIncarcerationChart() {
+  loadChartData;
+
   const stateData = new google.visualization.DataTable();
   stateData.addColumn('string', 'Race');
   stateData.addColumn('number', 'Count');
@@ -274,4 +275,16 @@ function drawStateIncarcerationChart() {
   const chart = new google.visualization.PieChart(
       document.getElementById('chart-container'));
   chart.draw(stateData, stateChartDimensions);
+}
+
+async function loadChartData() {
+  const response = await fetch('/chart-data');
+  const dataPairs = await response.json();
+  const chartData = [];
+
+  dataPairs.forEach((pair) => {
+    chartData.push([pair.group, pair.percent]);
+  });
+
+  return chartData;
 }

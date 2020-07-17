@@ -14,21 +14,12 @@
 
 package com.google.sps.servlets;
 
-public final class UserComment {
-  private final String name;
-  private final String email;
-  private final String location;
-  private final String description;
-  private final long timeStamp;
-  private final long id;
+public final class DataPair {
+  private final String group;
+  private final Double percent;
 
-  public UserComment(
-      String name, String email, String location, String description, long timeStamp, long id) {
-    this.name = name;
-    this.email = email;
-    this.location = location;
-    this.description = description;
-    this.timeStamp = timeStamp;
-    this.id = id;
+  public DataPair(String group, Double percent) {
+    this.group = group;
+    this.percent = percent;
   }
 }

@@ -22,9 +22,10 @@ COLUMNS_OF_INTEREST = ['name', 'race', 'date', 'address', 'city',
 RACE_CATEGORIES = ['American Indian', 'Alaska Native', 'Asian', 'Black',
                    'African American', 'Native Hawaiian', 'Native American',
                    'Pacific Islander', 'White', 'Hispanic', 'Latino',]
+TIME_COLUMNS = ['date', 'name']
 RACE = 'race'
 
-def clean_data(raw_file):
+def clean_csv(raw_file):
   raw_file_path = 'raw_data/' + raw_file
   dataframe = pd.read_csv(raw_file_path, index_col=0)
   csv_columns = dataframe.columns
@@ -40,7 +41,6 @@ def clean_data(raw_file):
   dataframe = dataframe[columns_to_keep]
   clean_file_path = 'clean_data/' + raw_file
   dataframe.to_csv(clean_file_path, index = False)
-  return columns_to_keep
 
 def store_to_database(clean_file, kind):
   clean_file_path = 'clean_data/' + clean_file
@@ -55,10 +55,21 @@ def store_to_database(clean_file, kind):
     for index, column in enumerate(dataframe.columns):
       violence_entity[column] = row[index+1]
 
-    datastore_client.put(violence_entity)    
+    datastore_client.put(violence_entity)
+
+def count_deaths_by_year(raw_file):
+  raw_file_path = 'raw_data/' + raw_file  
+  clean_file_path = 'clean_data/' + raw_file
+  timeframe = clean_csv(raw_file_path, TIME_COLUMNS)
+  timeframe.columns = ['Totals', 'Date']
+  timeframe['Date'] = pd.to_datetime(timeframe['Date'], format='%m/%d/%y',
+                                     errors='ignore')
+  timeframe['Date'] = pd.DatetimeIndex(timeframe['Date']).year
+  timeframe = timeframe.groupby(by='Date').count()
+  timeframe.to_csv(clean_file_path)
 
 def main(file, kind): 
-  clean_data(file)
+  clean_csv(file)
   store_to_database(file, kind)
 
 # To clean and store specific CSV data, you have to enter

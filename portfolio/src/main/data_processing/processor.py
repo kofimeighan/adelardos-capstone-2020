@@ -14,8 +14,17 @@ stored within a database."""
 
 from google.cloud import datastore
 import pandas as pd
+import sys
 
-def cleanData(raw_file, COLUMNS_OF_INTEREST):
+COLUMNS_OF_INTEREST = ['name', 'race', 'date', 'address', 'city',
+                       'state', 'zipcode', 'police budget', 'hospital',
+                       'education', 'cause of death', 'budget',]
+RACE_CATEGORIES = ['American Indian', 'Alaska Native', 'Asian', 'Black',
+                   'African American', 'Native Hawaiian', 'Native American',
+                   'Pacific Islander', 'White', 'Hispanic', 'Latino',]
+RACE = 'race'
+
+def clean_data(raw_file):
   raw_file_path = 'raw_data/' + raw_file
   dataframe = pd.read_csv(raw_file_path, index_col=0)
   csv_columns = dataframe.columns
@@ -24,7 +33,8 @@ def cleanData(raw_file, COLUMNS_OF_INTEREST):
     stripped_csv_column = csv_column.lower()
     for column_of_interest in COLUMNS_OF_INTEREST:
         if column_of_interest.lower() in stripped_csv_column:
-          columns_to_keep.append(csv_column)
+          dataframe = dataframe.rename(columns={csv_column:column_of_interest})
+          columns_to_keep.append(column_of_interest)
           break
       
   dataframe = dataframe[columns_to_keep]
@@ -32,44 +42,24 @@ def cleanData(raw_file, COLUMNS_OF_INTEREST):
   dataframe.to_csv(clean_file_path, index = False)
   return columns_to_keep
 
-def storeToDatabase(clean_file, columns_to_keep, kind):
-  RACE_CATAGORIES = ['American Indian', 'Alaska Native', 'Asian', 'Black',
-                     'African American', 'Native Hawaiian', 
-                     'Pacific Islander', 'White', 'Hispanic', 'Latino',]
-  RACE = 'race'
+def store_to_database(clean_file, kind):
   clean_file_path = 'clean_data/' + clean_file
   dataframe = pd.read_csv(clean_file_path)
   datastore_client = datastore.Client()
 
-  for row in range(len(dataframe)):
-    has_race = True
+  for row in dataframe.itertuples():
+    if row.race not in RACE_CATEGORIES:
+      continue
     violence_entity = datastore.Entity(key=datastore_client.key(kind))
-    column_number = 0
-    for column in columns_to_keep:
-      if 'race' not in column:
-        violence_entity.update({column : 
-                                dataframe.iloc[row, column_number]})
-        column_number += 1
-      elif 'race' in column and dataframe.iloc[row, column_number] \
-                  in RACE_CATAGORIES:
-        violence_entity.update({column : 
-                                dataframe.iloc[row, column_number]})
-        column_number += 1
-      else:
-        has_race = False
-      if has_race:
-        datastore_client.put(violence_entity)
-
-# TODO(kofimeighan): iterate along files within the raw_data directory
-def main():
-  file = 'police_killings_2013.csv'
-  KIND = 'Police Violence Data'
-  COLUMNS_OF_INTEREST = ['name', 'race', 'date', 'address', 'city',
-                         'state', 'zipcode', 'police budget', 'hospital',
-                         'education', 'cause of death', 'budget',]
     
-  columns_to_keep = cleanData(file, COLUMNS_OF_INTEREST)
-  storeToDatabase(file, columns_to_keep, KIND)
+    for index, column in enumerate(dataframe.columns):
+      violence_entity[column] = row[index+1]
+
+    datastore_client.put(violence_entity)    
+
+def main(file, kind): 
+  columns_to_keep = clean_data(file)
+  store_to_database(file, kind)
 
 if __name__ == '__main__':
-  main()
+  main(sys.argv[1], sys.argv[2])

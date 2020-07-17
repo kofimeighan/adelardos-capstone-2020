@@ -34,8 +34,8 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/submitted-locations")
 public class UserSubmittedLocationsServlet extends HttpServlet {
-  private static final String NAME = "name";
-  private static final String PHONE = "phone";
+  private static final String NAME_OF_PROTEST = "name";
+  private static final String EMAIL = "email";
   private static final String LOCATION = "location";
   private static final String DESCRIPTION = "description";
   private static final String TABLE_NAME = "Pins";
@@ -52,13 +52,13 @@ public class UserSubmittedLocationsServlet extends HttpServlet {
 
     List<UserComment> userComments = new ArrayList<UserComment>();
     for (Entity entity : results.asIterable()) {
-      String name = (String) entity.getProperty(NAME);
-      String phone = (String) entity.getProperty(PHONE);
+      String name = (String) entity.getProperty(NAME_OF_PROTEST);
+      String email = (String) entity.getProperty(EMAIL);
       String location = (String) entity.getProperty(LOCATION);
       String description = (String) entity.getProperty(DESCRIPTION);
       long timeStamp = (long) entity.getProperty(TIME_STAMP);
       long id = entity.getKey().getId();
-      UserComment userComment = new UserComment(name, phone, location, description, timeStamp, id);
+      UserComment userComment = new UserComment(name, email, location, description, timeStamp, id);
       userComments.add(userComment);
     }
 
@@ -73,15 +73,15 @@ public class UserSubmittedLocationsServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
     if (userService.isUserLoggedIn()) {
-      String name = request.getParameter(NAME);
-      String phone = request.getParameter(PHONE);
+      String name = request.getParameter(NAME_OF_PROTEST);
+      String email = userService.getCurrentUser().getEmail();
       String location = request.getParameter(LOCATION);
       String description = request.getParameter(DESCRIPTION);
       long timeStamp = System.currentTimeMillis();
 
       Entity pinEntity = new Entity(TABLE_NAME);
-      pinEntity.setProperty(NAME, name);
-      pinEntity.setProperty(PHONE, phone);
+      pinEntity.setProperty(NAME_OF_PROTEST, name);
+      pinEntity.setProperty(EMAIL, email);
       pinEntity.setProperty(LOCATION, location);
       pinEntity.setProperty(DESCRIPTION, description);
       pinEntity.setProperty(TIME_STAMP, timeStamp);

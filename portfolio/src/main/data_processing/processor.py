@@ -61,5 +61,7 @@ def main(file, kind):
   columns_to_keep = clean_data(file)
   store_to_database(file, kind)
 
+# To clean and store specific CSV data, you have to enter
+# enter the file name and the kind of entity you'd like to store.
 if __name__ == '__main__':
   main(sys.argv[1], sys.argv[2])

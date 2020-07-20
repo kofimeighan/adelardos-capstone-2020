@@ -22,7 +22,7 @@ COLUMNS_OF_INTEREST = ['name', 'race', 'date', 'address', 'city',
 RACE_CATEGORIES = ['American Indian', 'Alaska Native', 'Asian', 'Black',
                    'African American', 'Native Hawaiian', 'Native American',
                    'Pacific Islander', 'White', 'Hispanic', 'Latino',]
-TIME_COLUMNS = ['date', 'name']
+TIME_COLUMNS = ['date', 'name',]
 RACE = 'race'
 
 def clean_csv(raw_file):

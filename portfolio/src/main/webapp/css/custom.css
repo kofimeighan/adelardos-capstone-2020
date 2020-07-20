@@ -391,6 +391,7 @@ body {
   color: white;
 }
 
-#chart-container {
-  display: inline-block;
+#timeseries {
+  width: 600px;
+  height: 400px;
 }

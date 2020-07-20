@@ -17,8 +17,8 @@ import pandas as pd
 import sys
 
 COLUMNS_OF_INTEREST = ['name', 'race', 'date', 'address', 'city',
-                       'state', 'zipcode', 'police budget', 'hospital',
-                       'education', 'cause of death', 'budget',]
+                       'state', 'zipcode', 'police budget', 'hospital budget',
+                       'education budget', 'cause of death', 'budget',]
 RACE_CATEGORIES = ['American Indian', 'Alaska Native', 'Asian', 'Black',
                    'African American', 'Native Hawaiian', 'Native American',
                    'Pacific Islander', 'White', 'Hispanic', 'Latino',]

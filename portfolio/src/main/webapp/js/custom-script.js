@@ -21,6 +21,7 @@
 /* exported insertSearch */
 /* exported allowUserSubmit */
 /* exported statisticsOnLoad */
+/* exported chartsOnLoad */
 /* global google */
 /* global Chart*/
 // Neccessary constants or else variables will return as
@@ -46,7 +47,7 @@ function onLoad() {
   renderLoginButton();
 }
 
-function chartsOnLoad(){
+function chartsOnLoad() {
   drawTimeSeriesChart();
 }
 

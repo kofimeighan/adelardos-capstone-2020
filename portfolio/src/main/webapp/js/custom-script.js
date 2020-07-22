@@ -21,6 +21,7 @@
 /* exported insertSearch */
 /* exported allowUserSubmit */
 /* exported statisticsOnLoad */
+/* exported loadChartData */
 /* global google */
 /* global Chart*/
 // Neccessary constants or else variables will return as

@@ -166,23 +166,25 @@ async function haversineDistance(userAddress, dataPoint) {
   const [userAddressLatLong, pinAddressLatLong] =
       await Promise.all([userAddressQuery, pinAddressQuery]);
 
-  const R = 3958.8;  // Radius of the Earth in miles
-  const rlat1 =
+  const radiusOfEarth = 3958.8;  // Radius of the Earth in miles
+  const userAddLatInRadians =
       userAddressLatLong[0] * (Math.PI / 180);  // Convert degrees to radians
-  const rlat2 =
+  const pinAddLatInRadians =
       pinAddressLatLong[0] * (Math.PI / 180);  // Convert degrees to radians
-  const difflat = rlat2 - rlat1;               // Radian difference (latitudes)
-  const difflon = (pinAddressLatLong[1] - pinAddressLatLong[1]) *
+  const lattitudeDifference = pinAddLatInRadians -
+      userAddLatInRadians;  // Radian difference (latitudes)
+  const longitudeDifference = (pinAddressLatLong[1] - pinAddressLatLong[1]) *
       (Math.PI / 180);  // Radian difference (longitudes)
 
-
   // distance between the two markers in miles
-  const d = 2 * R *
+  const distanceBetweenPins = 2 * radiusOfEarth *
       Math.asin(Math.sqrt(
-          Math.sin(difflat / 2) * Math.sin(difflat / 2) +
-          Math.cos(rlat1) * Math.cos(rlat2) * Math.sin(difflon / 2) *
-              Math.sin(difflon / 2)));
-  return d;
+          Math.sin(lattitudeDifference / 2) *
+              Math.sin(lattitudeDifference / 2) +
+          Math.cos(userAddLatInRadians) * Math.cos(pinAddLatInRadians) *
+              Math.sin(longitudeDifference / 2) *
+              Math.sin(longitudeDifference / 2)));
+  return distanceBetweenPins;
 }
 
 /* inserts a functioning searchbar into the navigation bar of a page. */

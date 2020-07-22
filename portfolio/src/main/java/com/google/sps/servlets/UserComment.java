@@ -16,16 +16,16 @@ package com.google.sps.servlets;
 
 public final class UserComment {
   private final String name;
-  private final String phone;
+  private final String email;
   private final String location;
   private final String description;
   private final long timeStamp;
   private final long id;
 
   public UserComment(
-      String name, String phone, String location, String description, long timeStamp, long id) {
+      String name, String email, String location, String description, long timeStamp, long id) {
     this.name = name;
-    this.phone = phone;
+    this.email = email;
     this.location = location;
     this.description = description;
     this.timeStamp = timeStamp;

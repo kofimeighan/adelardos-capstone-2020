@@ -68,38 +68,38 @@
           <div class="dropdown">
             <button
               type="button"
-              class="btn btn-primary dropdown-toggle"
+              class="btn btn-secondary dropdown-toggle"
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
             >
-              Where martyrs have died
+              Where Martyrs Have Died
             </button>
-            <ul id="martyr-dropdown-menu" class="dropdown-menu"></ul>
+            <div class="dropdown-menu" id="martyr-dropdown-menu"></div>
           </div>
           <div class="dropdown">
             <button
               type="button"
-              class="btn btn-primary dropdown-toggle"
+              class="btn btn-secondary dropdown-toggle"
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
             >
               Iconic Protests
             </button>
-            <ul id="IP-dropdown-menu" class="dropdown-menu"></ul>
+            <div class="dropdown-menu" id="IP-dropdown-menu"></div>
           </div>
           <div class="dropdown">
             <button
               type="button"
-              class="btn btn-primary dropdown-toggle"
+              class="btn btn-secondary dropdown-toggle"
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
             >
-              User-submitted Locations
+              User-Submitted Protests
             </button>
-            <ul id="user-submitted-dropdown-menu" class="dropdown-menu"></ul>
+            <div class="dropdown-menu" id="user-submitted-dropdown-menu"></div>
           </div>
         </div>
       </div>
@@ -119,44 +119,32 @@
                   id="name"
                   name="name"
                   type="text"
-                  placeholder="Your Name *"
+                  placeholder="Name of Protest *"
                   required
                   data-validation-required-message="Please enter your name."
                 />
                 <p class="help-block text-danger"></p>
               </div>
-              <div class="form-group mb-md-0">
-                <input
-                  class="form-control"
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  placeholder="Your Phone *"
-                  required
-                  data-validation-required-message="Please enter your phone number."
-                />
-                <p class="help-block text-danger"></p>
-              </div>
-            </div>
-            <div class="col-md-6">
               <div class="form-group">
                 <input
                   class="form-control"
                   id="location"
                   name="location"
                   type="text"
-                  placeholder="Location of protest *"
+                  placeholder="Location of Protest *"
                   required
                   data-validation-required-message="Please enter a location address."
                 />
                 <p class="help-block text-danger"></p>
               </div>
+            </div>
+            <div class="col-md-6">
               <div class="form-group form-group-textarea mb-md-0">
                 <textarea
                   class="form-control"
                   id="description"
                   name="description"
-                  placeholder="Description of protest *"
+                  placeholder="Description of Protest *"
                   required
                   data-validation-required-message="Please enter a description."
                 ></textarea>

@@ -109,7 +109,7 @@
       <div id="login-box">
         <!--Place Pin Form-->
         <form method="post" action="/submitted-locations" id="form">
-          <h4>Leave a marker on the map for protests you will be attending!</h4>
+          <h6>Leave a marker on the map for protests you will be attending!</h6>
           <div class="row align-items-stretch mb-5">
             <div class="col-md-6">
               <div class="form-group">
@@ -165,11 +165,57 @@
             </button>
           </div>
         </form>
+        <hr />
+        <form id="proximity pin form">
+          <h6>Find cases of police brutality in your area</h6>
+          <div class="row align-items-stretch mb-5">
+            <div class="col-md-auto">
+              <input
+                class="form-control"
+                id="address"
+                name="address"
+                type="text"
+                placeholder="Your address *"
+                required
+                data-validation-required-message="Please enter your name."
+              />
+            </div>
+            <input id="state" type="text" size="5" placeholder="State *" />
+            <p class="help-block text-danger"></p>
+            <div class="text-center">
+              <label for="radius">
+                Select a radius in miles that you would like to see pins within.
+              </label>
+              <select name="radius" id="radius">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+              <br />
+              <br />
+              <div class="text-center">
+                <div id="allowed-to-see-pins"></div>
+                <div id="place pin success"></div>
+                <button
+                  class="btn btn-primary btn-xl text-uppercase"
+                  id="getProximityPins"
+                  type="submit"
+                  value="See Proximity Pins"
+                  onclick="placeProximityPins();"
+                >
+                  See Places Near You
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
-      <div id="clear"></div>
-      <br />
-      <br />
     </div>
+    <div id="clear"></div>
+    <br />
+    <br />
     <!-- Charts-->
     <section class="page-section bg-light" id="charts">
       <div class="container">

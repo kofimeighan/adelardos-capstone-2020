@@ -399,3 +399,8 @@ body {
   background: #11110f;
   text-shadow: none;
 }
+
+.mb-5,
+.my-5 {
+  margin-bottom: 0.5rem !important;
+}

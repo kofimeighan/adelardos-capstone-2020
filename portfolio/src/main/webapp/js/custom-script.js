@@ -21,6 +21,7 @@
 /* exported insertSearch */
 /* exported allowUserSubmit */
 /* exported statisticsOnLoad */
+/* exported placeProximityPins */
 /* global google */
 // Neccessary constants or else variables will return as
 // 'undefined' in lint checks
@@ -119,6 +120,69 @@ function populateDropdown(list, ID) {
 
     dropDownMenu.appendChild(titleElement);
   });
+}
+
+async function placeProximityPins() {
+  const state = document.getElementById('state').value;
+  const userAddress = document.getElementById('address').value;
+  const response = await fetch('/proximity-pins?state=' + state);
+  const pins = await response.json();
+  const radius = Number(document.getElementById('radius').value);
+
+  pins.forEach(async (pin) => {
+    if (await haversineDistance(userAddress, pin.address) < radius) {
+      codeAddress(pin.address);
+    }
+  });
+}
+
+async function haversineDistance(userAddress, dataPoint) {
+  const userAddressQuery = new Promise((resolve, reject) => {
+    geocoder.geocode({'address': userAddress}, function(results, status) {
+      if (status == 'OK') {
+        resolve([
+          results[0].geometry.location.lat(),
+          results[0].geometry.location.lng(),
+        ]);
+      } else {
+        reject(status);
+      }
+    });
+  });
+
+  const pinAddressQuery = new Promise((resolve, reject) => {
+    geocoder.geocode({'address': dataPoint}, function(results, status) {
+      if (status == 'OK') {
+        resolve([
+          results[0].geometry.location.lat(),
+          results[0].geometry.location.lng(),
+        ]);
+      } else {
+        reject(status);
+      }
+    });
+  });
+
+  const [userAddressLatLong, pinAddressLatLong] =
+      await Promise.all([userAddressQuery, pinAddressQuery]);
+
+  const R = 3958.8;  // Radius of the Earth in miles
+  const rlat1 =
+      userAddressLatLong[0] * (Math.PI / 180);  // Convert degrees to radians
+  const rlat2 =
+      pinAddressLatLong[0] * (Math.PI / 180);  // Convert degrees to radians
+  const difflat = rlat2 - rlat1;               // Radian difference (latitudes)
+  const difflon = (pinAddressLatLong[1] - pinAddressLatLong[1]) *
+      (Math.PI / 180);  // Radian difference (longitudes)
+
+
+  // distance between the two markers in miles
+  const d = 2 * R *
+      Math.asin(Math.sqrt(
+          Math.sin(difflat / 2) * Math.sin(difflat / 2) +
+          Math.cos(rlat1) * Math.cos(rlat2) * Math.sin(difflon / 2) *
+              Math.sin(difflon / 2)));
+  return d;
 }
 
 /* inserts a functioning searchbar into the navigation bar of a page. */
@@ -250,6 +314,7 @@ function allowUserSubmit() {
         }
       });
 }
+
 google.charts.load('current', {'packages': ['corechart']});
 google.charts.setOnLoadCallback(drawStateIncarcerationChart);
 

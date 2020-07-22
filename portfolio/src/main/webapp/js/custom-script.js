@@ -22,20 +22,20 @@
 /* exported allowUserSubmit */
 /* exported statisticsOnLoad */
 /* exported placeProximityPins */
+/* exported loadChartData */
 /* global google */
+/* global Chart*/
 // Neccessary constants or else variables will return as
 // 'undefined' in lint checks
 // Center points to the middle of the United States
 // TODO(kofimeighan/briafassler): Try and figure out how to decrease
 // the scope of these variables. maybe within a new class?
 
-// Center points to the middle of the United Statesd
-// TODO(kofimeighan/briafassler): Try and figure out how to decrease
-// the scope of these variables. maybe within a new class?
 let map;
 let geocoder;
 const MNPLS_LAT = 44.9778;
 const MNPLS_LNG = -93.2650;
+
 
 // TODO(kofimeighan): add an event listener to when the page is loaded and
 // call onLoad();
@@ -74,6 +74,7 @@ function statisticsOnLoad() {
   ];
 
   loadMap();
+  drawTimeSeriesChart();
   insertSearch();
   renderLoginButton();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
@@ -317,32 +318,73 @@ function allowUserSubmit() {
       });
 }
 
-google.charts.load('current', {'packages': ['corechart']});
-google.charts.setOnLoadCallback(drawStateIncarcerationChart);
+/** Adds a line chart to page showing the global avg temp from a csv */
+async function drawTimeSeriesChart() {
+  const tempData = await getTempData();
+  const chart = {
+    type: 'line',
+    data: {
+      labels: tempData.xAxis,
+      datasets: [{
+        label: 'Mean Temp',
+        backgroundColor: 'rgb(255, 0, 0)',
+        fill: false,
+        borderColor: 'rgb(255, 0, 0)',
+        data: tempData.yAxis,
+      }],
+    },
 
-/** Creates chart and adds it to the page. */
-function drawStateIncarcerationChart() {
-  loadChartData;
-
-  const stateData = new google.visualization.DataTable();
-  stateData.addColumn('string', 'Race');
-  stateData.addColumn('number', 'Count');
-  stateData.addRows([
-    ['Whites', 201],
-    ['Blacks', 1767],
-    ['Hispanics', 385],
-  ]);
-
-  const stateChartDimensions = {
-    'title': 'Incarceration Rates (per 100,000) by Race in California',
-    'width': 500,
-    'height': 400,
+    options: {
+      reponsive: true,
+      title: {
+        display: true,
+        text: 'Zonal Annual Temperature Mean',
+      },
+      scales: {
+        xAxes: [{
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Year',
+          },
+        }],
+        yAxes: [{
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Temperature Mean',
+          },
+        }],
+      },
+    },
   };
 
-  const chart = new google.visualization.PieChart(
-      document.getElementById('chart-container'));
-  chart.draw(stateData, stateChartDimensions);
+
+  const timeSeries = document.getElementById('timeseries').getContext('2d');
+  new Chart(timeSeries, chart);
+
+  async function getTempData() {
+    // Source of Data: https://data.giss.nasa.gov/gistemp/
+    const xAxis = [];
+    const yAxis = [];
+
+    // TODO(briafassler): move globaltemp.csv into csv folder and change file
+    // path
+    const response = await fetch('globaltemp.csv');
+    const zonalTempData = await response.text();
+
+    const table = zonalTempData.split('\n').slice(1);
+    table.forEach((row) => {
+      const columns = row.split(',');
+      const year = columns[0];
+      xAxis.push(year);
+      const temp = columns[1];
+      yAxis.push(parseFloat(temp) + 14);
+    });
+    return {xAxis, yAxis};
+  }
 }
+
 
 async function loadChartData() {
   const response = await fetch('/chart-data');

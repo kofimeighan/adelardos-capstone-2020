@@ -21,7 +21,6 @@
 /* exported insertSearch */
 /* exported allowUserSubmit */
 /* exported statisticsOnLoad */
-/* exported chartsOnLoad */
 /* global google */
 /* global Chart*/
 // Neccessary constants or else variables will return as
@@ -45,10 +44,6 @@ const MNPLS_LNG = -93.2650;
 function onLoad() {
   insertSearch();
   renderLoginButton();
-}
-
-function chartsOnLoad() {
-  drawTimeSeriesChart();
 }
 
 function statisticsOnLoad() {
@@ -78,6 +73,7 @@ function statisticsOnLoad() {
   ];
 
   loadMap();
+  drawTimeSeriesChart();
   insertSearch();
   renderLoginButton();
   populateDropdown(martyrData, 'martyr-dropdown-menu');

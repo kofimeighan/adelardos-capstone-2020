@@ -46,6 +46,10 @@ function onLoad() {
   renderLoginButton();
 }
 
+function chartsOnLoad(){
+  drawTimeSeriesChart();
+}
+
 function statisticsOnLoad() {
   const martyrData = [
     ['George Floyd', 'Minneapolis, Minnesota'],
@@ -253,8 +257,6 @@ function allowUserSubmit() {
         }
       });
 }
-
-drawTimeSeriesChart();
 
 /** Adds a line chart to page showing the global avg temp from a csv */
 async function drawTimeSeriesChart() {

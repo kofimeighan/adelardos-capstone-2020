@@ -40,6 +40,8 @@ const MNPLS_LNG = -93.2650;
 // TODO(kofimeighan): add an event listener to when the page is loaded and
 // call onLoad();
 
+// TODO(brifassler/kofimeighan/chidawaya): add docstrings for all functions
+
 function onLoad() {
   insertSearch();
   renderLoginButton();
@@ -123,6 +125,9 @@ function populateDropdown(list, ID) {
   });
 }
 
+/**
+ * Places pins on the map in a given radius set by the user
+ */
 async function placeProximityPins() {
   const state = document.getElementById('state').value;
   const userAddress = document.getElementById('address').value;
@@ -137,7 +142,42 @@ async function placeProximityPins() {
   });
 }
 
+/**
+ * Calculates the distance between two coordinate sets in miles
+ * @param {String} userAddress as the point to calculate the distance from
+ * @param {String} dataPoint as the point to calculate the distance between
+ * @return {number} Distance in miles.
+ */
 async function haversineDistance(userAddress, dataPoint) {
+  const [userAddressLatLong, pinAddressLatLong] =
+      await addressToCoordinates(userAddress, dataPoint);
+
+  const radiusOfEarth = 3958.8;
+  const userAddLatInRadians = userAddressLatLong[0] * (Math.PI / 180);
+  const pinAddLatInRadians = pinAddressLatLong[0] * (Math.PI / 180);
+  const lattitudeDifference = pinAddLatInRadians - userAddLatInRadians;
+  const longitudeDifference =
+      (pinAddressLatLong[1] - pinAddressLatLong[1]) * (Math.PI / 180);
+
+
+  const distanceBetweenPins = 2 * radiusOfEarth *
+      Math.asin(Math.sqrt(
+          Math.sin(lattitudeDifference / 2) *
+              Math.sin(lattitudeDifference / 2) +
+          Math.cos(userAddLatInRadians) * Math.cos(pinAddLatInRadians) *
+              Math.sin(longitudeDifference / 2) *
+              Math.sin(longitudeDifference / 2)));
+  return distanceBetweenPins;
+}
+
+/**
+ * Converts addresses into latitude and longitude coordinate sets
+ * @param {String} userAddress as the point to calculate the distance from
+ * @param {String} dataPoint as the point to calculate the distance between
+ * @return {Array} Array of arrays of size 2 that returns two sets of
+ *     coordinates
+ */
+async function addressToCoordinates(userAddress, dataPoint) {
   const userAddressQuery = new Promise((resolve, reject) => {
     geocoder.geocode({'address': userAddress}, function(results, status) {
       if (status == 'OK') {
@@ -167,28 +207,8 @@ async function haversineDistance(userAddress, dataPoint) {
   const [userAddressLatLong, pinAddressLatLong] =
       await Promise.all([userAddressQuery, pinAddressQuery]);
 
-  const radiusOfEarth = 3958.8;  // Radius of the Earth in miles
-  const userAddLatInRadians =
-      userAddressLatLong[0] * (Math.PI / 180);  // Convert degrees to radians
-  const pinAddLatInRadians =
-      pinAddressLatLong[0] * (Math.PI / 180);  // Convert degrees to radians
-  const lattitudeDifference = pinAddLatInRadians -
-      userAddLatInRadians;  // Radian difference (latitudes)
-  const longitudeDifference = (pinAddressLatLong[1] - pinAddressLatLong[1]) *
-      (Math.PI / 180);  // Radian difference (longitudes)
-
-  // distance between the two markers in miles
-  const distanceBetweenPins = 2 * radiusOfEarth *
-      Math.asin(Math.sqrt(
-          Math.sin(lattitudeDifference / 2) *
-              Math.sin(lattitudeDifference / 2) +
-          Math.cos(userAddLatInRadians) * Math.cos(pinAddLatInRadians) *
-              Math.sin(longitudeDifference / 2) *
-              Math.sin(longitudeDifference / 2)));
-  return distanceBetweenPins;
+  return [userAddressLatLong, pinAddressLatLong];
 }
-
-function addressToCoordinates
 
 /* inserts a functioning searchbar into the navigation bar of a page. */
 function insertSearch() {
@@ -361,7 +381,6 @@ async function drawTimeSeriesChart() {
     },
   };
 
-
   const timeSeries = document.getElementById('timeseries').getContext('2d');
   new Chart(timeSeries, chart);
 
@@ -386,7 +405,6 @@ async function drawTimeSeriesChart() {
     return {xAxis, yAxis};
   }
 }
-
 
 async function loadChartData() {
   const response = await fetch('/chart-data');

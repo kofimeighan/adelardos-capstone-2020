@@ -48,11 +48,10 @@ public class ProximityPinsServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    UserService userService = UserServiceFactory.getUserService();
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     String queryState = request.getParameter(STATE);
     Filter stateFilter = new FilterPredicate(STATE, FilterOperator.EQUAL, queryState);
     Query query = new Query(TABLE_NAME).setFilter(stateFilter);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
     List<ProximityPin> queriedPins = new ArrayList<ProximityPin>();

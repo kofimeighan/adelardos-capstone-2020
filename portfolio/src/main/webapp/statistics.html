@@ -110,7 +110,7 @@
       <div id="login-box">
         <!--Place Pin Form-->
         <form method="post" action="/submitted-locations" id="form">
-          <h6>Leave a marker on the map for protests you will be attending!</h6>
+          <h6>Leave a Marker On The Map For Protests You Will Be Attending!</h6>
           <div class="row align-items-stretch mb-5">
             <div class="col-md-6">
               <div class="form-group">
@@ -121,7 +121,7 @@
                   type="text"
                   placeholder="Name of Protest *"
                   required
-                  data-validation-required-message="Please enter your name."
+                  data-validation-required-message="Please Enter Your Name."
                 />
                 <p class="help-block text-danger"></p>
               </div>
@@ -133,7 +133,7 @@
                   type="text"
                   placeholder="Location of Protest *"
                   required
-                  data-validation-required-message="Please enter a location address."
+                  data-validation-required-message="Please Enter a Location Address."
                 />
                 <p class="help-block text-danger"></p>
               </div>
@@ -146,7 +146,7 @@
                   name="description"
                   placeholder="Description of Protest *"
                   required
-                  data-validation-required-message="Please enter a description."
+                  data-validation-required-message="Please Enter a Description."
                 ></textarea>
                 <p class="help-block text-danger"></p>
               </div>
@@ -167,7 +167,7 @@
           </div>
         </form>
         <hr />
-        <h6>Find cases of police brutality in your area</h6>
+        <h6>Find Cases Of Police Brutality In Your Area</h6>
         <div class="row align-items-stretch mb-5">
           <div class="col-md-auto">
             <input
@@ -177,14 +177,14 @@
               type="text"
               placeholder="Your Address *"
               required
-              data-validation-required-message="Please enter your name."
+              data-validation-required-message="Please Enter Your Address."
             />
           </div>
           <input id="state" type="text" size="5" placeholder="State *" />
           <p class="help-block text-danger"></p>
           <div class="text-center">
             <label for="radius">
-              Select a radius in miles that you would like to see pins within.
+              Select a Radius In Miles That You Would Like To See Pins Within
             </label>
             <select name="radius" id="radius">
               <option value="5">5</option>
@@ -195,22 +195,21 @@
             </select>
             <br />
             <br />
-              <div class="text-center">
-                <div id="allowed-to-see-pins"></div>
-                <div id="place pin success"></div>
-                <button
-                  class="btn btn-primary btn-xl text-uppercase"
-                  id="getProximityPins"
-                  type="submit"
-                  value="See Proximity Pins"
-                  onclick="placeProximityPins();"
-                >
-                  See Places Near You
-                </button>
-              </div>
+            <div class="text-center">
+              <div id="allowed-to-see-pins"></div>
+              <div id="place pin success"></div>
+              <button
+                class="btn btn-primary btn-xl text-uppercase"
+                id="getProximityPins"
+                type="button"
+                value="See Proximity Pins"
+                onclick="placeProximityPins();"
+              >
+                See Places Near You
+              </button>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
     <div id="clear"></div>

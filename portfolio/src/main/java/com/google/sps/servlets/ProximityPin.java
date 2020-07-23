@@ -14,6 +14,8 @@
 
 package com.google.sps.servlets;
 
+import java.util.StringJoiner;
+
 public final class ProximityPin {
   private final String address;
   private final String race;
@@ -22,7 +24,7 @@ public final class ProximityPin {
 
   public ProximityPin(String streetAddress, String city, String state, String zipcode, String race,
       String causeOfDeath, String dateOfDeath) {
-    this.address = streetAddress + " " + city + ", " + state + " " + zipcode;
+    this.address = StringJoiner(" ").add(streetAddress).add(city).add(state).add(zipcode);
     this.race = race;
     this.causeOfDeath = causeOfDeath;
     this.dateOfDeath = dateOfDeath;

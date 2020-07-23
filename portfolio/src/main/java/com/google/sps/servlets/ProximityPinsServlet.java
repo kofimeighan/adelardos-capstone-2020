@@ -54,9 +54,8 @@ public class ProximityPinsServlet extends HttpServlet {
     Filter stateFilter = new FilterPredicate(STATE, FilterOperator.EQUAL, queryState);
     Query query = new Query(TABLE_NAME).setFilter(stateFilter);
     PreparedQuery results = datastore.prepare(query);
-    response.setContentType("application/json");
 
-    List<ProximityPin> quieriedPins = new ArrayList<ProximityPin>();
+    List<ProximityPin> queriedPins = new ArrayList<ProximityPin>();
     for (Entity entity : results.asIterable()) {
       String streetAddress = (String) entity.getProperty(STREET_ADDRESS);
       String city = (String) entity.getProperty(CITY);
@@ -67,9 +66,10 @@ public class ProximityPinsServlet extends HttpServlet {
       String dateOfDeath = (String) entity.getProperty(DATE_OF_DEATH);
       ProximityPin proximityPin =
           new ProximityPin(streetAddress, city, state, zipcode, race, causeOfDeath, dateOfDeath);
-      quieriedPins.add(proximityPin);
+      .add(proximityPin);
     }
 
-    response.getWriter().println(new Gson().toJson(quieriedPins));
+    response.setContentType("application/json");
+    response.getWriter().println(new Gson().toJson());
   }
 }

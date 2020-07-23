@@ -188,6 +188,8 @@ async function haversineDistance(userAddress, dataPoint) {
   return distanceBetweenPins;
 }
 
+function addressToCoordinates
+
 /* inserts a functioning searchbar into the navigation bar of a page. */
 function insertSearch() {
   const searchElement = createSearchElement();

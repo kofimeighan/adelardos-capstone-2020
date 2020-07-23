@@ -65,10 +65,10 @@ public class ProximityPinsServlet extends HttpServlet {
       String dateOfDeath = (String) entity.getProperty(DATE_OF_DEATH);
       ProximityPin proximityPin =
           new ProximityPin(streetAddress, city, state, zipcode, race, causeOfDeath, dateOfDeath);
-      .add(proximityPin);
+      queriedPins.add(proximityPin);
     }
 
     response.setContentType("application/json");
-    response.getWriter().println(new Gson().toJson());
+    response.getWriter().println(new Gson().toJson(queriedPins));
   }
 }

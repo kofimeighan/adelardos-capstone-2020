@@ -18,7 +18,6 @@
 */
 /* exported onLoad */
 /* exported codeAddress */
-/* exported insertSearch */
 /* exported allowUserSubmit */
 /* exported statisticsOnLoad */
 /* exported loadChartData */
@@ -43,7 +42,7 @@ const MNPLS_LNG = -93.2650;
 // call onLoad();
 
 function onLoad() {
-  insertSearch();
+  loadSearch();
   renderLoginButton();
 }
 
@@ -75,9 +74,8 @@ function statisticsOnLoad() {
     ],
   ];
 
-  loadMap();
   drawTimeSeriesChart();
-  insertSearch();
+  loadMap();
   renderLoginButton();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
   populateDropdown(iconicProtestData, 'IP-dropdown-menu');
@@ -125,16 +123,99 @@ function populateDropdown(list, ID) {
   });
 }
 
+async function renderLoginButton() {
+  const response = await fetch('/login');
+  const authenticationURL = await response.text();
+
+  const navBar = document.getElementById('navBar');
+
+  const welcomeElement = document.createElement('li');
+  welcomeElement.className = 'nav-item';
+  welcomeElement.innerHTML = authenticationURL;
+
+  navBar.appendChild(welcomeElement);
+}
+
+async function fetchSubmittedLocations() {
+  const response = await fetch('/submitted-locations');
+  const userComments = await response.json();
+  const commentData = [];
+
+  userComments['userComments'].forEach((comment) => {
+    const tempArray = [comment.name, comment.location];
+    commentData.push(tempArray);
+  });
+
+  return commentData;
+}
+
+function allowUserSubmit() {
+  fetch('/submitted-locations')
+      .then((response) => response.json())
+      .then((payout) => {
+        if (!payout['isUserLoggedIn']) {
+          alert('Please login to place a pin!');
+        }
+      });
+}
+
+let aboutResponse;
+let statsResponse;
+
+async function loadSearch() {
+  await Promise.all([getHTML('/about.html', setDoc), 
+    getHTML('/statistics.html', insertSearch)]).
+      then((values) => {
+        console.log(values);
+      });
+  console.log('done');
+}
+
+function setDoc() {  
+  console.log("here");
+}
+
+/**
+ * Get HTML asynchronously
+ * @param  {String}   url      The URL to get HTML from
+ * @param  {Function} callback A callback funtion. Pass in "response" variable to use returned HTML.
+ */
+async function getHTML(url, callback) {
+
+	// Feature detection
+	if ( !window.XMLHttpRequest ) return;
+
+	// Create new request
+	var xhr = new XMLHttpRequest();
+
+	// Setup callback
+	xhr.onload = await function() {
+		if (callback && typeof(callback) === 'function') {
+			return this.responseXML;
+      callback();
+		}
+	}
+
+	// Get the HTML
+	xhr.open( 'GET', url );
+	xhr.responseType = 'document';
+	xhr.send();
+};
+
 /* inserts a functioning searchbar into the navigation bar of a page. */
 function insertSearch() {
   const searchElement = createSearchElement();
   const docElements = Array.from(document.body.childNodes);
+  console.log("Break");
+  console.log(aboutResponse);
+
   searchElement.onkeyup = function() {
     const wantedWords =
         document.getElementById('searchQuery').value.toLowerCase();
     const resultElements = searchPages(docElements, wantedWords);
     showResults(resultElements, wantedWords);
   };
+
   document.getElementById('mainNav').appendChild(searchElement);
 }
 
@@ -164,32 +245,6 @@ function createSearchElement() {
   searchBar.append(searchResults);
 
   return searchBar;
-}
-
-async function renderLoginButton() {
-  const response = await fetch('/login');
-  const authenticationURL = await response.text();
-
-  const navBar = document.getElementById('navBar');
-
-  const welcomeElement = document.createElement('li');
-  welcomeElement.className = 'nav-item';
-  welcomeElement.innerHTML = authenticationURL;
-
-  navBar.appendChild(welcomeElement);
-}
-
-async function fetchSubmittedLocations() {
-  const response = await fetch('/submitted-locations');
-  const userComments = await response.json();
-  const commentData = [];
-
-  userComments['userComments'].forEach((comment) => {
-    const tempArray = [comment.name, comment.location];
-    commentData.push(tempArray);
-  });
-
-  return commentData;
 }
 
 /* searches each child Node of the page in the docElements and retains the

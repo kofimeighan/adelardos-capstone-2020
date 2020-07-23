@@ -88,7 +88,7 @@ function loadMap() {
   geocoder = new google.maps.Geocoder();
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: MNPLS_LAT, lng: MNPLS_LNG},
-    zoom: 18,
+    zoom: 14,
     mapTypeId: 'satellite',
   });
 }

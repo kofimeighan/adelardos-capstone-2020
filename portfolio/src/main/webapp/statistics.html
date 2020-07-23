@@ -179,9 +179,24 @@
           <h3 class="section-subheading text-muted">Learn about how African Americans are racially profiled.</h3>
           <canvas id="timeseries"></canvas>
           <br />
+          <h4>How Do You Feel When in an Encounter With the Police?</h4>
+          <p>Vote Here</p>
+          <form action="/interactive-chart" method="post">
+            <select name="emotion" id="emotion">
+              <option value="Scared">Scared</option>
+              <option value="Calm">Calm</option>
+              <option value="Nervous/Anxious">Nervous/Anxious</option>
+              <option value="Neutral/No Feeling">Neutral/No Feeling</option>
+            </select>
+            <br />
+            <br />
+            <button type="submit">Submit</button>
+          </form>
           <br />
         </div>
       </div>
+      <div id="chart-container"></div>
+      <br />
     </section>
     <!-- Sources-->
     <section class="page-section" id="sources">

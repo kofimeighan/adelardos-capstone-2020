@@ -30,7 +30,7 @@ public class InteractiveChartServlet extends HttpServlet {
     int currentVotes = emotionVotes.containsKey(emotion) ? emotionVotes.get(emotion) : 0;
     emotionVotes.put(emotion, currentVotes + 1);
 
-    //TODO(briafassler): Find a way to prevent redirecting when submitting votes
+    // TODO(briafassler): Find a way to prevent redirecting when submitting votes
     response.sendRedirect("/statistics.html");
   }
 }

@@ -149,8 +149,8 @@ async function placeProximityPins() {
  * @return {number} Distance in miles.
  */
 async function haversineDistance(userAddress, dataPoint) {
-  const [userAddressLatLong, pinAddressLatLong] =
-      await addressToCoordinates(userAddress, dataPoint);
+  const userAddressLatLong = await addressToCoordinates(userAddress);
+  const pinAddressLatLong = await addressToCoordinates(dataPoint);
 
   const radiusOfEarth = 3958.8;
   const userAddLatInRadians = userAddressLatLong[0] * (Math.PI / 180);
@@ -171,15 +171,14 @@ async function haversineDistance(userAddress, dataPoint) {
 }
 
 /**
- * Converts addresses into latitude and longitude coordinate sets
- * @param {String} userAddress as the point to calculate the distance from
- * @param {String} dataPoint as the point to calculate the distance between
- * @return {Array} Array of arrays of size 2 that returns two sets of
- *     coordinates
+ * Converts an address into latitude and longitude coordinate sets
+ * @param {String} address original delivery address to calculate the
+ *     coordinates of
+ * @return {Array} Array of size 2 that contains the address' coordinates
  */
-async function addressToCoordinates(userAddress, dataPoint) {
-  const userAddressQuery = new Promise((resolve, reject) => {
-    geocoder.geocode({'address': userAddress}, function(results, status) {
+async function addressToCoordinates(address) {
+  const addressQuery = new Promise((resolve, reject) => {
+    geocoder.geocode({'address': address}, function(results, status) {
       if (status == 'OK') {
         resolve([
           results[0].geometry.location.lat(),
@@ -191,23 +190,7 @@ async function addressToCoordinates(userAddress, dataPoint) {
     });
   });
 
-  const pinAddressQuery = new Promise((resolve, reject) => {
-    geocoder.geocode({'address': dataPoint}, function(results, status) {
-      if (status == 'OK') {
-        resolve([
-          results[0].geometry.location.lat(),
-          results[0].geometry.location.lng(),
-        ]);
-      } else {
-        reject(status);
-      }
-    });
-  });
-
-  const [userAddressLatLong, pinAddressLatLong] =
-      await Promise.all([userAddressQuery, pinAddressQuery]);
-
-  return [userAddressLatLong, pinAddressLatLong];
+  return addressQuery;
 }
 
 /* inserts a functioning searchbar into the navigation bar of a page. */

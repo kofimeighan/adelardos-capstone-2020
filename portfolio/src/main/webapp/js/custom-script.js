@@ -326,3 +326,31 @@ async function loadChartData() {
 
   return chartData;
 }
+
+google.charts.load('current', {'packages': ['corechart']});
+google.charts.setOnLoadCallback(drawInteractiveChart);
+
+/** Draws user inputted pie chart and adds to page. */
+function drawInteractiveChart() {
+  fetch('/interactive-chart')
+      .then((response) => response.json())
+      .then((emotionVotes) => {
+        const emotionData = new google.visualization.DataTable();
+        emotionData.addColumn('string', 'Emotion');
+        emotionData.addColumn('number', 'Votes');
+        Object.keys(emotionVotes).forEach((emotion) => {
+          emotionData.addRow([emotion, emotionVotes[emotion]]);
+        });
+
+        const options = {
+          'width': 650,
+          'height': 500,
+          'is3D': true,
+          'backgroundColor': '#f8f9fa',
+        };
+
+        const interactiveChart = new google.visualization.PieChart(
+            document.getElementById('chart-container'));
+        interactiveChart.draw(emotionData, options);
+      });
+}

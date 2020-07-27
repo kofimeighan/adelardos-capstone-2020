@@ -116,8 +116,7 @@ function placeMarker(nameAndLocation) {
           '<div id="siteNotice">' +
           '</div>' +
           '<div id="bodyContent">' +
-          '<b>' + nameAndLocation[0] + '</b><br>' +
-          nameAndLocation[1] +
+          '<b>' + nameAndLocation[0] + '</b><br>' + nameAndLocation[1] +
           '</div>' +
           '</div>';
 

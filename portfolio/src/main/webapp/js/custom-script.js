@@ -171,7 +171,7 @@ function insertSearch() {
     const resultElements = searchPages(docElements, wantedWords);
     showResults(resultElements, wantedWords);
   };
-  
+
   document.getElementById('mainNav').appendChild(searchElement);
 }
 
@@ -250,7 +250,6 @@ function showResults(resultElements, wantedWords) {
     searchResults.appendChild(textElement);
   });
 }
-
 /** Adds a line chart to page showing the global avg temp from a csv */
 async function drawTimeSeriesChart() {
   const tempData = await getTempData();

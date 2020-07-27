@@ -17,7 +17,8 @@
    checks
 */
 /* exported onLoad */
-/* exported codeAddress */
+/* exported placeMarker
+ */
 /* exported insertSearch */
 /* exported allowUserSubmit */
 /* exported statisticsOnLoad */
@@ -95,14 +96,77 @@ function loadMap() {
   });
 }
 
-function codeAddress(address) {
+/**
+ * Places a marker on the current loaded map at the given location with an
+ * information window
+ * @param {String} address Postal address of the location you would like to
+ *     place a marker on the map for
+ */
+function placeMarker(address) {
   geocoder.geocode({'address': address}, function(results, status) {
     if (status == 'OK') {
       map.setCenter(results[0].geometry.location);
-      new google.maps.Marker({
+      const marker = new google.maps.Marker({
         map: map,
         position: results[0].geometry.location,
         animation: google.maps.Animation.DROP,
+      });
+
+      const content = '<div id="content">' +
+          '<div id="siteNotice">' +
+          '</div>' +
+          '<div id="bodyContent">' +
+          '<b>' + address + '</b>' +
+          '</div>' +
+          '</div>';
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: content,
+      });
+
+      marker.addListener('click', function() {
+        infoWindow.open(map, marker);
+      });
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+}
+
+/**
+ * Places marker on the loaded map with the person's race, cause of death, date
+ * of death, and distance from the incident to the user
+ * @param {JSON} pin json object of pins from the database
+ * @param {Number} distance distance between the user's location and
+ */
+function addPinAndInfoWindow(pin, distance) {
+  geocoder.geocode({'address': pin.address}, function(results, status) {
+    if (status == 'OK') {
+      map.setCenter(results[0].geometry.location);
+      const marker = new google.maps.Marker({
+        map: map,
+        position: results[0].geometry.location,
+        animation: google.maps.Animation.DROP,
+      });
+
+      const content = '<div id="content">' +
+          '<div id="siteNotice">' +
+          '</div>' +
+          '<div id="bodyContent">' +
+          '<p>Race: <b>' + pin.race + '</b><br>' +
+          'Cause Of Death: <b>' + pin.causeOfDeath + '</b><br>' +
+          'Date of Death: <b>' + pin.dateOfDeath + '</b><br>' +
+          'This incident occured <b><i>' + Math.floor(distance) +
+          ' miles </i></b> away from you.' +
+          '</div>' +
+          '</div>';
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: content,
+      });
+
+      marker.addListener('click', function() {
+        infoWindow.open(map, marker);
       });
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
@@ -118,7 +182,7 @@ function populateDropdown(list, ID) {
     titleElement.innerText = nameAndLocation[0];
 
     titleElement.addEventListener('click', () => {
-      codeAddress(nameAndLocation[1]);
+      placeMarker(nameAndLocation[1]);
     });
 
     dropDownMenu.appendChild(titleElement);
@@ -135,9 +199,15 @@ async function placeProximityPins() {
   const pins = await response.json();
   const radius = Number(document.getElementById('radius').value);
 
-  pins.forEach(async (pin) => {
+  pins.forEach(async (pin, index, array) => {
     if (await haversineDistance(userAddress, pin.address) < radius) {
-      codeAddress(pin.address);
+      const distance = await haversineDistance(userAddress, pin.address);
+      if (index == array.length - 1) {
+        addPinAndInfoWindow(pin, distance);
+        map.setCenter(addressToCoordinates(pin.address)[2]);
+      } else {
+        addPinAndInfoWindow(pin, distance);
+      }
     }
   });
 }
@@ -183,6 +253,7 @@ async function addressToCoordinates(address) {
         resolve([
           results[0].geometry.location.lat(),
           results[0].geometry.location.lng(),
+          results[0].geometry.location,
         ]);
       } else {
         reject(status);

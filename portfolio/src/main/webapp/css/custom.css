@@ -401,16 +401,15 @@ body {
   text-shadow: none;
 }
 
-<<<<<<< HEAD
 .mb-5,
 .my-5 {
   margin-bottom: 0.5rem;
-=======
+}
+
 #chart-container {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
   text-align: center;
->>>>>>> origin
 }

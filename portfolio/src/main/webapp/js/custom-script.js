@@ -351,6 +351,8 @@ function drawInteractiveChart() {
           'height': 500,
           'is3D': true,
           'backgroundColor': '#f8f9fa',
+          'animation': {'startup': true},
+          'colors': ['#900c3f', '#c70039', '#ff5733', 'ffc300'],
         };
 
         const interactiveChart = new google.visualization.PieChart(

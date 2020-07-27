@@ -255,6 +255,7 @@ async function addressToCoordinates(address) {
           results[0].geometry.location.lat(),
           results[0].geometry.location.lng(),
           results[0].geometry.location,
+
         ]);
       } else {
         reject(status);

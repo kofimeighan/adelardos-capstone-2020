@@ -139,7 +139,7 @@ function placeMarker(address) {
  * @param {JSON} pin json object of pins from the database
  * @param {Number} distance distance between the user's location and
  */
-function addPinAndInfoWindow(pin, distance) {
+function addProximityPinAndWindow(pin, distance) {
   geocoder.geocode({'address': pin.address}, function(results, status) {
     if (status == 'OK') {
       map.setCenter(results[0].geometry.location);
@@ -203,10 +203,10 @@ async function placeProximityPins() {
     if (await haversineDistance(userAddress, pin.address) < radius) {
       const distance = await haversineDistance(userAddress, pin.address);
       if (index == array.length - 1) {
-        addPinAndInfoWindow(pin, distance);
+        addProximityPinAndWindow(pin, distance);
         map.setCenter(addressToCoordinates(pin.address)[2]);
       } else {
-        addPinAndInfoWindow(pin, distance);
+        addProximityPinAndWindow(pin, distance);
       }
     }
   });

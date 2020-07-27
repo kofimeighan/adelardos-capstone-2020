@@ -102,8 +102,8 @@ function loadMap() {
  * @param {String} address Postal address of the location you would like to
  *     place a marker on the map for
  */
-function placeMarker(address) {
-  geocoder.geocode({'address': address}, function(results, status) {
+function placeMarker(nameAndLocation) {
+  geocoder.geocode({'address': nameAndLocation[1]}, function(results, status) {
     if (status == 'OK') {
       map.setCenter(results[0].geometry.location);
       const marker = new google.maps.Marker({
@@ -116,7 +116,8 @@ function placeMarker(address) {
           '<div id="siteNotice">' +
           '</div>' +
           '<div id="bodyContent">' +
-          '<b>' + address + '</b>' +
+          '<b>' + nameAndLocation[0] + '</b><br>' +
+          nameAndLocation[1] +
           '</div>' +
           '</div>';
 
@@ -182,7 +183,7 @@ function populateDropdown(list, ID) {
     titleElement.innerText = nameAndLocation[0];
 
     titleElement.addEventListener('click', () => {
-      placeMarker(nameAndLocation[1]);
+      placeMarker(nameAndLocation);
     });
 
     dropDownMenu.appendChild(titleElement);

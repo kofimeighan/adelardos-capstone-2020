@@ -149,11 +149,14 @@ function addProximityPinAndWindow(pin, distance) {
         animation: google.maps.Animation.DROP,
       });
 
-      const content = '<div id="content">' +
+      const formattedRace =
+          pin.race.charAt(0).toUpperCase() + pin.race.slice(1);
+
+      const windowContent = '<div id="content">' +
           '<div id="siteNotice">' +
           '</div>' +
           '<div id="bodyContent">' +
-          '<p>Race: <b>' + pin.race + '</b><br>' +
+          '<p>Race: <b>' + formattedRace + '</b><br>' +
           'Cause Of Death: <b>' + pin.causeOfDeath + '</b><br>' +
           'Date of Death: <b>' + pin.dateOfDeath + '</b><br>' +
           'This incident occured <b><i>' + Math.floor(distance) +
@@ -162,7 +165,7 @@ function addProximityPinAndWindow(pin, distance) {
           '</div>';
 
       const infoWindow = new google.maps.InfoWindow({
-        content: content,
+        content: windowContent,
       });
 
       marker.addListener('click', function() {

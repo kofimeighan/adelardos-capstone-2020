@@ -169,46 +169,52 @@
         <hr />
         <h6>Find Cases Of Police Brutality In Your Area</h6>
         <div class="row align-items-stretch mb-5">
-          <div class="col-md-auto">
-            <input
-              class="form-control"
-              id="address"
-              name="address"
-              type="text"
-              placeholder="Your Address *"
-              required
-              data-validation-required-message="Please Enter Your Address."
-            />
-          </div>
-          <input id="state" type="text" size="5" placeholder="State *" />
-          <p class="help-block text-danger"></p>
-          <div class="text-center">
-            <label for="radius">
-              Select a Radius:
-            </label>
-            <select name="radius" id="radius">
-              <option value="5">5 Miles</option>
-              <option value="10">10 Miles</option>
-              <option value="15">15 Miles</option>
-              <option value="50">50 Miles</option>
-              <option value="100">100 Miles</option>
-            </select>
-            <br />
-            <br />
-            <div class="text-center">
-              <div id="allowed-to-see-pins"></div>
-              <div id="place pin success"></div>
-              <button
-                class="btn btn-primary btn-xl text-uppercase"
-                id="getProximityPins"
-                type="button"
-                value="See Proximity Pins"
-                onclick="placeProximityPins();"
-              >
-                See Places Near You
-              </button>
+          <div class="col-md-6">
+            <div class="form-group">
+              <input
+                class="form-control"
+                id="address"
+                name="address"
+                type="text"
+                placeholder="Your Address *"
+                required
+                data-validation-required-message="Please Enter Your Address."
+              />
             </div>
           </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <div class="text-center">
+                <input id="state" type="text" size="5" placeholder="State *" />
+              </div>
+            </div>
+          </div>
+          <p class="help-block text-danger"></p>
+        </div>
+        <div class="text-center">
+          <label for="radius">
+            Select a Radius:
+          </label>
+          <select name="radius" id="radius">
+            <option value="5">5 Miles</option>
+            <option value="10">10 Miles</option>
+            <option value="15">15 Miles</option>
+            <option value="50">50 Miles</option>
+            <option value="100">100 Miles</option>
+          </select>
+        </div>
+        <div class="text-center">
+          <div id="allowed-to-see-pins"></div>
+          <div id="place pin success"></div>
+          <button
+            class="btn btn-primary btn-xl text-uppercase"
+            id="getProximityPins"
+            type="button"
+            value="See Proximity Pins"
+            onclick="placeProximityPins();"
+          >
+            See Places Near You
+          </button>
         </div>
       </div>
     </div>

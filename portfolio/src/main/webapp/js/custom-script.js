@@ -227,61 +227,64 @@ function allowUserSubmit() {
       });
 }
 
-let aboutResponse;
-let statsResponse;
-
+/**
+ * Gets the other html pages as documents  
+ */
 async function loadSearch() {
-  await Promise.all([getHTML('/about.html', setDoc), 
-    getHTML('/statistics.html', insertSearch)]).
-      then((values) => {
-        console.log(values);
-      });
-  console.log('done');
-}
-
-function setDoc() {  
-  console.log("here");
+  var [index, about, stats] = await Promise.all([getHTML('/index.html'),
+    getHTML('/about.html'), getHTML('/statistics.html')]);
+  if(document == index){
+    console.log('hey')
+  }
+  if(document == about) {
+    console.log('eish')
+  }
+  // const otherDocs = [...Array.from(about.body.childNodes), 
+  //   ...Array.from(stats.body.childNodes)];
+  // insertSearch(otherDocs);
 }
 
 /**
  * Get HTML asynchronously
  * @param  {String}   url      The URL to get HTML from
- * @param  {Function} callback A callback funtion. Pass in "response" variable to use returned HTML.
  */
-async function getHTML(url, callback) {
+async function getHTML(url) {
+  return new Promise((resolve, reject) => {
 
-	// Feature detection
-	if ( !window.XMLHttpRequest ) return;
+    // Feature detection
+    if (!window.XMLHttpRequest) return;
 
-	// Create new request
-	var xhr = new XMLHttpRequest();
+    // Create new request
+    var xhr = new XMLHttpRequest();
 
-	// Setup callback
-	xhr.onload = await function() {
-		if (callback && typeof(callback) === 'function') {
-			return this.responseXML;
-      callback();
-		}
-	}
+    // Setup callback
+    xhr.onload = () => {
+      if(xhr.status === 200){
+        resolve(xhr.responseXML);
+      } else {
+        reject(xhr.statusText);
+      }
+    };
 
-	// Get the HTML
-	xhr.open( 'GET', url );
-	xhr.responseType = 'document';
-	xhr.send();
-};
+    // Get the HTML
+    xhr.open( 'GET', url );
+    xhr.responseType = 'document';
+    xhr.send();
+  });
+}
 
 /* inserts a functioning searchbar into the navigation bar of a page. */
-function insertSearch() {
+function insertSearch(otherDocs) {
   const searchElement = createSearchElement();
   const docElements = Array.from(document.body.childNodes);
-  console.log("Break");
-  console.log(aboutResponse);
 
   searchElement.onkeyup = function() {
     const wantedWords =
         document.getElementById('searchQuery').value.toLowerCase();
-    const resultElements = searchPages(docElements, wantedWords);
+    const resultElements = searchElements(docElements, wantedWords);
+    const otherResultElements = searchElements(otherDocs, wantedWords);
     showResults(resultElements, wantedWords);
+    showOtherResults(otherResultElements, wantedWords);
   };
 
   document.getElementById('mainNav').appendChild(searchElement);
@@ -312,7 +315,7 @@ function createSearchElement() {
 
 /* searches each child Node of the page in the docElements and retains the
    elements that contain the wanted word. */
-function searchPages(docElements, wantedWords) {
+function searchElements(docElements, wantedWords) {
   const resultElements = [];
 
   if (wantedWords.length <= 0) {
@@ -362,6 +365,32 @@ function showResults(resultElements, wantedWords) {
     searchResults.appendChild(textElement);
   });
 }
+
+function showOtherResults(otherResultElements, wantedWords) {
+  otherResultElements.forEach((result) => {
+    if (result.getAttribute('aria-hidden') == 'true' ||
+        result.id == 'mainNav') {
+      return;
+    }
+
+    const textElement = document.createElement('li');
+    let resultText = result.innerText.replace(/\s\s+/g, ' ').trim();
+    resultText = resultText.replace(/[\n\r]/g, ' ');
+    const searchPos = resultText.toLowerCase().indexOf(wantedWords);
+    textElement.innerText = '...' +
+        resultText.substring(searchPos - 10, searchPos).replace(/^\s+/g, '') +
+        resultText.substring(searchPos, searchPos + 20).trim() + '...';
+    
+    const docUrl = result.ownerDocument.url;
+
+    textElement.onclick = function() {
+      console.log(docUrl);
+    };
+
+    document.getElementById('searchResults').append(textElement);
+  });
+}
+
 /** Adds a line chart to page showing the global avg temp from a csv */
 async function drawTimeSeriesChart() {
   const tempData = await getTempData();

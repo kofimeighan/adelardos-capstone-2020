@@ -14,7 +14,8 @@
 
 /**
  * Neccessary constants or else variables will return as 'undefined' in lint
-   checks */
+   checks
+ */
 /* exported onLoad */
 /* exported placeMarker */
 /* exported insertSearch */

@@ -14,11 +14,9 @@
 
 /**
  * Neccessary constants or else variables will return as 'undefined' in lint
-   checks
-*/
+   checks */
 /* exported onLoad */
-/* exported placeMarker
- */
+/* exported placeMarker */
 /* exported insertSearch */
 /* exported allowUserSubmit */
 /* exported statisticsOnLoad */
@@ -36,7 +34,6 @@ let map;
 let geocoder;
 const MNPLS_LAT = 44.9778;
 const MNPLS_LNG = -93.2650;
-
 
 // TODO(kofimeighan): add an event listener to when the page is loaded and
 // call onLoad();
@@ -393,6 +390,7 @@ function showResults(resultElements, wantedWords) {
     searchResults.appendChild(textElement);
   });
 }
+
 /** Adds a line chart to page showing the global avg temp from a csv */
 async function drawTimeSeriesChart() {
   const tempData = await getTempData();

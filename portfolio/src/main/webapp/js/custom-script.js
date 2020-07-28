@@ -193,47 +193,6 @@ async function addressToCoordinates(address) {
   return addressQuery;
 }
 
-/* inserts a functioning searchbar into the navigation bar of a page. */
-function insertSearch() {
-  const searchElement = createSearchElement();
-  const docElements = Array.from(document.body.childNodes);
-  searchElement.onkeyup = function() {
-    const wantedWords =
-        document.getElementById('searchQuery').value.toLowerCase();
-    const resultElements = searchPages(docElements, wantedWords);
-    showResults(resultElements, wantedWords);
-  };
-  document.getElementById('mainNav').appendChild(searchElement);
-}
-
-/* creates the html search skeleton that the user interacts with */
-function createSearchElement() {
-  const searchBar = document.createElement('form');
-  searchBar.className = 'form-inline mr-auto';
-
-  const searchDiv = document.createElement('div');
-  searchDiv.className = 'md-form my-0';
-
-  const searchInput = document.createElement('input');
-  searchInput.className = 'form-control form-inline';
-  searchInput.id = 'searchQuery';
-  searchInput.type = 'text';
-  searchInput.placeholder = 'Search';
-
-  const searchI = document.createElement('i');
-  searchI.className = 'fas fa-search text-white ml-3 mr-auto';
-
-  const searchResults = document.createElement('ul');
-  searchResults.id = 'searchResults';
-
-  searchDiv.appendChild(searchInput);
-  searchDiv.appendChild(searchI);
-  searchBar.appendChild(searchDiv);
-  searchBar.append(searchResults);
-
-  return searchBar;
-}
-
 async function renderLoginButton() {
   const response = await fetch('/login');
   const authenticationURL = await response.text();
@@ -258,6 +217,53 @@ async function fetchSubmittedLocations() {
   });
 
   return commentData;
+}
+
+function allowUserSubmit() {
+  fetch('/submitted-locations')
+      .then((response) => response.json())
+      .then((payout) => {
+        if (!payout['isUserLoggedIn']) {
+          alert('Please login to place a pin!');
+        }
+      });
+}
+
+/* inserts a functioning searchbar into the navigation bar of a page. */
+function insertSearch() {
+  const searchElement = createSearchElement();
+  const docElements = Array.from(document.body.childNodes);
+  searchElement.onkeyup = function() {
+    const wantedWords =
+        document.getElementById('searchQuery').value.toLowerCase();
+    const resultElements = searchPages(docElements, wantedWords);
+    showResults(resultElements, wantedWords);
+  };
+
+  document.getElementById('mainNav').appendChild(searchElement);
+}
+
+/* creates the html search skeleton that the user interacts with */
+function createSearchElement() {
+  const searchBar = document.createElement('form');
+  searchBar.className = 'form-inline';
+
+  const searchDiv = document.createElement('div');
+  searchDiv.className = 'md-form my-0';
+
+  const searchInput = document.createElement('input');
+  searchInput.className = 'form-control form-inline';
+  searchInput.id = 'searchQuery';
+  searchInput.type = 'text';
+  searchInput.placeholder = 'Search';
+
+  const searchResults = document.createElement('ul');
+  searchResults.id = 'searchResults';
+
+  searchDiv.appendChild(searchInput);
+  searchDiv.appendChild(searchResults);
+
+  return searchDiv;
 }
 
 /* searches each child Node of the page in the docElements and retains the
@@ -309,20 +315,9 @@ function showResults(resultElements, wantedWords) {
       result.scrollIntoView();
     };
 
-    searchResults.append(textElement);
+    searchResults.appendChild(textElement);
   });
 }
-
-function allowUserSubmit() {
-  fetch('/submitted-locations')
-      .then((response) => response.json())
-      .then((payout) => {
-        if (!payout['isUserLoggedIn']) {
-          alert('Please login to place a pin!');
-        }
-      });
-}
-
 /** Adds a line chart to page showing the global avg temp from a csv */
 async function drawTimeSeriesChart() {
   const tempData = await getTempData();

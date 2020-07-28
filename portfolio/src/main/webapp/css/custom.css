@@ -421,6 +421,11 @@ body {
   text-shadow: none;
 }
 
+.mb-5,
+.my-5 {
+  margin-bottom: 0.5rem;
+}
+
 #chart-container {
   display: flex;
   flex-flow: row wrap;

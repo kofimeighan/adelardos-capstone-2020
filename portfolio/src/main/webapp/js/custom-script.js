@@ -20,6 +20,7 @@
 /* exported codeAddress */
 /* exported allowUserSubmit */
 /* exported statisticsOnLoad */
+/* exported placeProximityPins */
 /* exported loadChartData */
 /* global google */
 /* global Chart*/
@@ -29,9 +30,6 @@
 // TODO(kofimeighan/briafassler): Try and figure out how to decrease
 // the scope of these variables. maybe within a new class?
 
-// Center points to the middle of the United Statesd
-// TODO(kofimeighan/briafassler): Try and figure out how to decrease
-// the scope of these variables. maybe within a new class?
 let map;
 let geocoder;
 const MNPLS_LAT = 44.9778;
@@ -40,6 +38,8 @@ const MNPLS_LNG = -93.2650;
 
 // TODO(kofimeighan): add an event listener to when the page is loaded and
 // call onLoad();
+
+// TODO(brifassler/kofimeighan/chidawaya): add docstrings for all functions
 
 function onLoad() {
   loadSearch();
@@ -88,7 +88,7 @@ function loadMap() {
   geocoder = new google.maps.Geocoder();
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: MNPLS_LAT, lng: MNPLS_LNG},
-    zoom: 18,
+    zoom: 14,
     mapTypeId: 'satellite',
   });
 }
@@ -121,6 +121,74 @@ function populateDropdown(list, ID) {
 
     dropDownMenu.appendChild(titleElement);
   });
+}
+
+/**
+ * Places pins on the map in a given radius set by the user
+ */
+async function placeProximityPins() {
+  const state = document.getElementById('state').value;
+  const userAddress = document.getElementById('address').value;
+  const response = await fetch('/proximity-pins?state=' + state);
+  const pins = await response.json();
+  const radius = Number(document.getElementById('radius').value);
+
+  pins.forEach(async (pin) => {
+    if (await haversineDistance(userAddress, pin.address) < radius) {
+      codeAddress(pin.address);
+    }
+  });
+}
+
+/**
+ * Calculates the distance between two coordinate sets in miles
+ * @param {String} userAddress as the point to calculate the distance from
+ * @param {String} dataPoint as the point to calculate the distance between
+ * @return {number} Distance in miles.
+ */
+async function haversineDistance(userAddress, dataPoint) {
+  const userAddressLatLong = await addressToCoordinates(userAddress);
+  const pinAddressLatLong = await addressToCoordinates(dataPoint);
+
+  const radiusOfEarth = 3958.8;
+  const userAddLatInRadians = userAddressLatLong[0] * (Math.PI / 180);
+  const pinAddLatInRadians = pinAddressLatLong[0] * (Math.PI / 180);
+  const lattitudeDifference = pinAddLatInRadians - userAddLatInRadians;
+  const longitudeDifference =
+      (pinAddressLatLong[1] - pinAddressLatLong[1]) * (Math.PI / 180);
+
+
+  const distanceBetweenPins = 2 * radiusOfEarth *
+      Math.asin(Math.sqrt(
+          Math.sin(lattitudeDifference / 2) *
+              Math.sin(lattitudeDifference / 2) +
+          Math.cos(userAddLatInRadians) * Math.cos(pinAddLatInRadians) *
+              Math.sin(longitudeDifference / 2) *
+              Math.sin(longitudeDifference / 2)));
+  return distanceBetweenPins;
+}
+
+/**
+ * Converts an address into latitude and longitude coordinate sets
+ * @param {String} address original delivery address to calculate the
+ *     coordinates of
+ * @return {Array} Array of size 2 that contains the address' coordinates
+ */
+async function addressToCoordinates(address) {
+  const addressQuery = new Promise((resolve, reject) => {
+    geocoder.geocode({'address': address}, function(results, status) {
+      if (status == 'OK') {
+        resolve([
+          results[0].geometry.location.lat(),
+          results[0].geometry.location.lng(),
+        ]);
+      } else {
+        reject(status);
+      }
+    });
+  });
+
+  return addressQuery;
 }
 
 async function renderLoginButton() {
@@ -222,7 +290,7 @@ function insertSearch() {
 /* creates the html search skeleton that the user interacts with */
 function createSearchElement() {
   const searchBar = document.createElement('form');
-  searchBar.className = 'form-inline mr-auto';
+  searchBar.className = 'form-inline';
 
   const searchDiv = document.createElement('div');
   searchDiv.className = 'md-form my-0';
@@ -233,18 +301,13 @@ function createSearchElement() {
   searchInput.type = 'text';
   searchInput.placeholder = 'Search';
 
-  const searchI = document.createElement('i');
-  searchI.className = 'fas fa-search text-white ml-3 mr-auto';
-
   const searchResults = document.createElement('ul');
   searchResults.id = 'searchResults';
 
   searchDiv.appendChild(searchInput);
-  searchDiv.appendChild(searchI);
-  searchBar.appendChild(searchDiv);
-  searchBar.append(searchResults);
+  searchDiv.appendChild(searchResults);
 
-  return searchBar;
+  return searchDiv;
 }
 
 /* searches each child Node of the page in the docElements and retains the
@@ -296,20 +359,9 @@ function showResults(resultElements, wantedWords) {
       result.scrollIntoView();
     };
 
-    searchResults.append(textElement);
+    searchResults.appendChild(textElement);
   });
 }
-
-function allowUserSubmit() {
-  fetch('/submitted-locations')
-      .then((response) => response.json())
-      .then((payout) => {
-        if (!payout['isUserLoggedIn']) {
-          alert('Please login to place a pin!');
-        }
-      });
-}
-
 /** Adds a line chart to page showing the global avg temp from a csv */
 async function drawTimeSeriesChart() {
   const tempData = await getTempData();
@@ -359,6 +411,8 @@ async function drawTimeSeriesChart() {
     const xAxis = [];
     const yAxis = [];
 
+    // TODO(briafassler): move globaltemp.csv into csv folder and change file
+    // path
     const response = await fetch('globaltemp.csv');
     const zonalTempData = await response.text();
 

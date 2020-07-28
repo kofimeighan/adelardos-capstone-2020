@@ -387,8 +387,28 @@ body {
   padding-bottom: 10px;
 }
 
+.md-form {
+  width: 350px;
+  position: relative;
+}
+
 #searchResults {
   color: white;
+  position: absolute;
+  width: 350px;
+  top: 42px;
+  background: black;
+  opacity: 0.9;
+  list-style: none;
+  padding: 0;
+}
+
+#searchResults li {
+  padding: 4px;
+}
+
+#searchResults li:hover {
+  background: grey;
 }
 
 #timeseries {
@@ -399,6 +419,11 @@ body {
 ::selection {
   background: #11110f;
   text-shadow: none;
+}
+
+.mb-5,
+.my-5 {
+  margin-bottom: 0.5rem;
 }
 
 #chart-container {

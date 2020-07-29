@@ -77,6 +77,7 @@ function statisticsOnLoad() {
 
   loadMap();
   drawTimeSeriesChart();
+  drawInteractiveChart();
   insertSearch();
   renderLoginButton();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
@@ -396,8 +397,9 @@ async function loadChartData() {
   return chartData;
 }
 
-google.charts.load('current', {'packages': ['corechart']});
-google.charts.setOnLoadCallback(drawInteractiveChart);
+/** TODO(briafassler): fix the scope of google  */
+// google.charts.load('current', {'packages': ['corechart']});
+// google.charts.setOnLoadCallback(drawInteractiveChart);
 
 /** Draws user inputted pie chart and adds to page. */
 function drawInteractiveChart() {
@@ -423,3 +425,57 @@ function drawInteractiveChart() {
         interactiveChart.draw(emotionData, options);
       });
 }
+
+const typedText = document.querySelector('.typed-text');
+/**
+ * TODO Stretch Feature(briafassler): read names from a database instead of an
+ * array
+ */
+const martyrNames = [
+  'George Floyd',          'Breonna Taylor',  'Ahmaud Arbery',
+  'Rayshard Brooks',       'Robert Fuller',   'James Scurlock',
+  'Elijah McClain',        'Justin Howell',   'Jamel Floyd',
+  'Eric Garner',           'Michael Brown',   'Eric Reason',
+  'Sandra Bland',          'Jamar Clark',     'Tamir Rice',
+  'John Crawford III',     'Phillip White',   'Ezell Ford',
+  'Dante Parker',          'Laquan McDonald', 'Dominique Clayton',
+  'Michelle Cusseaux',     'George Mann',     'Tanisha Anderson',
+  'Akai Gurley',           'Alonzo Smith',    'Stephon Clark',
+  'Philando Castile',      'Janet Wilson',    'Darrius Stewart',
+  'Botham Jean',           'Samuel Dubose',   'Willie Tillman',
+  'Quintonio Legrier',     'Brian Keith Day', 'Christian Taylor',
+  'Junior Prosper',        'Freddie Gray',    'Christopher McCorvey',
+  'Peter Gaines',          'Mya Hall',        'Felix Kumi',
+  'Keith Harrison McLeod', 'Anthony Ashford', 'Salvado Ellswood',
+];
+let marytrNamesIndex = 0;
+let charIndex = 0;
+
+function typeName() {
+  if (charIndex < martyrNames[marytrNamesIndex].length) {
+    typedText.textContent += martyrNames[marytrNamesIndex].charAt(charIndex);
+    charIndex++;
+    setTimeout(typeName, 150);
+  } else {
+    setTimeout(eraseName, 2000);
+  }
+}
+
+function eraseName() {
+  if (charIndex > 0) {
+    typedText.textContent =
+        martyrNames[marytrNamesIndex].substring(0, charIndex - 1);
+    charIndex--;
+    setTimeout(eraseName, 100);
+  } else {
+    marytrNamesIndex++;
+    if (marytrNamesIndex >= martyrNames.length) {
+      marytrNamesIndex = 0;
+    }
+    setTimeout(typeName, 1300);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (martyrNames.length) setTimeout(typeName, 2250);
+});

@@ -433,3 +433,33 @@ body {
   align-items: center;
   text-align: center;
 }
+
+.typed-text {
+  color: white;
+}
+
+.cursor {
+  display: inline-block;
+  width: 3px;
+  background-color: white;
+  margin-left: 0.1rem;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% {
+    background-color: white;
+  }
+  50% {
+    background-color: transparent;
+  }
+  100% {
+    background-color: white;
+  }
+}
+
+#typewriter-formatting {
+  overflow: hidden;
+  padding: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.45);
+}

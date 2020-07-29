@@ -228,37 +228,36 @@ function allowUserSubmit() {
 }
 
 /**
- * Gets the other html pages as documents  
+ * Gets the other html pages as documents and invokes method to insert Search
+ * bar
  */
 async function loadSearch() {
-  const otherDocs = await Promise.all([getHTML('/about.html'), 
-    getHTML('/statistics.html')]);
+  const otherDocs =
+      await Promise.all([getHTML('/about.html'), getHTML('/statistics.html')]);
 
-  var otherElements = [];
+  let otherElements = [];
   otherDocs.forEach((doc) => {
-    otherElements = [...otherElements, 
-      ...Array.from(doc.body.childNodes)];
+    otherElements = [...otherElements, ...Array.from(doc.body.childNodes)];
   });
 
   insertSearch(otherElements);
 }
 
 /**
- * Get HTML asynchronously
- * @param  {String}   url      The URL to get HTML from
+ * Get HTML asynchronously as document
+ * @param {String} url: The URL to get HTML from
  */
 async function getHTML(url) {
   return new Promise((resolve, reject) => {
-
     // Feature detection
     if (!window.XMLHttpRequest) return;
 
     // Create new request
-    var xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
 
     // Setup callback
     xhr.onload = () => {
-      if(xhr.status === 200){
+      if (xhr.status === 200) {
         resolve(xhr.responseXML);
       } else {
         reject(xhr.statusText);
@@ -266,13 +265,16 @@ async function getHTML(url) {
     };
 
     // Get the HTML
-    xhr.open( 'GET', url );
+    xhr.open('GET', url);
     xhr.responseType = 'document';
     xhr.send();
   });
 }
 
-/* inserts a functioning searchbar into the navigation bar of a page. */
+/**
+ * inserts a functioning searchbar into the navigation bar of a page.
+ * @param {array} otherElements: The elements from every other pages
+ */
 function insertSearch(otherElements) {
   const searchElement = createSearchElement();
   const docElements = Array.from(document.body.childNodes);
@@ -312,8 +314,11 @@ function createSearchElement() {
   return searchDiv;
 }
 
-/* searches each child Node of the page in the docElements and retains the
-   elements that contain the wanted word. */
+/**
+ * searches each node in docElements and retains relevant elements
+ * @param {array} docElements: The elements from to search
+ * @param {String} wantedWords: The users entered search query
+ */
 function searchElements(docElements, wantedWords) {
   const resultElements = [];
 
@@ -349,14 +354,7 @@ function showResults(resultElements, wantedWords) {
       return;
     }
 
-    const textElement = document.createElement('li');
-    let resultText = result.innerText.replace(/\s\s+/g, ' ').trim();
-    resultText = resultText.replace(/[\n\r]/g, ' ');
-    const searchPos = resultText.toLowerCase().indexOf(wantedWords);
-    textElement.innerText = '...' +
-        resultText.substring(searchPos - 10, searchPos).replace(/^\s+/g, '') +
-        resultText.substring(searchPos, searchPos + 20).trim() + '...';
-
+    const textElement = createResult(result, wantedWords)[1];
     textElement.onclick = function() {
       result.scrollIntoView();
     };
@@ -372,16 +370,9 @@ function showOtherResults(otherResultElements, wantedWords) {
       return;
     }
 
-    const textElement = document.createElement('li');
-    let resultText = result.innerText.replace(/\s\s+/g, ' ').trim();
-    resultText = resultText.replace(/[\n\r]/g, ' ');
-    const searchPos = resultText.toLowerCase().indexOf(wantedWords);
-    const outputText = resultText.substring(searchPos - 10, searchPos).replace(/^\s+/g, '') 
-      + resultText.substring(searchPos, searchPos + 20).trim();
-    textElement.innerText = '...' + outputText + '...';
-    
+    const [outputText, textElement] = createResult(result, wantedWords);
     const docUrl = result.ownerDocument.URL;
-    var hash = encodeURI('#' + outputText + '#' + wantedWords);
+    const hash = encodeURI('#' + outputText + '#' + wantedWords);
 
     textElement.onclick = function() {
       window.location.href = docUrl + hash;
@@ -389,6 +380,19 @@ function showOtherResults(otherResultElements, wantedWords) {
 
     document.getElementById('searchResults').append(textElement);
   });
+}
+
+function createResult(result, wantedWords) {
+  const textElement = document.createElement('li');
+  let resultText = result.innerText.replace(/\s\s+/g, ' ').trim();
+  resultText = resultText.replace(/[\n\r]/g, ' ');
+  const searchPos = resultText.toLowerCase().indexOf(wantedWords);
+  const outputText =
+      resultText.substring(searchPos - 10, searchPos).replace(/^\s+/g, '') +
+      resultText.substring(searchPos, searchPos + 20).trim();
+  textElement.innerText = '...' + outputText + '...';
+
+  return [outputText, textElement];
 }
 
 /** Adds a line chart to page showing the global avg temp from a csv */

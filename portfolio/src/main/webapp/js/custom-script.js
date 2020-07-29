@@ -231,17 +231,16 @@ function allowUserSubmit() {
  * Gets the other html pages as documents  
  */
 async function loadSearch() {
-  var [index, about, stats] = await Promise.all([getHTML('/index.html'),
-    getHTML('/about.html'), getHTML('/statistics.html')]);
-  if(document == index){
-    console.log('hey')
-  }
-  if(document == about) {
-    console.log('eish')
-  }
-  // const otherDocs = [...Array.from(about.body.childNodes), 
-  //   ...Array.from(stats.body.childNodes)];
-  // insertSearch(otherDocs);
+  const otherDocs = await Promise.all([getHTML('/about.html'), 
+    getHTML('/statistics.html')]);
+
+  var otherElements = [];
+  otherDocs.forEach((doc) => {
+    otherElements = [...otherElements, 
+      ...Array.from(doc.body.childNodes)];
+  });
+
+  insertSearch(otherElements);
 }
 
 /**
@@ -274,7 +273,7 @@ async function getHTML(url) {
 }
 
 /* inserts a functioning searchbar into the navigation bar of a page. */
-function insertSearch(otherDocs) {
+function insertSearch(otherElements) {
   const searchElement = createSearchElement();
   const docElements = Array.from(document.body.childNodes);
 
@@ -282,7 +281,7 @@ function insertSearch(otherDocs) {
     const wantedWords =
         document.getElementById('searchQuery').value.toLowerCase();
     const resultElements = searchElements(docElements, wantedWords);
-    const otherResultElements = searchElements(otherDocs, wantedWords);
+    const otherResultElements = searchElements(otherElements, wantedWords);
     showResults(resultElements, wantedWords);
     showOtherResults(otherResultElements, wantedWords);
   };
@@ -377,14 +376,15 @@ function showOtherResults(otherResultElements, wantedWords) {
     let resultText = result.innerText.replace(/\s\s+/g, ' ').trim();
     resultText = resultText.replace(/[\n\r]/g, ' ');
     const searchPos = resultText.toLowerCase().indexOf(wantedWords);
-    textElement.innerText = '...' +
-        resultText.substring(searchPos - 10, searchPos).replace(/^\s+/g, '') +
-        resultText.substring(searchPos, searchPos + 20).trim() + '...';
+    const outputText = resultText.substring(searchPos - 10, searchPos).replace(/^\s+/g, '') 
+      + resultText.substring(searchPos, searchPos + 20).trim();
+    textElement.innerText = '...' + outputText + '...';
     
-    const docUrl = result.ownerDocument.url;
+    const docUrl = result.ownerDocument.URL;
+    var hash = encodeURI('#' + outputText + '#' + wantedWords);
 
     textElement.onclick = function() {
-      console.log(docUrl);
+      window.location.href = docUrl + hash;
     };
 
     document.getElementById('searchResults').append(textElement);

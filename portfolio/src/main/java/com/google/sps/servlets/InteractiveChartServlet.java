@@ -21,12 +21,12 @@ import javax.servlet.http.HttpServletResponse;
 public class InteractiveChartServlet extends HttpServlet {
   private Map<String, Integer> emotionVotes = new HashMap<>();
   private static String EMOTION_DATA = "emotion";
-  private static String VOTES_PARAM = "Votes";
-  private static String TIMESTAMP_PARAM = "timestamp";
+  private static String VOTES = "Votes";
+  private static String TIMESTAMP = "timestamp";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query votesQuery = new Query(VOTES_PARAM).addSort(TIMESTAMP_PARAM, SortDirection.DESCENDING);
+    Query votesQuery = new Query(VOTES);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(votesQuery);
 
@@ -43,12 +43,12 @@ public class InteractiveChartServlet extends HttpServlet {
     long timestamp = System.currentTimeMillis();
 
     // Stores object in datastore entity
-    Entity votesEntity = new Entity(VOTES_PARAM);
-    votesEntity.setProperty(EMOTION_DATA, emotion);
-    votesEntity.setProperty(TIMESTAMP_PARAM, timestamp);
+    Entity TABLE_NAME = new Entity(VOTES);
+    TABLE_NAME.setProperty(EMOTION_DATA, emotion);
+    TABLE_NAME.setProperty(TIMESTAMP, timestamp);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(votesEntity);
+    datastore.put(TABLE_NAME);
 
     // TODO(briafassler): Find a way to prevent redirecting when submitting votes
     response.sendRedirect("/statistics.html#chart-container");

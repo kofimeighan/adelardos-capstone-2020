@@ -303,8 +303,8 @@ function allowUserSubmit() {
     bar
  */
 async function loadSearch() {
-  const otherDocs =
-      await Promise.all([getHTML('/about.html'), getHTML('/statistics.html')]);
+  const otherPageLinks = getOtherLinks();
+  const otherDocs = await Promise.all(otherPageLinks.map(getHTML));
 
   let otherElements = [];
   otherDocs.forEach((doc) => {
@@ -312,6 +312,32 @@ async function loadSearch() {
   });
 
   insertSearch(otherElements);
+}
+
+function getOtherLinks() {
+  const pagePath = window.location.pathname;
+  const pathSize = pagePath.length;
+
+  let linkElements =
+      document.getElementById('navBar').getElementsByTagName('a');
+  linkElements = Array.from(linkElements);
+  let numLinks = linkElements.length;
+
+  for (let i = 0; i < numLinks; i++) {
+    const link = linkElements[i].href;
+    if (pathSize < 2) {
+      if (link.includes('index')) {
+        linkElements.splice(i, 1);
+        numLinks--;
+      }
+    } else if (link.includes(pagePath)) {
+      linkElements.splice(i, 1);
+      numLinks--;
+    }
+    linkElements[i] = '/' + linkElements[i].getAttribute('href');
+  }
+
+  return linkElements;
 }
 
 /**

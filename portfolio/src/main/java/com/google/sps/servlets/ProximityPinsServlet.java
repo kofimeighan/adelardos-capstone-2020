@@ -27,6 +27,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
+import com.google.sps.ProximityPin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;

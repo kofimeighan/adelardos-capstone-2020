@@ -136,8 +136,8 @@ async function placeProximityPins() {
   const radius = Number(document.getElementById('radius').value);
 
   pins.forEach(async (pin) => {
-    if (await haversineDistance(userAddress, pin.address) < radius) {
-      codeAddress(pin.address);
+    if (await haversineDistance(userAddress, pin.getAddress()) < radius) {
+      codeAddress(pin.getAddress());
     }
   });
 }

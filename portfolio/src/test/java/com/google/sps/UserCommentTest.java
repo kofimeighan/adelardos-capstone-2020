@@ -14,12 +14,20 @@
 
 package com.google.sps;
 
-public final class DataPair {
-  private final String group;
-  private final Double percent;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-  public DataPair(String group, Double percent) {
-    this.group = group;
-    this.percent = percent;
-  }
+/** */
+@RunWith(JUnit4.class)
+public final class UserCommentTest {
+
+    @Test
+    public void correctDate() {
+        UserComment userComment = new UserComment("Emily" , "emily@gmail.com", "San Francisco, CA", "Protest in the Bay Area", 123456789, 987654321);
+
+        Assert.assertEquals(987654321, userComment.getID());
+    }
 }

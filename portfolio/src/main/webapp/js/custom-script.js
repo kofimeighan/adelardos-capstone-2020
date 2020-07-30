@@ -15,9 +15,10 @@
 /**
  * Neccessary constants or else variables will return as 'undefined' in lint
    checks
-*/
+ */
 /* exported onLoad */
-/* exported codeAddress */
+/* exported placeMarker */
+/* exported insertSearch */
 /* exported allowUserSubmit */
 /* exported statisticsOnLoad */
 /* exported placeProximityPins */
@@ -34,7 +35,6 @@ let map;
 let geocoder;
 const MNPLS_LAT = 44.9778;
 const MNPLS_LNG = -93.2650;
-
 
 // TODO(kofimeighan): add an event listener to when the page is loaded and
 // call onLoad();
@@ -93,14 +93,80 @@ function loadMap() {
   });
 }
 
-function codeAddress(address) {
-  geocoder.geocode({'address': address}, function(results, status) {
+/**
+ * Places a marker on the current loaded map at the given location with an
+ * information window
+ * @param {String} address Postal address of the location you would like to
+ *     place a marker on the map for
+ */
+function placeMarker(nameAndLocation) {
+  geocoder.geocode({'address': nameAndLocation[1]}, function(results, status) {
     if (status == 'OK') {
       map.setCenter(results[0].geometry.location);
-      new google.maps.Marker({
+      const marker = new google.maps.Marker({
         map: map,
         position: results[0].geometry.location,
         animation: google.maps.Animation.DROP,
+      });
+
+      const content = '<div id="content">' +
+          '<div id="siteNotice">' +
+          '</div>' +
+          '<div id="bodyContent">' +
+          '<b>' + nameAndLocation[0] + '</b><br>' + nameAndLocation[1] +
+          '</div>' +
+          '</div>';
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: content,
+      });
+
+      marker.addListener('click', function() {
+        infoWindow.open(map, marker);
+      });
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+}
+
+/**
+ * Places marker on the loaded map with the person's race, cause of death, date
+ * of death, and distance from the incident to the user
+ * @param {JSON} pin json object of pins from the database
+ * @param {Number} distance distance between the user's location and
+ */
+function addProximityPinAndWindow(pin, distance) {
+  geocoder.geocode({'address': pin.address}, function(results, status) {
+    if (status == 'OK') {
+      map.setCenter(results[0].geometry.location);
+      const marker = new google.maps.Marker({
+        map: map,
+        position: results[0].geometry.location,
+        animation: google.maps.Animation.DROP,
+      });
+
+      const formattedRace =
+          pin.race.charAt(0).toUpperCase() + pin.race.slice(1);
+
+      const windowContent = '<div id="content">' +
+          '<div id="siteNotice">' +
+          '</div>' +
+          '<div id="bodyContent">' +
+          '<p>Race: <b>' + formattedRace + '</b><br>' +
+          'Cause Of Death: <b>' + pin.causeOfDeath + '</b><br>' +
+          'Date of Death: <b>' + pin.dateOfDeath + '</b><br>' +
+          'This incident occured <b><i>' + Math.floor(distance) +
+          ' miles </i></b> away from you.' +
+          '</div>' +
+          '</div>';
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: windowContent,
+      });
+
+      marker.addListener('click', function() {
+        infoWindow.open(map, marker);
       });
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
@@ -116,7 +182,7 @@ function populateDropdown(list, ID) {
     titleElement.innerText = nameAndLocation[0];
 
     titleElement.addEventListener('click', () => {
-      codeAddress(nameAndLocation[1]);
+      placeMarker(nameAndLocation);
     });
 
     dropDownMenu.appendChild(titleElement);
@@ -133,9 +199,13 @@ async function placeProximityPins() {
   const pins = await response.json();
   const radius = Number(document.getElementById('radius').value);
 
-  pins.forEach(async (pin) => {
+  pins.forEach(async (pin, index, array) => {
     if (await haversineDistance(userAddress, pin.address) < radius) {
-      codeAddress(pin.address);
+      const distance = await haversineDistance(userAddress, pin.address);
+      addProximityPinAndWindow(pin, distance);
+      if (index == array.length - 1) {
+        map.setCenter(addressToCoordinates(userAddress)[2]);
+      }
     }
   });
 }
@@ -181,6 +251,7 @@ async function addressToCoordinates(address) {
         resolve([
           results[0].geometry.location.lat(),
           results[0].geometry.location.lng(),
+          results[0].geometry.location,
         ]);
       } else {
         reject(status);
@@ -517,6 +588,8 @@ function drawInteractiveChart() {
           'height': 500,
           'is3D': true,
           'backgroundColor': '#f8f9fa',
+          'animation': {'startup': true},
+          'colors': ['#900c3f', '#c70039', '#ff5733', 'ffc300'],
         };
 
         const interactiveChart = new google.visualization.PieChart(

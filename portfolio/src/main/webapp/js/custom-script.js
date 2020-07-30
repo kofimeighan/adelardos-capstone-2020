@@ -314,6 +314,11 @@ async function loadSearch() {
   insertSearch(otherElements);
 }
 
+/**
+ * Gets links from the navigation bar
+ * Removes link for current page we are on
+ * @return {array}: the links from other pages.
+ */
 function getOtherLinks() {
   const pagePath = window.location.pathname;
   const pathSize = pagePath.length;

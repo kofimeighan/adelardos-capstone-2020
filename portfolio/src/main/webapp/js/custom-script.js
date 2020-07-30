@@ -44,8 +44,6 @@ const MNPLS_LNG = -93.2650;
 function onLoad() {
   loadSearch();
   renderLoginButton();
-  searchHash();
-  statisticsOnLoad();
 }
 
 function statisticsOnLoad() {
@@ -84,6 +82,9 @@ function statisticsOnLoad() {
   fetchSubmittedLocations().then((locationData) => {
     populateDropdown(locationData, 'user-submitted-dropdown-menu');
   });
+
+  searchHash();
+  loadSearch();
 }
 
 function loadMap() {

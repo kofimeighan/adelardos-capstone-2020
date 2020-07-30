@@ -43,6 +43,7 @@ const MNPLS_LNG = -93.2650;
 
 function onLoad() {
   loadSearch();
+  searchHash();
   renderLoginButton();
 }
 

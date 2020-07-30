@@ -228,8 +228,8 @@ function allowUserSubmit() {
 }
 
 /**
- * Gets the other html pages as documents and invokes method to insert Search
- * bar
+ * Gets the other html pages as documents and invokes method to insert search
+    bar
  */
 async function loadSearch() {
   const otherDocs =
@@ -250,7 +250,9 @@ async function loadSearch() {
 async function getHTML(url) {
   return new Promise((resolve, reject) => {
     // Feature detection
-    if (!window.XMLHttpRequest) return;
+    if (!window.XMLHttpRequest) {
+      return;
+    }
 
     // Create new request
     const xhr = new XMLHttpRequest();
@@ -291,7 +293,10 @@ function insertSearch(otherElements) {
   document.getElementById('mainNav').appendChild(searchElement);
 }
 
-/* creates the html search skeleton that the user interacts with */
+/**
+ * creates the html search skeleton that the user interacts with
+ * @return {DOM} searchDiv: div with input bar and results element.
+ */
 function createSearchElement() {
   const searchBar = document.createElement('form');
   searchBar.className = 'form-inline';
@@ -318,6 +323,7 @@ function createSearchElement() {
  * searches each node in docElements and retains relevant elements
  * @param {array} docElements: The elements from to search
  * @param {String} wantedWords: The users entered search query
+ * @return {array} resultElements: The relevant results as elements
  */
 function searchElements(docElements, wantedWords) {
   const resultElements = [];
@@ -341,9 +347,12 @@ function searchElements(docElements, wantedWords) {
 }
 
 /**
- * populates the search skeleton with the results and sets the functionality to
-   navigate to the result by clicking on it.
- */
+* populates the search skeleton with the results and sets the functionality to
+   scroll the result it into view by clicking on it.
+* @param {Array} resultElements: elements containing the wanted words from page
+   the user is currently on.
+* @param {String} wantedWords: the search query the user entered
+*/
 function showResults(resultElements, wantedWords) {
   const searchResults = document.getElementById('searchResults');
   searchResults.innerHTML = '';
@@ -363,6 +372,13 @@ function showResults(resultElements, wantedWords) {
   });
 }
 
+/**
+* populates the search skeleton with the results and sets the functionality to
+   redirect to page result is on, whilst sending a hash for it to be found.
+* @param {Array} otherResultElements: elements containing the wanted words from
+   the pages the user is not currently on.
+* @param {String} wantedWords: the search query the user entered
+*/
 function showOtherResults(otherResultElements, wantedWords) {
   otherResultElements.forEach((result) => {
     if (result.getAttribute('aria-hidden') == 'true' ||
@@ -382,6 +398,14 @@ function showOtherResults(otherResultElements, wantedWords) {
   });
 }
 
+/**
+* creates the element that the result will be displayed in
+* @param {Array} result: element to display to user.
+* @param {String} wantedWords: the search query the user entered
+* @result {String} outputText: the text displayed to the user
+* @result {DOM} textElement: the element the outputText is
+   displayed.
+*/
 function createResult(result, wantedWords) {
   const textElement = document.createElement('li');
   let resultText = result.innerText.replace(/\s\s+/g, ' ').trim();

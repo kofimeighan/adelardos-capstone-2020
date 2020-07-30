@@ -203,11 +203,9 @@ async function placeProximityPins() {
   pins.forEach(async (pin, index, array) => {
     if (await haversineDistance(userAddress, pin.address) < radius) {
       const distance = await haversineDistance(userAddress, pin.address);
+      addProximityPinAndWindow(pin, distance);
       if (index == array.length - 1) {
-        addProximityPinAndWindow(pin, distance);
-        map.setCenter(addressToCoordinates(pin.address)[2]);
-      } else {
-        addProximityPinAndWindow(pin, distance);
+        map.setCenter(addressToCoordinates(userAddress)[2]);
       }
     }
   });

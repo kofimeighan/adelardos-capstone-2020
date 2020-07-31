@@ -435,7 +435,7 @@ function typewriterFeature() {
    * TODO Stretch Feature(briafassler): read names from a database instead of an
    * array
    */
-  const martyrNames = [
+  const MARTYR_NAMES = [
     'George Floyd',          'Breonna Taylor',  'Ahmaud Arbery',
     'Rayshard Brooks',       'Robert Fuller',   'James Scurlock',
     'Elijah McClain',        'Justin Howell',   'Jamel Floyd',
@@ -456,8 +456,8 @@ function typewriterFeature() {
   let charIndex = 0;
 
   function typeName() {
-    if (charIndex < martyrNames[marytrNamesIndex].length) {
-      typedText.textContent += martyrNames[marytrNamesIndex].charAt(charIndex);
+    if (charIndex < MARTYR_NAMES[marytrNamesIndex].length) {
+      typedText.textContent += MARTYR_NAMES[marytrNamesIndex].charAt(charIndex);
       charIndex++;
       setTimeout(typeName, 150);
     } else {
@@ -468,12 +468,12 @@ function typewriterFeature() {
   function eraseName() {
     if (charIndex > 0) {
       typedText.textContent =
-          martyrNames[marytrNamesIndex].substring(0, charIndex - 1);
+          MARTYR_NAMES[marytrNamesIndex].substring(0, charIndex - 1);
       charIndex--;
       setTimeout(eraseName, 100);
     } else {
       marytrNamesIndex++;
-      if (marytrNamesIndex >= martyrNames.length) {
+      if (marytrNamesIndex >= MARTYR_NAMES.length) {
         marytrNamesIndex = 0;
       }
       setTimeout(typeName, 1300);
@@ -481,6 +481,6 @@ function typewriterFeature() {
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    if (martyrNames.length) setTimeout(typeName, 2250);
+    if (MARTYR_NAMES.length) setTimeout(typeName, 2250);
   });
 }

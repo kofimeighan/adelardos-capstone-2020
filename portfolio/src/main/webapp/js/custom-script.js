@@ -43,6 +43,7 @@ const MNPLS_LNG = -93.2650;
 
 function onLoad() {
   loadSearch();
+  searchHash();
   renderLoginButton();
 }
 
@@ -82,6 +83,9 @@ function statisticsOnLoad() {
   fetchSubmittedLocations().then((locationData) => {
     populateDropdown(locationData, 'user-submitted-dropdown-menu');
   });
+
+  searchHash();
+  loadSearch();
 }
 
 function loadMap() {
@@ -459,7 +463,7 @@ function showOtherResults(otherResultElements, wantedWords) {
 
     const [outputText, textElement] = createResult(result, wantedWords);
     const docUrl = result.ownerDocument.URL;
-    const hash = encodeURI('#' + outputText + '#' + wantedWords);
+    const hash = encodeURI('#' + outputText);
 
     textElement.onclick = function() {
       window.location.href = docUrl + hash;
@@ -488,6 +492,18 @@ function createResult(result, wantedWords) {
   textElement.innerText = '...' + outputText + '...';
 
   return [outputText, textElement];
+}
+
+function searchHash() {
+  const urlHash = window.location.hash;
+  if (urlHash) {
+    const hashArray = urlHash.split('#');
+    const outputText = decodeURI(hashArray[1]).substring(0, 5).toLowerCase();
+
+    const docElements = Array.from(document.body.childNodes);
+    const resultElement = searchElements(docElements, outputText)[0];
+    resultElement.scrollIntoView();
+  }
 }
 
 /** Adds a line chart to page showing the global avg temp from a csv */

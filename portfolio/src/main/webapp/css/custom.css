@@ -423,7 +423,7 @@ body {
 
 .mb-5,
 .my-5 {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem !important;
 }
 
 #chart-container {
@@ -462,4 +462,11 @@ body {
   overflow: hidden;
   padding: 0.5rem;
   background-color: rgba(0, 0, 0, 0.45);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -0.1rem;
+  margin-left: -0.1rem;
 }

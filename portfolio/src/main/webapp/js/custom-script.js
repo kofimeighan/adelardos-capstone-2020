@@ -15,9 +15,9 @@
 /**
  * Neccessary constants or else variables will return as 'undefined' in lint
    checks
-*/
+ */
 /* exported onLoad */
-/* exported codeAddress */
+/* exported placeMarker */
 /* exported insertSearch */
 /* exported allowUserSubmit */
 /* exported statisticsOnLoad */
@@ -36,14 +36,13 @@ let geocoder;
 const MNPLS_LAT = 44.9778;
 const MNPLS_LNG = -93.2650;
 
-
 // TODO(kofimeighan): add an event listener to when the page is loaded and
 // call onLoad();
 
 // TODO(brifassler/kofimeighan/chidawaya): add docstrings for all functions
 
 function onLoad() {
-  insertSearch();
+  loadSearch();
   renderLoginButton();
 }
 
@@ -75,10 +74,10 @@ function statisticsOnLoad() {
     ],
   ];
 
-  loadMap();
   drawTimeSeriesChart();
   drawInteractiveChart();
   insertSearch();
+  loadMap();
   renderLoginButton();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
   populateDropdown(iconicProtestData, 'IP-dropdown-menu');
@@ -96,14 +95,80 @@ function loadMap() {
   });
 }
 
-function codeAddress(address) {
-  geocoder.geocode({'address': address}, function(results, status) {
+/**
+ * Places a marker on the current loaded map at the given location with an
+ * information window
+ * @param {String} address Postal address of the location you would like to
+ *     place a marker on the map for
+ */
+function placeMarker(nameAndLocation) {
+  geocoder.geocode({'address': nameAndLocation[1]}, function(results, status) {
     if (status == 'OK') {
       map.setCenter(results[0].geometry.location);
-      new google.maps.Marker({
+      const marker = new google.maps.Marker({
         map: map,
         position: results[0].geometry.location,
         animation: google.maps.Animation.DROP,
+      });
+
+      const content = '<div id="content">' +
+          '<div id="siteNotice">' +
+          '</div>' +
+          '<div id="bodyContent">' +
+          '<b>' + nameAndLocation[0] + '</b><br>' + nameAndLocation[1] +
+          '</div>' +
+          '</div>';
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: content,
+      });
+
+      marker.addListener('click', function() {
+        infoWindow.open(map, marker);
+      });
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+}
+
+/**
+ * Places marker on the loaded map with the person's race, cause of death, date
+ * of death, and distance from the incident to the user
+ * @param {JSON} pin json object of pins from the database
+ * @param {Number} distance distance between the user's location and
+ */
+function addProximityPinAndWindow(pin, distance) {
+  geocoder.geocode({'address': pin.address}, function(results, status) {
+    if (status == 'OK') {
+      map.setCenter(results[0].geometry.location);
+      const marker = new google.maps.Marker({
+        map: map,
+        position: results[0].geometry.location,
+        animation: google.maps.Animation.DROP,
+      });
+
+      const formattedRace =
+          pin.race.charAt(0).toUpperCase() + pin.race.slice(1);
+
+      const windowContent = '<div id="content">' +
+          '<div id="siteNotice">' +
+          '</div>' +
+          '<div id="bodyContent">' +
+          '<p>Race: <b>' + formattedRace + '</b><br>' +
+          'Cause Of Death: <b>' + pin.causeOfDeath + '</b><br>' +
+          'Date of Death: <b>' + pin.dateOfDeath + '</b><br>' +
+          'This incident occured <b><i>' + Math.floor(distance) +
+          ' miles </i></b> away from you.' +
+          '</div>' +
+          '</div>';
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: windowContent,
+      });
+
+      marker.addListener('click', function() {
+        infoWindow.open(map, marker);
       });
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
@@ -119,7 +184,7 @@ function populateDropdown(list, ID) {
     titleElement.innerText = nameAndLocation[0];
 
     titleElement.addEventListener('click', () => {
-      codeAddress(nameAndLocation[1]);
+      placeMarker(nameAndLocation);
     });
 
     dropDownMenu.appendChild(titleElement);
@@ -136,9 +201,13 @@ async function placeProximityPins() {
   const pins = await response.json();
   const radius = Number(document.getElementById('radius').value);
 
-  pins.forEach(async (pin) => {
+  pins.forEach(async (pin, index, array) => {
     if (await haversineDistance(userAddress, pin.address) < radius) {
-      codeAddress(pin.address);
+      const distance = await haversineDistance(userAddress, pin.address);
+      addProximityPinAndWindow(pin, distance);
+      if (index == array.length - 1) {
+        map.setCenter(addressToCoordinates(userAddress)[2]);
+      }
     }
   });
 }
@@ -184,6 +253,7 @@ async function addressToCoordinates(address) {
         resolve([
           results[0].geometry.location.lat(),
           results[0].geometry.location.lng(),
+          results[0].geometry.location,
         ]);
       } else {
         reject(status);
@@ -230,21 +300,76 @@ function allowUserSubmit() {
       });
 }
 
-/* inserts a functioning searchbar into the navigation bar of a page. */
-function insertSearch() {
+/**
+ * Gets the other html pages as documents and invokes method to insert search
+    bar
+ */
+async function loadSearch() {
+  const otherDocs =
+      await Promise.all([getHTML('/about.html'), getHTML('/statistics.html')]);
+
+  let otherElements = [];
+  otherDocs.forEach((doc) => {
+    otherElements = [...otherElements, ...Array.from(doc.body.childNodes)];
+  });
+
+  insertSearch(otherElements);
+}
+
+/**
+ * Get HTML asynchronously as document
+ * @param {String} url: The URL to get HTML from
+ */
+async function getHTML(url) {
+  return new Promise((resolve, reject) => {
+    // Feature detection
+    if (!window.XMLHttpRequest) {
+      return;
+    }
+
+    // Create new request
+    const xhr = new XMLHttpRequest();
+
+    // Setup callback
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        resolve(xhr.responseXML);
+      } else {
+        reject(xhr.statusText);
+      }
+    };
+
+    // Get the HTML
+    xhr.open('GET', url);
+    xhr.responseType = 'document';
+    xhr.send();
+  });
+}
+
+/**
+ * inserts a functioning searchbar into the navigation bar of a page.
+ * @param {array} otherElements: The elements from every other pages
+ */
+function insertSearch(otherElements) {
   const searchElement = createSearchElement();
   const docElements = Array.from(document.body.childNodes);
+
   searchElement.onkeyup = function() {
     const wantedWords =
         document.getElementById('searchQuery').value.toLowerCase();
-    const resultElements = searchPages(docElements, wantedWords);
+    const resultElements = searchElements(docElements, wantedWords);
+    const otherResultElements = searchElements(otherElements, wantedWords);
     showResults(resultElements, wantedWords);
+    showOtherResults(otherResultElements, wantedWords);
   };
 
   document.getElementById('mainNav').appendChild(searchElement);
 }
 
-/* creates the html search skeleton that the user interacts with */
+/**
+ * creates the html search skeleton that the user interacts with
+ * @return {DOM} searchDiv: div with input bar and results element.
+ */
 function createSearchElement() {
   const searchBar = document.createElement('form');
   searchBar.className = 'form-inline';
@@ -267,9 +392,13 @@ function createSearchElement() {
   return searchDiv;
 }
 
-/* searches each child Node of the page in the docElements and retains the
-   elements that contain the wanted word. */
-function searchPages(docElements, wantedWords) {
+/**
+ * searches each node in docElements and retains relevant elements
+ * @param {array} docElements: The elements from to search
+ * @param {String} wantedWords: The users entered search query
+ * @return {array} resultElements: The relevant results as elements
+ */
+function searchElements(docElements, wantedWords) {
   const resultElements = [];
 
   if (wantedWords.length <= 0) {
@@ -291,9 +420,12 @@ function searchPages(docElements, wantedWords) {
 }
 
 /**
- * populates the search skeleton with the results and sets the functionality to
-   navigate to the result by clicking on it.
- */
+* populates the search skeleton with the results and sets the functionality to
+   scroll the result it into view by clicking on it.
+* @param {Array} resultElements: elements containing the wanted words from page
+   the user is currently on.
+* @param {String} wantedWords: the search query the user entered
+*/
 function showResults(resultElements, wantedWords) {
   const searchResults = document.getElementById('searchResults');
   searchResults.innerHTML = '';
@@ -304,14 +436,7 @@ function showResults(resultElements, wantedWords) {
       return;
     }
 
-    const textElement = document.createElement('li');
-    let resultText = result.innerText.replace(/\s\s+/g, ' ').trim();
-    resultText = resultText.replace(/[\n\r]/g, ' ');
-    const searchPos = resultText.toLowerCase().indexOf(wantedWords);
-    textElement.innerText = '...' +
-        resultText.substring(searchPos - 10, searchPos).replace(/^\s+/g, '') +
-        resultText.substring(searchPos, searchPos + 20).trim() + '...';
-
+    const textElement = createResult(result, wantedWords)[1];
     textElement.onclick = function() {
       result.scrollIntoView();
     };
@@ -319,6 +444,54 @@ function showResults(resultElements, wantedWords) {
     searchResults.appendChild(textElement);
   });
 }
+
+/**
+* populates the search skeleton with the results and sets the functionality to
+   redirect to page result is on, whilst sending a hash for it to be found.
+* @param {Array} otherResultElements: elements containing the wanted words from
+   the pages the user is not currently on.
+* @param {String} wantedWords: the search query the user entered
+*/
+function showOtherResults(otherResultElements, wantedWords) {
+  otherResultElements.forEach((result) => {
+    if (result.getAttribute('aria-hidden') == 'true' ||
+        result.id == 'mainNav') {
+      return;
+    }
+
+    const [outputText, textElement] = createResult(result, wantedWords);
+    const docUrl = result.ownerDocument.URL;
+    const hash = encodeURI('#' + outputText + '#' + wantedWords);
+
+    textElement.onclick = function() {
+      window.location.href = docUrl + hash;
+    };
+
+    document.getElementById('searchResults').append(textElement);
+  });
+}
+
+/**
+* creates the element that the result will be displayed in
+* @param {Array} result: element to display to user.
+* @param {String} wantedWords: the search query the user entered
+* @result {String} outputText: the text displayed to the user
+* @result {DOM} textElement: the element the outputText is
+   displayed.
+*/
+function createResult(result, wantedWords) {
+  const textElement = document.createElement('li');
+  let resultText = result.innerText.replace(/\s\s+/g, ' ').trim();
+  resultText = resultText.replace(/[\n\r]/g, ' ');
+  const searchPos = resultText.toLowerCase().indexOf(wantedWords);
+  const outputText =
+      resultText.substring(searchPos - 10, searchPos).replace(/^\s+/g, '') +
+      resultText.substring(searchPos, searchPos + 20).trim();
+  textElement.innerText = '...' + outputText + '...';
+
+  return [outputText, textElement];
+}
+
 /** Adds a line chart to page showing the global avg temp from a csv */
 async function drawTimeSeriesChart() {
   const tempData = await getTempData();
@@ -418,6 +591,8 @@ function drawInteractiveChart() {
           'height': 500,
           'is3D': true,
           'backgroundColor': '#f8f9fa',
+          'animation': {'startup': true},
+          'colors': ['#900c3f', '#c70039', '#ff5733', 'ffc300'],
         };
 
         const interactiveChart = new google.visualization.PieChart(

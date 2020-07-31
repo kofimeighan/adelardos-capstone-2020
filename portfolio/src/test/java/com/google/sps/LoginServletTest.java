@@ -16,87 +16,83 @@ package com.google.sps;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletRequest;
+import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
 import com.google.sps.servlets.LoginServlet;
-import org.mockito.MockitoAnnotations;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import java.io.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.After;
-import java.io.*;
-
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
   Tests the Login/Logout URL's of the LoginServlet
 */
 @RunWith(JUnit4.class)
 public final class LoginServletTest {
-    @InjectMocks
-    private LoginServlet loginServlet = new LoginServlet();
+  @InjectMocks private LoginServlet loginServlet = new LoginServlet();
 
-    @Mock
-	private HttpServletRequest request;
+  @Mock private HttpServletRequest request;
 
-	@Mock
-	private HttpServletResponse response; 
+  @Mock private HttpServletResponse response;
 
-    private final LocalServiceTestHelper helper =
-      new LocalServiceTestHelper(new LocalUserServiceTestConfig());   
-       private static final String EMAIL = "test@google.com";
+  private final LocalServiceTestHelper helper =
+      new LocalServiceTestHelper(new LocalUserServiceTestConfig());
+  private static final String EMAIL = "test@google.com";
 
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        helper.setUp();
-    }
+  @Before
+  public void setUp() throws Exception {
+    MockitoAnnotations.initMocks(this);
+    helper.setUp();
+  }
 
-    @After
-    public void tearDown() {
-        helper.tearDown();
-    }
+  @After
+  public void tearDown() {
+    helper.tearDown();
+  }
 
-    @Test
-    public void logoutMessage() throws Exception {
-        helper.setEnvIsLoggedIn(true).setEnvEmail(EMAIL).setEnvAuthDomain("localhost");
-        UserService userService = UserServiceFactory.getUserService();
+  @Test
+  public void logoutMessage() throws Exception {
+    helper.setEnvIsLoggedIn(true).setEnvEmail(EMAIL).setEnvAuthDomain("localhost");
+    UserService userService = UserServiceFactory.getUserService();
 
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter writer = new PrintWriter(stringWriter);
+    when(response.getWriter()).thenReturn(writer);
 
-        loginServlet.doGet(request, response);
+    loginServlet.doGet(request, response);
 
-        String logoutUrl = userService.createLogoutURL("/index.html");
-        String actual = stringWriter.getBuffer().toString().trim();
+    String logoutUrl = userService.createLogoutURL("/index.html");
+    String actual = stringWriter.getBuffer().toString().trim();
 
-        verify(response).setContentType("text/html");
-        assertEquals("<a href=\"" + logoutUrl + "\">Logout</a>", actual);
-    }
+    verify(response).setContentType("text/html");
+    assertEquals("<a href=\"" + logoutUrl + "\">Logout</a>", actual);
+  }
 
-    @Test
-    public void loginMessage() throws Exception {
-        helper.setEnvIsLoggedIn(false);
-        UserService userService = UserServiceFactory.getUserService();
+  @Test
+  public void loginMessage() throws Exception {
+    helper.setEnvIsLoggedIn(false);
+    UserService userService = UserServiceFactory.getUserService();
 
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter writer = new PrintWriter(stringWriter);
+    when(response.getWriter()).thenReturn(writer);
 
-        loginServlet.doGet(request, response);
+    loginServlet.doGet(request, response);
 
-        String loginUrl = userService.createLoginURL("/index.html");
-        String actual = stringWriter.getBuffer().toString().trim();
+    String loginUrl = userService.createLoginURL("/index.html");
+    String actual = stringWriter.getBuffer().toString().trim();
 
-        verify(response).setContentType("text/html");
-        assertEquals("<a href=\"" + loginUrl + "\">Login</a>", actual);
-    }
-
+    verify(response).setContentType("text/html");
+    assertEquals("<a href=\"" + loginUrl + "\">Login</a>", actual);
+  }
 }

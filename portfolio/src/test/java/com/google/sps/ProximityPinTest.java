@@ -20,21 +20,24 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** */
+/**
+ * Tests the ProximityPin class
+ */
 @RunWith(JUnit4.class)
 public final class ProximityPinTest {
+  @Test
+  public void correctDescription() {
+    ProximityPin proximityPin = new ProximityPin(
+        "1600 Ampitheatre Pkwy", "Mountain View", "CA", "94043", "black", "Gunshot", "7/29/20");
 
-    @Test
-    public void correctDescription() {
-        ProximityPin proximityPin = new ProximityPin("1600 Ampitheatre Pkwy", "Mountain View", "CA", "94043", "black", "Gunshot", "7/29/20");
+    Assert.assertEquals("1600 Ampitheatre Pkwy Mountain View CA 94043", proximityPin.getAddress());
+  }
 
-        Assert.assertEquals("1600 Ampitheatre Pkwy Mountain View CA 94043", proximityPin.getAddress());
-    }
+  @Test
+  public void correctDate() {
+    ProximityPin proximityPin = new ProximityPin(
+        "1600 Ampitheatre Pkwy", "Mountain View", "CA", "94043", "black", "Gunshot", "7/29/20");
 
-    @Test
-    public void correctDate() {
-        ProximityPin proximityPin = new ProximityPin("1600 Ampitheatre Pkwy", "Mountain View", "CA", "94043", "black", "Gunshot", "7/29/20");
-
-        Assert.assertEquals("7/29/20", proximityPin.getDate());
-    }
+    Assert.assertEquals("7/29/20", proximityPin.getDate());
+  }
 }

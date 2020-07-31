@@ -322,27 +322,23 @@ async function loadSearch() {
 function getOtherLinks() {
   const pagePath = window.location.pathname;
   const pathSize = pagePath.length;
+  const linkElements =
+      Array.from(document.getElementById('navBar').getElementsByTagName('a'));
+  const wantedLinks = [];
 
-  let linkElements =
-      document.getElementById('navBar').getElementsByTagName('a');
-  linkElements = Array.from(linkElements);
-  let numLinks = linkElements.length;
-
-  for (let i = 0; i < numLinks; i++) {
-    const link = linkElements[i].href;
+  linkElements.forEach((linkElement) => {
+    const link = linkElement.href;
     if (pathSize < 2) {
       if (link.includes('index')) {
-        linkElements.splice(i, 1);
-        numLinks--;
+        return;
       }
     } else if (link.includes(pagePath)) {
-      linkElements.splice(i, 1);
-      numLinks--;
+      return;
     }
-    linkElements[i] = '/' + linkElements[i].getAttribute('href');
-  }
+    wantedLinks.push('/' + linkElement.getAttribute('href'));
+  });
 
-  return linkElements;
+  return wantedLinks;
 }
 
 /**

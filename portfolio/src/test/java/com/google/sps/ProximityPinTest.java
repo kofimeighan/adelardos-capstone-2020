@@ -28,15 +28,16 @@ public final class ProximityPinTest {
   @Test
   public void correctDescription() {
     ProximityPin proximityPin = new ProximityPin(
-        "1600 Ampitheatre Pkwy", "Mountain View", "CA", 94043.0 , "black", "Gunshot", "7/29/20");
+        "1600 Ampitheatre Pkwy", "Mountain View", "CA", 94043.0, "black", "Gunshot", "7/29/20");
 
-    Assert.assertEquals("1600 Ampitheatre Pkwy Mountain View CA 94043.0", proximityPin.getAddress());
+    Assert.assertEquals(
+        "1600 Ampitheatre Pkwy Mountain View CA 94043.0", proximityPin.getAddress());
   }
 
   @Test
   public void correctDate() {
     ProximityPin proximityPin = new ProximityPin(
-        "1600 Ampitheatre Pkwy", "Mountain View", "CA", 94043.0 , "black", "Gunshot", "7/29/20");
+        "1600 Ampitheatre Pkwy", "Mountain View", "CA", 94043.0, "black", "Gunshot", "7/29/20");
 
     Assert.assertEquals("7/29/20", proximityPin.getDate());
   }

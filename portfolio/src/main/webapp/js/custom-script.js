@@ -77,7 +77,6 @@ function statisticsOnLoad() {
 
   drawTimeSeriesChart();
   drawInteractiveChart();
-  insertSearch();
   loadMap();
   renderLoginButton();
   populateDropdown(martyrData, 'martyr-dropdown-menu');

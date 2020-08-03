@@ -24,8 +24,12 @@ public final class ProximityPin {
 
   public ProximityPin(String streetAddress, String city, String state, Double zipcode, String race,
       String causeOfDeath, String dateOfDeath) {
-    this.address =
-        new StringJoiner(" ").add(streetAddress).add(city).add(state).add(String.valueOf(zipcode)).toString();
+    this.address = new StringJoiner(" ")
+                       .add(streetAddress)
+                       .add(city)
+                       .add(state)
+                       .add(String.valueOf(zipcode))
+                       .toString();
     this.race = race;
     this.causeOfDeath = causeOfDeath;
     this.dateOfDeath = dateOfDeath;

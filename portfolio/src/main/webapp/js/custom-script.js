@@ -42,7 +42,8 @@ const MNPLS_LNG = -93.2650;
 // TODO(brifassler/kofimeighan/chidawaya): add docstrings for all functions
 
 function onLoad() {
-  insertSearch();
+  loadSearch();
+  searchHash();
   renderLoginButton();
 }
 
@@ -74,15 +75,18 @@ function statisticsOnLoad() {
     ],
   ];
 
-  loadMap();
   drawTimeSeriesChart();
-  insertSearch();
+  drawInteractiveChart();
+  loadMap();
   renderLoginButton();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
   populateDropdown(iconicProtestData, 'IP-dropdown-menu');
   fetchSubmittedLocations().then((locationData) => {
     populateDropdown(locationData, 'user-submitted-dropdown-menu');
   });
+
+  searchHash();
+  loadSearch();
 }
 
 function loadMap() {
@@ -299,21 +303,76 @@ function allowUserSubmit() {
       });
 }
 
-/* inserts a functioning searchbar into the navigation bar of a page. */
-function insertSearch() {
+/**
+ * Gets the other html pages as documents and invokes method to insert search
+    bar
+ */
+async function loadSearch() {
+  const otherDocs =
+      await Promise.all([getHTML('/about.html'), getHTML('/statistics.html')]);
+
+  let otherElements = [];
+  otherDocs.forEach((doc) => {
+    otherElements = [...otherElements, ...Array.from(doc.body.childNodes)];
+  });
+
+  insertSearch(otherElements);
+}
+
+/**
+ * Get HTML asynchronously as document
+ * @param {String} url: The URL to get HTML from
+ */
+async function getHTML(url) {
+  return new Promise((resolve, reject) => {
+    // Feature detection
+    if (!window.XMLHttpRequest) {
+      return;
+    }
+
+    // Create new request
+    const xhr = new XMLHttpRequest();
+
+    // Setup callback
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        resolve(xhr.responseXML);
+      } else {
+        reject(xhr.statusText);
+      }
+    };
+
+    // Get the HTML
+    xhr.open('GET', url);
+    xhr.responseType = 'document';
+    xhr.send();
+  });
+}
+
+/**
+ * inserts a functioning searchbar into the navigation bar of a page.
+ * @param {array} otherElements: The elements from every other pages
+ */
+function insertSearch(otherElements) {
   const searchElement = createSearchElement();
   const docElements = Array.from(document.body.childNodes);
+
   searchElement.onkeyup = function() {
     const wantedWords =
         document.getElementById('searchQuery').value.toLowerCase();
-    const resultElements = searchPages(docElements, wantedWords);
+    const resultElements = searchElements(docElements, wantedWords);
+    const otherResultElements = searchElements(otherElements, wantedWords);
     showResults(resultElements, wantedWords);
+    showOtherResults(otherResultElements, wantedWords);
   };
 
   document.getElementById('mainNav').appendChild(searchElement);
 }
 
-/* creates the html search skeleton that the user interacts with */
+/**
+ * creates the html search skeleton that the user interacts with
+ * @return {DOM} searchDiv: div with input bar and results element.
+ */
 function createSearchElement() {
   const searchBar = document.createElement('form');
   searchBar.className = 'form-inline';
@@ -336,9 +395,13 @@ function createSearchElement() {
   return searchDiv;
 }
 
-/* searches each child Node of the page in the docElements and retains the
-   elements that contain the wanted word. */
-function searchPages(docElements, wantedWords) {
+/**
+ * searches each node in docElements and retains relevant elements
+ * @param {array} docElements: The elements from to search
+ * @param {String} wantedWords: The users entered search query
+ * @return {array} resultElements: The relevant results as elements
+ */
+function searchElements(docElements, wantedWords) {
   const resultElements = [];
 
   if (wantedWords.length <= 0) {
@@ -360,9 +423,12 @@ function searchPages(docElements, wantedWords) {
 }
 
 /**
- * populates the search skeleton with the results and sets the functionality to
-   navigate to the result by clicking on it.
- */
+* populates the search skeleton with the results and sets the functionality to
+   scroll the result it into view by clicking on it.
+* @param {Array} resultElements: elements containing the wanted words from page
+   the user is currently on.
+* @param {String} wantedWords: the search query the user entered
+*/
 function showResults(resultElements, wantedWords) {
   const searchResults = document.getElementById('searchResults');
   searchResults.innerHTML = '';
@@ -373,20 +439,72 @@ function showResults(resultElements, wantedWords) {
       return;
     }
 
-    const textElement = document.createElement('li');
-    let resultText = result.innerText.replace(/\s\s+/g, ' ').trim();
-    resultText = resultText.replace(/[\n\r]/g, ' ');
-    const searchPos = resultText.toLowerCase().indexOf(wantedWords);
-    textElement.innerText = '...' +
-        resultText.substring(searchPos - 10, searchPos).replace(/^\s+/g, '') +
-        resultText.substring(searchPos, searchPos + 20).trim() + '...';
-
+    const textElement = createResult(result, wantedWords)[1];
     textElement.onclick = function() {
       result.scrollIntoView();
     };
 
     searchResults.appendChild(textElement);
   });
+}
+
+/**
+* populates the search skeleton with the results and sets the functionality to
+   redirect to page result is on, whilst sending a hash for it to be found.
+* @param {Array} otherResultElements: elements containing the wanted words from
+   the pages the user is not currently on.
+* @param {String} wantedWords: the search query the user entered
+*/
+function showOtherResults(otherResultElements, wantedWords) {
+  otherResultElements.forEach((result) => {
+    if (result.getAttribute('aria-hidden') == 'true' ||
+        result.id == 'mainNav') {
+      return;
+    }
+
+    const [outputText, textElement] = createResult(result, wantedWords);
+    const docUrl = result.ownerDocument.URL;
+    const hash = encodeURI('#' + outputText);
+
+    textElement.onclick = function() {
+      window.location.href = docUrl + hash;
+    };
+
+    document.getElementById('searchResults').append(textElement);
+  });
+}
+
+/**
+* creates the element that the result will be displayed in
+* @param {Array} result: element to display to user.
+* @param {String} wantedWords: the search query the user entered
+* @result {String} outputText: the text displayed to the user
+* @result {DOM} textElement: the element the outputText is
+   displayed.
+*/
+function createResult(result, wantedWords) {
+  const textElement = document.createElement('li');
+  let resultText = result.innerText.replace(/\s\s+/g, ' ').trim();
+  resultText = resultText.replace(/[\n\r]/g, ' ');
+  const searchPos = resultText.toLowerCase().indexOf(wantedWords);
+  const outputText =
+      resultText.substring(searchPos - 10, searchPos).replace(/^\s+/g, '') +
+      resultText.substring(searchPos, searchPos + 20).trim();
+  textElement.innerText = '...' + outputText + '...';
+
+  return [outputText, textElement];
+}
+
+function searchHash() {
+  const urlHash = window.location.hash;
+  if (urlHash) {
+    const hashArray = urlHash.split('#');
+    const outputText = decodeURI(hashArray[1]).substring(0, 5).toLowerCase();
+
+    const docElements = Array.from(document.body.childNodes);
+    const resultElement = searchElements(docElements, outputText)[0];
+    resultElement.scrollIntoView();
+  }
 }
 
 /** Adds a line chart to page showing the global avg temp from a csv */
@@ -467,8 +585,9 @@ async function loadChartData() {
   return chartData;
 }
 
-google.charts.load('current', {'packages': ['corechart']});
-google.charts.setOnLoadCallback(drawInteractiveChart);
+/** TODO(briafassler): fix the scope of google  */
+// google.charts.load('current', {'packages': ['corechart']});
+// google.charts.setOnLoadCallback(drawInteractiveChart);
 
 /** Draws user inputted pie chart and adds to page. */
 function drawInteractiveChart() {
@@ -495,4 +614,63 @@ function drawInteractiveChart() {
             document.getElementById('chart-container'));
         interactiveChart.draw(emotionData, options);
       });
+}
+
+// TODO(briafassler): Don't leave function here
+typewriterFeature();
+
+function typewriterFeature() {
+  const typedText = document.querySelector('.typed-text');
+  /**
+   * TODO Stretch Feature(briafassler): read names from a database instead of an
+   * array
+   */
+  const MARTYR_NAMES = [
+    'George Floyd',          'Breonna Taylor',  'Ahmaud Arbery',
+    'Rayshard Brooks',       'Robert Fuller',   'James Scurlock',
+    'Elijah McClain',        'Justin Howell',   'Jamel Floyd',
+    'Eric Garner',           'Michael Brown',   'Eric Reason',
+    'Sandra Bland',          'Jamar Clark',     'Tamir Rice',
+    'John Crawford III',     'Phillip White',   'Ezell Ford',
+    'Dante Parker',          'Laquan McDonald', 'Dominique Clayton',
+    'Michelle Cusseaux',     'George Mann',     'Tanisha Anderson',
+    'Akai Gurley',           'Alonzo Smith',    'Stephon Clark',
+    'Philando Castile',      'Janet Wilson',    'Darrius Stewart',
+    'Botham Jean',           'Samuel Dubose',   'Willie Tillman',
+    'Quintonio Legrier',     'Brian Keith Day', 'Christian Taylor',
+    'Junior Prosper',        'Freddie Gray',    'Christopher McCorvey',
+    'Peter Gaines',          'Mya Hall',        'Felix Kumi',
+    'Keith Harrison McLeod', 'Anthony Ashford', 'Salvado Ellswood',
+  ];
+  let marytrNamesIndex = 0;
+  let charIndex = 0;
+
+  function typeName() {
+    if (charIndex < MARTYR_NAMES[marytrNamesIndex].length) {
+      typedText.textContent += MARTYR_NAMES[marytrNamesIndex].charAt(charIndex);
+      charIndex++;
+      setTimeout(typeName, 150);
+    } else {
+      setTimeout(eraseName, 2000);
+    }
+  }
+
+  function eraseName() {
+    if (charIndex > 0) {
+      typedText.textContent =
+          MARTYR_NAMES[marytrNamesIndex].substring(0, charIndex - 1);
+      charIndex--;
+      setTimeout(eraseName, 100);
+    } else {
+      marytrNamesIndex++;
+      if (marytrNamesIndex >= MARTYR_NAMES.length) {
+        marytrNamesIndex = 0;
+      }
+      setTimeout(typeName, 1300);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    if (MARTYR_NAMES.length) setTimeout(typeName, 2250);
+  });
 }

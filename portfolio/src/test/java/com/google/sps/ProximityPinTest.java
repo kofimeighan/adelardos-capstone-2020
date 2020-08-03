@@ -25,6 +25,7 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public final class ProximityPinTest {
+  
   @Test
   public void correctDescription() {
     ProximityPin proximityPin = new ProximityPin(

@@ -22,10 +22,14 @@ public final class ProximityPin {
   private final String causeOfDeath;
   private final String dateOfDeath;
 
-  public ProximityPin(String streetAddress, String city, String state, String zipcode, String race,
+  public ProximityPin(String streetAddress, String city, String state, Double zipcode, String race,
       String causeOfDeath, String dateOfDeath) {
-    this.address =
-        new StringJoiner(" ").add(streetAddress).add(city).add(state).add(zipcode).toString();
+    this.address = new StringJoiner(" ")
+                       .add(streetAddress)
+                       .add(city)
+                       .add(state)
+                       .add(String.valueOf(zipcode))
+                       .toString();
     this.race = race;
     this.causeOfDeath = causeOfDeath;
     this.dateOfDeath = dateOfDeath;

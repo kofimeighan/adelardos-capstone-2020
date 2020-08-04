@@ -75,8 +75,9 @@ function statisticsOnLoad() {
     ],
   ];
 
+  drawCharts();
   drawTimeSeriesChart();
-  drawInteractiveChart();
+  insertSearch();
   loadMap();
   renderLoginButton();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
@@ -308,8 +309,8 @@ function allowUserSubmit() {
     bar
  */
 async function loadSearch() {
-  const otherDocs =
-      await Promise.all([getHTML('/about.html'), getHTML('/statistics.html')]);
+  const otherPageLinks = getOtherLinks();
+  const otherDocs = await Promise.all(otherPageLinks.map(getHTML));
 
   let otherElements = [];
   otherDocs.forEach((doc) => {
@@ -317,6 +318,33 @@ async function loadSearch() {
   });
 
   insertSearch(otherElements);
+}
+
+/**
+ * Gets links from the navigation bar
+ * Removes link for current page we are on
+ * @return {array}: the links from other pages.
+ */
+function getOtherLinks() {
+  const pagePath = window.location.pathname;
+  const pathSize = pagePath.length;
+  const linkElements =
+      Array.from(document.getElementById('navBar').getElementsByTagName('a'));
+  const wantedLinks = [];
+
+  linkElements.forEach((linkElement) => {
+    const link = linkElement.href;
+    if (pathSize < 2) {
+      if (link.includes('index')) {
+        return;
+      }
+    } else if (link.includes(pagePath)) {
+      return;
+    }
+    wantedLinks.push('/' + linkElement.getAttribute('href'));
+  });
+
+  return wantedLinks;
 }
 
 /**
@@ -585,35 +613,36 @@ async function loadChartData() {
   return chartData;
 }
 
-/** TODO(briafassler): fix the scope of google  */
-// google.charts.load('current', {'packages': ['corechart']});
-// google.charts.setOnLoadCallback(drawInteractiveChart);
+function drawCharts() {
+  google.charts.load('current', {'packages': ['corechart']});
+  google.charts.setOnLoadCallback(drawInteractiveChart);
 
-/** Draws user inputted pie chart and adds to page. */
-function drawInteractiveChart() {
-  fetch('/interactive-chart')
-      .then((response) => response.json())
-      .then((emotionVotes) => {
-        const emotionData = new google.visualization.DataTable();
-        emotionData.addColumn('string', 'Emotion');
-        emotionData.addColumn('number', 'Votes');
-        Object.keys(emotionVotes).forEach((emotion) => {
-          emotionData.addRow([emotion, emotionVotes[emotion]]);
+  /** Draws user inputted pie chart and adds to page. */
+  function drawInteractiveChart() {
+    fetch('/interactive-chart')
+        .then((response) => response.json())
+        .then((emotionVotes) => {
+          const emotionData = new google.visualization.DataTable();
+          emotionData.addColumn('string', 'Emotion');
+          emotionData.addColumn('number', 'Votes');
+          Object.keys(emotionVotes).forEach((emotion) => {
+            emotionData.addRow([emotion, emotionVotes[emotion]]);
+          });
+
+          const options = {
+            'width': 650,
+            'height': 500,
+            'is3D': true,
+            'backgroundColor': '#f8f9fa',
+            'animation': {'startup': true},
+            'colors': ['#900c3f', '#c70039', '#ff5733', 'ffc300'],
+          };
+
+          const interactiveChart = new google.visualization.PieChart(
+              document.getElementById('chart-container'));
+          interactiveChart.draw(emotionData, options);
         });
-
-        const options = {
-          'width': 650,
-          'height': 500,
-          'is3D': true,
-          'backgroundColor': '#f8f9fa',
-          'animation': {'startup': true},
-          'colors': ['#900c3f', '#c70039', '#ff5733', 'ffc300'],
-        };
-
-        const interactiveChart = new google.visualization.PieChart(
-            document.getElementById('chart-container'));
-        interactiveChart.draw(emotionData, options);
-      });
+  }
 }
 
 // TODO(briafassler): Don't leave function here

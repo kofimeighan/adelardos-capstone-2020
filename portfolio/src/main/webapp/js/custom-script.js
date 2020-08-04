@@ -204,15 +204,17 @@ async function placeProximityPins() {
   const pins = await response.json();
   const radius = Number(document.getElementById('radius').value);
 
-  pins.forEach(async (pin, index, array) => {
-    if (await haversineDistance(userAddress, pin.address) < radius) {
-      const distance = await haversineDistance(userAddress, pin.address);
+  pins.reduce(async (previousPin, pin, index) => {
+    await previousPin;
+    const distance = await haversineDistance(userAddress, pin.address);
+    if (distance < radius) {
+      await sleep(2000);
       addProximityPinAndWindow(pin, distance);
-      if (index == array.length - 1) {
-        map.setCenter(addressToCoordinates(userAddress)[2]);
+      if (index == pins.length - 1) {
+        map.setCenter(await addressToCoordinates(userAddress)[2]);
       }
     }
-  });
+  }, Promise.resolve());
 }
 
 /**
@@ -265,6 +267,15 @@ async function addressToCoordinates(address) {
   });
 
   return addressQuery;
+}
+
+/**
+ * Function to delay execution
+ * @param {Number} ms The amount of time in milliseconds you want to pause the
+ *     function
+ */
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function renderLoginButton() {

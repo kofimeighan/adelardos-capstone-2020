@@ -73,8 +73,7 @@ function statisticsOnLoad() {
     ],
   ];
 
-  drawTimeSeriesChart();
-  drawInteractiveChart();
+  drawCharts();
   insertSearch();
   loadMap();
   renderLoginButton();
@@ -503,69 +502,75 @@ async function loadChartData() {
   return chartData;
 }
 
-/** TODO(briafassler): fix the scope of google  */
-// google.charts.load('current', {'packages': ['corechart']});
-// google.charts.setOnLoadCallback(drawInteractiveChart);
-google.charts.setOnLoadCallback(drawTimeSeriesChart);
+/**
+ * calls the timeseries and interactive chart, and fetches the data from
+ * their respective servlets.
+ */
 
-/** Draws user inputted pie chart and adds to page. */
-function drawInteractiveChart() {
-  fetch('/interactive-chart')
-      .then((response) => response.json())
-      .then((emotionVotes) => {
-        const emotionData = new google.visualization.DataTable();
-        emotionData.addColumn('string', 'Emotion');
-        emotionData.addColumn('number', 'Votes');
-        Object.keys(emotionVotes).forEach((emotion) => {
-          emotionData.addRow([emotion, emotionVotes[emotion]]);
+function drawCharts() {
+  google.charts.load('current', {'packages': ['corechart']});
+  google.charts.setOnLoadCallback(drawInteractiveChart);
+  google.charts.setOnLoadCallback(drawTimeSeriesChart);
+
+  /** Draws user inputted pie chart and adds to page. */
+  function drawInteractiveChart() {
+    fetch('/interactive-chart')
+        .then((response) => response.json())
+        .then((emotionVotes) => {
+          const emotionData = new google.visualization.DataTable();
+          emotionData.addColumn('string', 'Emotion');
+          emotionData.addColumn('number', 'Votes');
+          Object.keys(emotionVotes).forEach((emotion) => {
+            emotionData.addRow([emotion, emotionVotes[emotion]]);
+          });
+
+          const options = {
+            'width': 650,
+            'height': 500,
+            'is3D': true,
+            'backgroundColor': '#f8f9fa',
+            'animation': {'startup': true},
+            'colors': ['#900c3f', '#c70039', '#ff5733', 'ffc300'],
+          };
+
+          const interactiveChart = new google.visualization.PieChart(
+              document.getElementById('chart-container'));
+          interactiveChart.draw(emotionData, options);
         });
+  }
 
-        const options = {
-          'width': 650,
-          'height': 500,
-          'is3D': true,
-          'backgroundColor': '#f8f9fa',
-          'animation': {'startup': true},
-          'colors': ['#900c3f', '#c70039', '#ff5733', 'ffc300'],
-        };
+  /** Fetches police killings data and uses it to create a chart. */
+  function drawTimeSeriesChart() {
+    fetch('/chart-data')
+        .then((response) => response.json())
+        .then((policeKillings) => {
+          const data = new google.visualization.DataTable();
+          data.addColumn('string', 'Year');
+          data.addColumn('number', 'People');
+          Object.keys(policeKillings).forEach((year) => {
+            data.addRow([year, policeKillings[year]]);
+          });
 
-        const interactiveChart = new google.visualization.PieChart(
-            document.getElementById('chart-container'));
-        interactiveChart.draw(emotionData, options);
-      });
+          const options = {
+            'width': 800,
+            'height': 550,
+            'backgroundColor': '#f8f9fa',
+            'animation': {'startup': true},
+            'colors': ['#900c3f'],
+            'hAxis': {
+              'title': 'Year',
+            },
+            'vAxis': {
+              'title': 'Amount of People Killed',
+            },
+          };
+
+          const chart = new google.visualization.LineChart(
+              document.getElementById('timeseries'));
+          chart.draw(data, options);
+        });
+  }
 }
-
-/** Fetches police killings data and uses it to create a chart. */
-function drawTimeSeriesChart() {
-  fetch('/police-killings')
-      .then((response) => response.json())
-      .then((policeKillings) => {
-        const data = new google.visualization.DataTable();
-        data.addColumn('string', 'Year');
-        data.addColumn('number', 'People');
-        Object.keys(policeKillings).forEach((year) => {
-          data.addRow([year, policeKillings[year]]);
-        });
-
-        const options = {
-          'width': 800,
-          'height': 550,
-          'backgroundColor': '#f8f9fa',
-          'animation': {'startup': true},
-          'colors': ['#900c3f'],
-          'hAxis': {
-            'title': 'Year'
-          },
-          'vAxis': {
-            'title': 'Amount of People Killed'
-          },
-        };
-
-        const chart = new google.visualization.LineChart(
-            document.getElementById('timeseries'));
-        chart.draw(data, options);
-      });
-    }
 
 // TODO(briafassler): Don't leave function here
 typewriterFeature();

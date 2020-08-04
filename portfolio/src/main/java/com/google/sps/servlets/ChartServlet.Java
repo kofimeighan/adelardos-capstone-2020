@@ -30,7 +30,9 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/chart-data") public class ChartServlet extends HttpServlet {
   @Override public void doGet(HttpServletRequest request,
                               HttpServletResponse response) throws IOException {
+                                
     List<DataPair> dataPairs = new ArrayList<DataPair>();
+    for (Entity)
 
     // Send the JSON as the response
     response.setContentType("application/json");

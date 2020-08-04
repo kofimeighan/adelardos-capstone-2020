@@ -309,8 +309,8 @@ function allowUserSubmit() {
     bar
  */
 async function loadSearch() {
-  const otherDocs =
-      await Promise.all([getHTML('/about.html'), getHTML('/statistics.html')]);
+  const otherPageLinks = getOtherLinks();
+  const otherDocs = await Promise.all(otherPageLinks.map(getHTML));
 
   let otherElements = [];
   otherDocs.forEach((doc) => {
@@ -318,6 +318,33 @@ async function loadSearch() {
   });
 
   insertSearch(otherElements);
+}
+
+/**
+ * Gets links from the navigation bar
+ * Removes link for current page we are on
+ * @return {array}: the links from other pages.
+ */
+function getOtherLinks() {
+  const pagePath = window.location.pathname;
+  const pathSize = pagePath.length;
+  const linkElements =
+      Array.from(document.getElementById('navBar').getElementsByTagName('a'));
+  const wantedLinks = [];
+
+  linkElements.forEach((linkElement) => {
+    const link = linkElement.href;
+    if (pathSize < 2) {
+      if (link.includes('index')) {
+        return;
+      }
+    } else if (link.includes(pagePath)) {
+      return;
+    }
+    wantedLinks.push('/' + linkElement.getAttribute('href'));
+  });
+
+  return wantedLinks;
 }
 
 /**

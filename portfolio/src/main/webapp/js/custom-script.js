@@ -76,6 +76,7 @@ function statisticsOnLoad() {
   ];
 
   drawCharts();
+  drawTimeSeriesChart();
   insertSearch();
   loadMap();
   renderLoginButton();

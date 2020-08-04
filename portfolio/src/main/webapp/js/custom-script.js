@@ -75,8 +75,9 @@ function statisticsOnLoad() {
     ],
   ];
 
+  drawCharts();
   drawTimeSeriesChart();
-  drawInteractiveChart();
+  insertSearch();
   loadMap();
   renderLoginButton();
   populateDropdown(martyrData, 'martyr-dropdown-menu');
@@ -585,35 +586,36 @@ async function loadChartData() {
   return chartData;
 }
 
-/** TODO(briafassler): fix the scope of google  */
-// google.charts.load('current', {'packages': ['corechart']});
-// google.charts.setOnLoadCallback(drawInteractiveChart);
+function drawCharts() {
+  google.charts.load('current', {'packages': ['corechart']});
+  google.charts.setOnLoadCallback(drawInteractiveChart);
 
-/** Draws user inputted pie chart and adds to page. */
-function drawInteractiveChart() {
-  fetch('/interactive-chart')
-      .then((response) => response.json())
-      .then((emotionVotes) => {
-        const emotionData = new google.visualization.DataTable();
-        emotionData.addColumn('string', 'Emotion');
-        emotionData.addColumn('number', 'Votes');
-        Object.keys(emotionVotes).forEach((emotion) => {
-          emotionData.addRow([emotion, emotionVotes[emotion]]);
+  /** Draws user inputted pie chart and adds to page. */
+  function drawInteractiveChart() {
+    fetch('/interactive-chart')
+        .then((response) => response.json())
+        .then((emotionVotes) => {
+          const emotionData = new google.visualization.DataTable();
+          emotionData.addColumn('string', 'Emotion');
+          emotionData.addColumn('number', 'Votes');
+          Object.keys(emotionVotes).forEach((emotion) => {
+            emotionData.addRow([emotion, emotionVotes[emotion]]);
+          });
+
+          const options = {
+            'width': 650,
+            'height': 500,
+            'is3D': true,
+            'backgroundColor': '#f8f9fa',
+            'animation': {'startup': true},
+            'colors': ['#900c3f', '#c70039', '#ff5733', 'ffc300'],
+          };
+
+          const interactiveChart = new google.visualization.PieChart(
+              document.getElementById('chart-container'));
+          interactiveChart.draw(emotionData, options);
         });
-
-        const options = {
-          'width': 650,
-          'height': 500,
-          'is3D': true,
-          'backgroundColor': '#f8f9fa',
-          'animation': {'startup': true},
-          'colors': ['#900c3f', '#c70039', '#ff5733', 'ffc300'],
-        };
-
-        const interactiveChart = new google.visualization.PieChart(
-            document.getElementById('chart-container'));
-        interactiveChart.draw(emotionData, options);
-      });
+  }
 }
 
 // TODO(briafassler): Don't leave function here

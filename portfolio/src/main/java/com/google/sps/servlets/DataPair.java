@@ -15,11 +15,11 @@
 package com.google.sps.servlets;
 
 public final class DataPair {
-  private final String group;
-  private final Double percent;
+  private final int amountKilled;
+  private final int year;
 
-  public DataPair(String group, Double percent) {
-    this.group = group;
-    this.percent = percent;
+  public DataPair(int amountKilled, int year) {
+    this.amountKilled = amountKilled;
+    this.year = year;
   }
 }

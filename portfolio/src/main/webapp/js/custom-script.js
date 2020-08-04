@@ -547,8 +547,8 @@ function drawCharts() {
           const data = new google.visualization.DataTable();
           data.addColumn('string', 'Year');
           data.addColumn('number', 'People');
-          Object.keys(policeKillings).forEach((year) => {
-            data.addRow([year, policeKillings[year]]);
+          policeKillings.forEach((dataPair) => {
+            data.addRow([dataPair.year.toString(), dataPair.amountKilled]);
           });
 
           const options = {

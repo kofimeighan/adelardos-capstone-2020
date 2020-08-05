@@ -21,12 +21,14 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.sps.servlets.UserSubmittedLocationsServlet;
 import com.google.sps.UserComment;
 import java.io.*;
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.After;
@@ -59,7 +61,7 @@ public final class UserSubmittedLocationsServletTest {
   private static final String TEST_EMAIL = "test@google.com";
   private static final String TEST_LOCATION = "Miami, FL";
   private static final String TEST_DESCRIPTION = "Protesting Police Brutality";
-  private static final long TEST_TIME_STAMP = 1111111;
+  private static final String TEST_TIME_STAMP = "1111111";
   private static final String NAME_OF_PROTEST = "name";
   private static final String EMAIL = "email";
   private static final String LOCATION = "location";
@@ -98,16 +100,15 @@ public final class UserSubmittedLocationsServletTest {
       when(request.getParameter(LOCATION)).thenReturn(TEST_LOCATION);
       when(request.getParameter(DESCRIPTION)).thenReturn(TEST_DESCRIPTION);
       when(request.getParameter(TIME_STAMP)).thenReturn(TEST_TIME_STAMP);
-
-      StringWriter stringWriter = new StringWriter();
-      PrintWriter printWriter = new PrintWriter();
       
       userSubmittedLocationsServlet.doPost(request, response);
 
       Query query = new Query(TABLE_NAME);
       PreparedQuery results = datastore.prepare(query);
-      Entity desiredEntity = preparedQuery.asSingleEntity();
+      List<Entity> singleResult = results.asList(FetchOptions.Builder.withLimit(3));
 
-      verify(response, time(1));
+      assertEquals(TEST_LOCATION, singleResult.get(0).getProperty(LOCATION));
   }
+
+  @
 }

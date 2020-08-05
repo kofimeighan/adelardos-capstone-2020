@@ -506,11 +506,11 @@ async function loadChartData() {
  * calls the timeseries and interactive chart, and fetches the data from
  * their respective servlets.
  */
-
 function drawCharts() {
   google.charts.load('current', {'packages': ['corechart']});
-  google.charts.setOnLoadCallback(drawInteractiveChart);
   google.charts.setOnLoadCallback(drawTimeSeriesChart);
+  google.charts.setOnLoadCallback(drawInteractiveChart);
+
 
   /** Draws user inputted pie chart and adds to page. */
   function drawInteractiveChart() {
@@ -548,7 +548,7 @@ function drawCharts() {
           data.addColumn('string', 'Year');
           data.addColumn('number', 'People');
           policeKillings.forEach((dataPair) => {
-            data.addRow([dataPair.year.toString(), dataPair.amountKilled]);
+            data.addRow([dataPair.year, dataPair.amountKilled]);
           });
 
           const options = {

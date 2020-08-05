@@ -58,20 +58,20 @@ public class ChartServlet extends HttpServlet {
     List<DataPair> dataPairs = new ArrayList<DataPair>();
     for (Entity entity : results.asIterable()) {
       int amountKilled = (int) entity.getProperty(AMOUNT_KILLED);
-      int year = (int) entity.getProperty(YEAR);
+      String year = (String) entity.getProperty(YEAR);
       DataPair policeKillings = new DataPair(amountKilled, year);
       dataPairs.add(policeKillings);
     }
 
     // TODO(briafassler): Use database csv instead of hardcoding data pairs
-    dataPairs.add(new DataPair(1106, 2013));
-    dataPairs.add(new DataPair(1050, 2014));
-    dataPairs.add(new DataPair(1103, 2015));
-    dataPairs.add(new DataPair(1071, 2016));
-    dataPairs.add(new DataPair(1093, 2017));
-    dataPairs.add(new DataPair(1142, 2018));
-    dataPairs.add(new DataPair(1099, 2019));
-    dataPairs.add(new DataPair(576, 2020));
+    dataPairs.add(new DataPair(1106, "2013"));
+    dataPairs.add(new DataPair(1050, "2014"));
+    dataPairs.add(new DataPair(1103, "2015"));
+    dataPairs.add(new DataPair(1071, "2016"));
+    dataPairs.add(new DataPair(1093, "2017"));
+    dataPairs.add(new DataPair(1142, "2018"));
+    dataPairs.add(new DataPair(1099, "2019"));
+    dataPairs.add(new DataPair(576, "2020"));
 
     // Send the JSON as the response
     response.setContentType("application/json");

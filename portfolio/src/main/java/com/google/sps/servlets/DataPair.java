@@ -16,9 +16,9 @@ package com.google.sps.servlets;
 
 public final class DataPair {
   private final int amountKilled;
-  private final int year;
+  private final String year;
 
-  public DataPair(int amountKilled, int year) {
+  public DataPair(int amountKilled, String year) {
     this.amountKilled = amountKilled;
     this.year = year;
   }

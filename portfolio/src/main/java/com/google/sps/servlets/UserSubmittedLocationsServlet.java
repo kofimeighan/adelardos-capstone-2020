@@ -24,6 +24,8 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
+import com.google.sps.UserComment;
+import com.google.sps.UserSubmittedLocationsPayload;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
@@ -72,6 +74,8 @@ public class UserSubmittedLocationsServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
+    // TODO(kofimeighan): use a simple if statement to check if the user is logging in with corp
+    // credentials.
     if (userService.isUserLoggedIn()) {
       String name = request.getParameter(NAME_OF_PROTEST);
       String email = userService.getCurrentUser().getEmail();

@@ -12,15 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.servlets;
-import java.util.*;
+package com.google.sps;
 
-public final class UserSubmittedLocationsPayload {
-  private final List<UserComment> userComments;
-  private final Boolean isUserLoggedIn;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-  public UserSubmittedLocationsPayload(List<UserComment> userComments, Boolean isUserLoggedIn) {
-    this.userComments = userComments;
-    this.isUserLoggedIn = isUserLoggedIn;
+@RunWith(JUnit4.class)
+public final class UserCommentTest {
+  @Test
+  public void correctDate() {
+    UserComment userComment = new UserComment("Emily", "emily@gmail.com", "San Francisco, CA",
+        "Protest in the Bay Area", 123456789, 987654321);
+
+    Assert.assertEquals(987654321, userComment.getID());
   }
 }

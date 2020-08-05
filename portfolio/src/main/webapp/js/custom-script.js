@@ -214,7 +214,7 @@ async function placeProximityPins() {
       addProximityPinAndWindow(pin, distance);
       if ((index == pins.length - 1) || (index == 25)) {
         map.setCenter(await addressToCoordinates(userAddress)[2]);
-        return
+        return;
       }
     }
   }, Promise.resolve());

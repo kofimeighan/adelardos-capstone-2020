@@ -17,16 +17,19 @@ package com.google.sps;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
-import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
-import com.google.sps.servlets.UserSubmittedLocationsServlet;
 import com.google.sps.UserComment;
+import com.google.sps.servlets.UserSubmittedLocationsServlet;
 import java.io.*;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
@@ -39,23 +42,14 @@ import org.junit.runners.JUnit4;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-
 
 /**
   Tests the Login/Logout URL's of the LoginServlet
 */
 @RunWith(JUnit4.class)
 public final class UserSubmittedLocationsServletTest {
-  @InjectMocks private UserSubmittedLocationsServlet userSubmittedLocationsServlet = new UserSubmittedLocationsServlet();
-
-  @Mock private HttpServletRequest request;
-
-  @Mock private HttpServletResponse response;
-
-  private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig(), new LocalUserServiceTestConfig());
+  private final LocalServiceTestHelper helper = new LocalServiceTestHelper(
+      new LocalDatastoreServiceTestConfig(), new LocalUserServiceTestConfig());
   private static final String TEST_NAME = "Tayla";
   private static final String TEST_PROTEST_NAME = "Protest in Miami!";
   private static final String TEST_EMAIL = "test@google.com";
@@ -70,6 +64,13 @@ public final class UserSubmittedLocationsServletTest {
   private static final String ID = "id";
   private static final String TABLE_NAME = "Pins";
 
+  @InjectMocks
+  private UserSubmittedLocationsServlet userSubmittedLocationsServlet =
+      new UserSubmittedLocationsServlet();
+
+  @Mock private HttpServletRequest request;
+
+  @Mock private HttpServletResponse response;
 
   @Before
   public void setUp() throws Exception {
@@ -84,31 +85,29 @@ public final class UserSubmittedLocationsServletTest {
 
   @Test
   public void storesCorrectEntity() throws Exception {
-      helper.setEnvIsLoggedIn(true).setEnvEmail(TEST_EMAIL).setEnvAuthDomain("localhost");
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    helper.setEnvIsLoggedIn(true).setEnvEmail(TEST_EMAIL).setEnvAuthDomain("localhost");
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-      Entity testEntity = new Entity(TABLE_NAME);
-      testEntity.setProperty(NAME_OF_PROTEST, TEST_PROTEST_NAME);
-      testEntity.setProperty(EMAIL, TEST_EMAIL);
-      testEntity.setProperty(LOCATION, TEST_LOCATION);
-      testEntity.setProperty(DESCRIPTION, TEST_DESCRIPTION);
-      testEntity.setProperty(TIME_STAMP, TEST_TIME_STAMP);
-      datastore.put(testEntity);
+    Entity testEntity = new Entity(TABLE_NAME);
+    testEntity.setProperty(NAME_OF_PROTEST, TEST_PROTEST_NAME);
+    testEntity.setProperty(EMAIL, TEST_EMAIL);
+    testEntity.setProperty(LOCATION, TEST_LOCATION);
+    testEntity.setProperty(DESCRIPTION, TEST_DESCRIPTION);
+    testEntity.setProperty(TIME_STAMP, TEST_TIME_STAMP);
+    datastore.put(testEntity);
 
-      when(request.getParameter(NAME_OF_PROTEST)).thenReturn(TEST_PROTEST_NAME);
-      when(request.getParameter(EMAIL)).thenReturn(TEST_EMAIL);
-      when(request.getParameter(LOCATION)).thenReturn(TEST_LOCATION);
-      when(request.getParameter(DESCRIPTION)).thenReturn(TEST_DESCRIPTION);
-      when(request.getParameter(TIME_STAMP)).thenReturn(TEST_TIME_STAMP);
-      
-      userSubmittedLocationsServlet.doPost(request, response);
+    when(request.getParameter(NAME_OF_PROTEST)).thenReturn(TEST_PROTEST_NAME);
+    when(request.getParameter(EMAIL)).thenReturn(TEST_EMAIL);
+    when(request.getParameter(LOCATION)).thenReturn(TEST_LOCATION);
+    when(request.getParameter(DESCRIPTION)).thenReturn(TEST_DESCRIPTION);
+    when(request.getParameter(TIME_STAMP)).thenReturn(TEST_TIME_STAMP);
 
-      Query query = new Query(TABLE_NAME);
-      PreparedQuery results = datastore.prepare(query);
-      List<Entity> singleResult = results.asList(FetchOptions.Builder.withLimit(3));
+    userSubmittedLocationsServlet.doPost(request, response);
 
-      assertEquals(TEST_LOCATION, singleResult.get(0).getProperty(LOCATION));
+    Query query = new Query(TABLE_NAME);
+    PreparedQuery results = datastore.prepare(query);
+    List<Entity> singleResult = results.asList(FetchOptions.Builder.withLimit(3));
+
+    assertEquals(TEST_LOCATION, singleResult.get(0).getProperty(LOCATION));
   }
-
-  @
 }

@@ -40,10 +40,6 @@ const MNPLS_LNG = -93.2650;
 
 // TODO(brifassler/kofimeighan/chidawaya): add docstrings for all functions
 
-// if (typeof exports === 'undefined') {
-//   window.exports = {};
-// }
-
 function onLoad() {
   searchHash();
   loadSearch();

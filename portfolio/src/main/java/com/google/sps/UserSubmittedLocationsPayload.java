@@ -12,23 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.servlets;
+package com.google.sps;
 
-public final class UserComment {
-  private final String name;
-  private final String email;
-  private final String location;
-  private final String description;
-  private final long timeStamp;
-  private final long id;
+import java.util.*;
 
-  public UserComment(
-      String name, String email, String location, String description, long timeStamp, long id) {
-    this.name = name;
-    this.email = email;
-    this.location = location;
-    this.description = description;
-    this.timeStamp = timeStamp;
-    this.id = id;
+public final class UserSubmittedLocationsPayload {
+  private final List<UserComment> userComments;
+  private final Boolean isUserLoggedIn;
+
+  public UserSubmittedLocationsPayload(List<UserComment> userComments, Boolean isUserLoggedIn) {
+    this.userComments = userComments;
+    this.isUserLoggedIn = isUserLoggedIn;
   }
 }

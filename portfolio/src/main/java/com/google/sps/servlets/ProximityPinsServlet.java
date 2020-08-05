@@ -27,6 +27,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
+import com.google.sps.ProximityPin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
@@ -59,7 +60,7 @@ public class ProximityPinsServlet extends HttpServlet {
       String streetAddress = (String) entity.getProperty(STREET_ADDRESS);
       String city = (String) entity.getProperty(CITY);
       String state = (String) entity.getProperty(STATE);
-      String zipcode = (String) entity.getProperty(ZIPCODE);
+      Double zipcode = (Double) entity.getProperty(ZIPCODE);
       String race = (String) entity.getProperty(RACE);
       String causeOfDeath = (String) entity.getProperty(CAUSE_OF_DEATH);
       String dateOfDeath = (String) entity.getProperty(DATE_OF_DEATH);

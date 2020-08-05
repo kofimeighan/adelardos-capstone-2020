@@ -43,6 +43,7 @@ const MNPLS_LNG = -93.2650;
 
 function onLoad() {
   loadSearch();
+  searchHash();
   renderLoginButton();
 }
 
@@ -74,8 +75,8 @@ function statisticsOnLoad() {
     ],
   ];
 
+  drawCharts();
   drawTimeSeriesChart();
-  drawInteractiveChart();
   insertSearch();
   loadMap();
   renderLoginButton();
@@ -84,6 +85,9 @@ function statisticsOnLoad() {
   fetchSubmittedLocations().then((locationData) => {
     populateDropdown(locationData, 'user-submitted-dropdown-menu');
   });
+
+  searchHash();
+  loadSearch();
 }
 
 function loadMap() {
@@ -201,15 +205,19 @@ async function placeProximityPins() {
   const pins = await response.json();
   const radius = Number(document.getElementById('radius').value);
 
-  pins.forEach(async (pin, index, array) => {
-    if (await haversineDistance(userAddress, pin.address) < radius) {
-      const distance = await haversineDistance(userAddress, pin.address);
+  pins.reduce(async (previousPin, pin, index) => {
+    await previousPin;
+    const distance = await haversineDistance(userAddress, pin.address);
+    // Prevents OVER_QUERY_LIMIT return value from geocoder
+    await sleep(2800);
+    if (distance < radius) {
       addProximityPinAndWindow(pin, distance);
-      if (index == array.length - 1) {
-        map.setCenter(addressToCoordinates(userAddress)[2]);
+      if ((index == pins.length - 1) || (index == 25)) {
+        map.setCenter(await addressToCoordinates(userAddress)[2]);
+        return;
       }
     }
-  });
+  }, Promise.resolve());
 }
 
 /**
@@ -264,6 +272,15 @@ async function addressToCoordinates(address) {
   return addressQuery;
 }
 
+/**
+ * Function to delay execution
+ * @param {Number} ms The amount of time in milliseconds you want to pause the
+ *     function
+ */
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function renderLoginButton() {
   const response = await fetch('/login');
   const authenticationURL = await response.text();
@@ -305,8 +322,8 @@ function allowUserSubmit() {
     bar
  */
 async function loadSearch() {
-  const otherDocs =
-      await Promise.all([getHTML('/about.html'), getHTML('/statistics.html')]);
+  const otherPageLinks = getOtherLinks();
+  const otherDocs = await Promise.all(otherPageLinks.map(getHTML));
 
   let otherElements = [];
   otherDocs.forEach((doc) => {
@@ -314,6 +331,33 @@ async function loadSearch() {
   });
 
   insertSearch(otherElements);
+}
+
+/**
+ * Gets links from the navigation bar
+ * Removes link for current page we are on
+ * @return {array}: the links from other pages.
+ */
+function getOtherLinks() {
+  const pagePath = window.location.pathname;
+  const pathSize = pagePath.length;
+  const linkElements =
+      Array.from(document.getElementById('navBar').getElementsByTagName('a'));
+  const wantedLinks = [];
+
+  linkElements.forEach((linkElement) => {
+    const link = linkElement.href;
+    if (pathSize < 2) {
+      if (link.includes('index')) {
+        return;
+      }
+    } else if (link.includes(pagePath)) {
+      return;
+    }
+    wantedLinks.push('/' + linkElement.getAttribute('href'));
+  });
+
+  return wantedLinks;
 }
 
 /**
@@ -461,7 +505,7 @@ function showOtherResults(otherResultElements, wantedWords) {
 
     const [outputText, textElement] = createResult(result, wantedWords);
     const docUrl = result.ownerDocument.URL;
-    const hash = encodeURI('#' + outputText + '#' + wantedWords);
+    const hash = encodeURI('#' + outputText);
 
     textElement.onclick = function() {
       window.location.href = docUrl + hash;
@@ -490,6 +534,18 @@ function createResult(result, wantedWords) {
   textElement.innerText = '...' + outputText + '...';
 
   return [outputText, textElement];
+}
+
+function searchHash() {
+  const urlHash = window.location.hash;
+  if (urlHash) {
+    const hashArray = urlHash.split('#');
+    const outputText = decodeURI(hashArray[1]).substring(0, 5).toLowerCase();
+
+    const docElements = Array.from(document.body.childNodes);
+    const resultElement = searchElements(docElements, outputText)[0];
+    resultElement.scrollIntoView();
+  }
 }
 
 /** Adds a line chart to page showing the global avg temp from a csv */
@@ -570,35 +626,36 @@ async function loadChartData() {
   return chartData;
 }
 
-/** TODO(briafassler): fix the scope of google  */
-// google.charts.load('current', {'packages': ['corechart']});
-// google.charts.setOnLoadCallback(drawInteractiveChart);
+function drawCharts() {
+  google.charts.load('current', {'packages': ['corechart']});
+  google.charts.setOnLoadCallback(drawInteractiveChart);
 
-/** Draws user inputted pie chart and adds to page. */
-function drawInteractiveChart() {
-  fetch('/interactive-chart')
-      .then((response) => response.json())
-      .then((emotionVotes) => {
-        const emotionData = new google.visualization.DataTable();
-        emotionData.addColumn('string', 'Emotion');
-        emotionData.addColumn('number', 'Votes');
-        Object.keys(emotionVotes).forEach((emotion) => {
-          emotionData.addRow([emotion, emotionVotes[emotion]]);
+  /** Draws user inputted pie chart and adds to page. */
+  function drawInteractiveChart() {
+    fetch('/interactive-chart')
+        .then((response) => response.json())
+        .then((emotionVotes) => {
+          const emotionData = new google.visualization.DataTable();
+          emotionData.addColumn('string', 'Emotion');
+          emotionData.addColumn('number', 'Votes');
+          Object.keys(emotionVotes).forEach((emotion) => {
+            emotionData.addRow([emotion, emotionVotes[emotion]]);
+          });
+
+          const options = {
+            'width': 650,
+            'height': 500,
+            'is3D': true,
+            'backgroundColor': '#f8f9fa',
+            'animation': {'startup': true},
+            'colors': ['#900c3f', '#c70039', '#ff5733', 'ffc300'],
+          };
+
+          const interactiveChart = new google.visualization.PieChart(
+              document.getElementById('chart-container'));
+          interactiveChart.draw(emotionData, options);
         });
-
-        const options = {
-          'width': 650,
-          'height': 500,
-          'is3D': true,
-          'backgroundColor': '#f8f9fa',
-          'animation': {'startup': true},
-          'colors': ['#900c3f', '#c70039', '#ff5733', 'ffc300'],
-        };
-
-        const interactiveChart = new google.visualization.PieChart(
-            document.getElementById('chart-container'));
-        interactiveChart.draw(emotionData, options);
-      });
+  }
 }
 
 // TODO(briafassler): Don't leave function here

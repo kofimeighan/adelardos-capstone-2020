@@ -12,22 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.servlets;
+package com.google.sps;
 
-import java.util.StringJoiner;
+public final class UserComment {
+  private final String name;
+  private final String email;
+  private final String location;
+  private final String description;
+  private final long timeStamp;
+  private final long id;
 
-public final class ProximityPin {
-  private final String address;
-  private final String race;
-  private final String causeOfDeath;
-  private final String dateOfDeath;
+  public UserComment(
+      String name, String email, String location, String description, long timeStamp, long id) {
+    this.name = name;
+    this.email = email;
+    this.location = location;
+    this.description = description;
+    this.timeStamp = timeStamp;
+    this.id = id;
+  }
 
-  public ProximityPin(String streetAddress, String city, String state, String zipcode, String race,
-      String causeOfDeath, String dateOfDeath) {
-    this.address =
-        new StringJoiner(" ").add(streetAddress).add(city).add(state).add(zipcode).toString();
-    this.race = race;
-    this.causeOfDeath = causeOfDeath;
-    this.dateOfDeath = dateOfDeath;
+  public long getID() {
+    return id;
   }
 }

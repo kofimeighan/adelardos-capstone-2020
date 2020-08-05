@@ -18,7 +18,6 @@
  */
 /* exported onLoad */
 /* exported placeMarker */
-/* exported insertSearch */
 /* exported allowUserSubmit */
 /* exported statisticsOnLoad */
 /* exported placeProximityPins */
@@ -41,9 +40,13 @@ const MNPLS_LNG = -93.2650;
 
 // TODO(brifassler/kofimeighan/chidawaya): add docstrings for all functions
 
+// if (typeof exports === 'undefined') {
+//   window.exports = {};
+// }
+
 function onLoad() {
-  loadSearch();
   searchHash();
+  loadSearch();
   renderLoginButton();
 }
 
@@ -614,8 +617,8 @@ async function drawTimeSeriesChart() {
   }
 }
 
-async function loadChartData() {
-  const response = await fetch('/chart-data');
+async function loadChartData(window) {
+  const response = await window.fetch('/chart-data');
   const dataPairs = await response.json();
   const chartData = [];
 
@@ -716,3 +719,12 @@ function typewriterFeature() {
     if (MARTYR_NAMES.length) setTimeout(typeName, 2250);
   });
 }
+
+/* eslint-disable */
+exports.createResult = createResult;
+exports.insertSearch = insertSearch;
+exports.createSearchElement = createSearchElement;
+exports.searchElements = searchElements;
+
+exports.loadChartData = loadChartData;
+/* eslint-enable */

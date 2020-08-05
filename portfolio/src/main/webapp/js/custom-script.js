@@ -208,11 +208,13 @@ async function placeProximityPins() {
   pins.reduce(async (previousPin, pin, index) => {
     await previousPin;
     const distance = await haversineDistance(userAddress, pin.address);
+    // Prevents OVER_QUERY_LIMIT return value from geocoder
+    await sleep(2800);
     if (distance < radius) {
-      await sleep(2000);
       addProximityPinAndWindow(pin, distance);
-      if (index == pins.length - 1) {
+      if ((index == pins.length - 1) || (index == 25)) {
         map.setCenter(await addressToCoordinates(userAddress)[2]);
+        return
       }
     }
   }, Promise.resolve());

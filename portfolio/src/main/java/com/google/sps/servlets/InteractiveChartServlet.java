@@ -50,7 +50,7 @@ public class InteractiveChartServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(TABLE_NAME);
 
-    // TODO(briafassler): Find a way to prevent redirecting when submitting votes
+    // TODO Stretch Feature(briafassler): Find a way to prevent redirecting when submitting votes
     response.sendRedirect("/statistics.html#chart-container");
   }
 

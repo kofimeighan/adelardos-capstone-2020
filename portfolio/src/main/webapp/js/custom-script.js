@@ -24,7 +24,6 @@
 /* exported placeProximityPins */
 /* exported loadChartData */
 /* global google */
-/* global Chart*/
 // Neccessary constants or else variables will return as
 // 'undefined' in lint checks
 // Center points to the middle of the United States
@@ -76,7 +75,6 @@ function statisticsOnLoad() {
   ];
 
   drawCharts();
-  drawTimeSeriesChart();
   insertSearch();
   loadMap();
   renderLoginButton();
@@ -548,72 +546,6 @@ function searchHash() {
   }
 }
 
-/** Adds a line chart to page showing the global avg temp from a csv */
-async function drawTimeSeriesChart() {
-  const tempData = await getTempData();
-  const chart = {
-    type: 'line',
-    data: {
-      labels: tempData.xAxis,
-      datasets: [{
-        label: 'Mean Temp',
-        backgroundColor: 'rgb(255, 0, 0)',
-        fill: false,
-        borderColor: 'rgb(255, 0, 0)',
-        data: tempData.yAxis,
-      }],
-    },
-
-    options: {
-      reponsive: true,
-      title: {
-        display: true,
-        text: 'Zonal Annual Temperature Mean',
-      },
-      scales: {
-        xAxes: [{
-          display: true,
-          scaleLabel: {
-            display: true,
-            labelString: 'Year',
-          },
-        }],
-        yAxes: [{
-          display: true,
-          scaleLabel: {
-            display: true,
-            labelString: 'Temperature Mean',
-          },
-        }],
-      },
-    },
-  };
-
-  const timeSeries = document.getElementById('timeseries').getContext('2d');
-  new Chart(timeSeries, chart);
-
-  async function getTempData() {
-    // Source of Data: https://data.giss.nasa.gov/gistemp/
-    const xAxis = [];
-    const yAxis = [];
-
-    // TODO(briafassler): move globaltemp.csv into csv folder and change file
-    // path
-    const response = await fetch('globaltemp.csv');
-    const zonalTempData = await response.text();
-
-    const table = zonalTempData.split('\n').slice(1);
-    table.forEach((row) => {
-      const columns = row.split(',');
-      const year = columns[0];
-      xAxis.push(year);
-      const temp = columns[1];
-      yAxis.push(parseFloat(temp) + 14);
-    });
-    return {xAxis, yAxis};
-  }
-}
-
 async function loadChartData() {
   const response = await fetch('/chart-data');
   const dataPairs = await response.json();
@@ -626,9 +558,15 @@ async function loadChartData() {
   return chartData;
 }
 
+/**
+ * calls the timeseries and interactive chart, and fetches the data from
+ * their respective servlets.
+ */
 function drawCharts() {
   google.charts.load('current', {'packages': ['corechart']});
+  google.charts.setOnLoadCallback(drawTimeSeriesChart);
   google.charts.setOnLoadCallback(drawInteractiveChart);
+
 
   /** Draws user inputted pie chart and adds to page. */
   function drawInteractiveChart() {
@@ -654,6 +592,38 @@ function drawCharts() {
           const interactiveChart = new google.visualization.PieChart(
               document.getElementById('chart-container'));
           interactiveChart.draw(emotionData, options);
+        });
+  }
+
+  /** Fetches police killings data and uses it to create a chart. */
+  function drawTimeSeriesChart() {
+    fetch('/chart-data')
+        .then((response) => response.json())
+        .then((policeKillings) => {
+          const data = new google.visualization.DataTable();
+          data.addColumn('string', 'Year');
+          data.addColumn('number', 'People');
+          policeKillings.forEach((dataPair) => {
+            data.addRow([dataPair.year, dataPair.amountKilled]);
+          });
+
+          const options = {
+            'width': 800,
+            'height': 550,
+            'backgroundColor': '#f8f9fa',
+            'animation': {'startup': true},
+            'colors': ['#900c3f'],
+            'hAxis': {
+              'title': 'Year',
+            },
+            'vAxis': {
+              'title': 'Amount of People Killed',
+            },
+          };
+
+          const chart = new google.visualization.LineChart(
+              document.getElementById('timeseries'));
+          chart.draw(data, options);
         });
   }
 }

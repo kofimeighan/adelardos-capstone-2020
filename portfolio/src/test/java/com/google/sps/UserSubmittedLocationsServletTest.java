@@ -50,7 +50,6 @@ import org.mockito.MockitoAnnotations;
 public final class UserSubmittedLocationsServletTest {
   private final LocalServiceTestHelper helper = new LocalServiceTestHelper(
       new LocalDatastoreServiceTestConfig(), new LocalUserServiceTestConfig());
-  private static final String TEST_NAME = "Tayla";
   private static final String TEST_PROTEST_NAME = "Protest in Miami!";
   private static final String TEST_EMAIL = "test@google.com";
   private static final String TEST_LOCATION = "Miami, FL";
@@ -72,6 +71,10 @@ public final class UserSubmittedLocationsServletTest {
 
   @Mock private HttpServletResponse response;
 
+  /**
+    setUp() and tearDown() are method to setup a local appengine service to test things like
+    Datastore and UserService. They must be created and disabled before and after tests are run.
+  */
   @Before
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);

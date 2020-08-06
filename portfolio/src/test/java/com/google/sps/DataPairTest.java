@@ -14,20 +14,26 @@
 
 package com.google.sps;
 
-public final class DataPair {
-  private final int amountKilled;
-  private final int year;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-  public DataPair(int amountKilled, int year) {
-    this.amountKilled = amountKilled;
-    this.year = year;
+/**
+ * Tests the DataPair class
+ */
+@RunWith(JUnit4.class)
+public final class DataPairTest {
+  @Test
+  public void correctAmountKilled() {
+    DataPair dataPair = new DataPair(1324, 2021);
+    Assert.assertEquals(1324, dataPair.getAmountKilled());
   }
 
-  public int getAmountKilled() {
-    return amountKilled;
-  }
-
-  public int getYear() {
-    return year;
+  @Test
+  public void correctYear() {
+    DataPair dataPair = new DataPair(2130, 2025);
+    Assert.assertEquals(2025, dataPair.getYear());
   }
 }

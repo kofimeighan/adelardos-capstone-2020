@@ -604,7 +604,7 @@ function drawCharts() {
           data.addColumn('string', 'Year');
           data.addColumn('number', 'People');
           policeKillings.forEach((dataPair) => {
-            data.addRow([dataPair.year, dataPair.amountKilled]);
+            data.addRow([dataPair.year.toString(), dataPair.amountKilled]);
           });
 
           const options = {

@@ -33,6 +33,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.Long;
+import java.lang.Math;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,37 +44,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /* Servlet to read chart data from data store and return it in doGet */
-// TODO(briafassler): Fix the problem where chart only appears after pressing submit
 @WebServlet("/chart-data")
 public class ChartServlet extends HttpServlet {
   private static final String TABLE_NAME = "Police Killings By Year";
-  private static final String YEAR = "year";
-  private static final String AMOUNT_KILLED = "amount killed";
-  private static final String test = "{'2020': '5'}";
+  private static final String DATE = "Date";
+  private static final String TOTALS = "Totals";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query(TABLE_NAME);
+    Query query = new Query(TABLE_NAME).addSort(DATE, SortDirection.ASCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
     List<DataPair> dataPairs = new ArrayList<DataPair>();
     for (Entity entity : results.asIterable()) {
-      int amountKilled = (int) entity.getProperty(AMOUNT_KILLED);
-      String year = (String) entity.getProperty(YEAR);
+      int amountKilled = ((Long) entity.getProperty(TOTALS)).intValue();
+      int year = ((Long) entity.getProperty(DATE)).intValue();
       DataPair policeKillings = new DataPair(amountKilled, year);
       dataPairs.add(policeKillings);
     }
-
-    // TODO(briafassler): Use database csv instead of hardcoding data pairs
-    dataPairs.add(new DataPair(1106, "2013"));
-    dataPairs.add(new DataPair(1050, "2014"));
-    dataPairs.add(new DataPair(1103, "2015"));
-    dataPairs.add(new DataPair(1071, "2016"));
-    dataPairs.add(new DataPair(1093, "2017"));
-    dataPairs.add(new DataPair(1142, "2018"));
-    dataPairs.add(new DataPair(1099, "2019"));
-    dataPairs.add(new DataPair(576, "2020"));
 
     // Send the JSON as the response
     response.setContentType("application/json");

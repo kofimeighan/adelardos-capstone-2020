@@ -473,3 +473,12 @@ body {
   margin-right: -0.1rem;
   margin-left: -0.1rem;
 }
+
+#chart_div {
+  height: 500px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}

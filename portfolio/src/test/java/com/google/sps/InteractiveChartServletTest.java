@@ -56,8 +56,7 @@ public final class InteractiveChartServletTest {
   private static final String TABLE_NAME = "Votes";
 
   @InjectMocks
-  private InteractiveChartServlet interactiveChartServlet =
-      new InteractiveChartServlet();
+  private InteractiveChartServlet interactiveChartServlet = new InteractiveChartServlet();
 
   @Mock private HttpServletRequest request;
 

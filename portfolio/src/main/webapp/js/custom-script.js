@@ -688,8 +688,8 @@ function typewriterFeature() {
 }
 
 /*
-* Lint checks disabled to allow exports for Jasmine testing.
-*/
+ * Lint checks disabled to allow exports for Jasmine testing.
+ */
 /* eslint-disable */
 exports.createResult = createResult;
 exports.insertSearch = insertSearch;

@@ -18,7 +18,6 @@
  */
 /* exported onLoad */
 /* exported placeMarker */
-/* exported insertSearch */
 /* exported allowUserSubmit */
 /* exported statisticsOnLoad */
 /* exported placeProximityPins */
@@ -75,7 +74,6 @@ function statisticsOnLoad() {
   ];
 
   drawCharts();
-  insertSearch();
   loadMap();
   renderLoginButton();
   populateDropdown(martyrData, 'martyr-dropdown-menu');

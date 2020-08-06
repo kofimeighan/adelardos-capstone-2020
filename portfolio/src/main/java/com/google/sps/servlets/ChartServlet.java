@@ -48,7 +48,6 @@ public class ChartServlet extends HttpServlet {
   private static final String TABLE_NAME = "Police Killings By Year";
   private static final String DATE = "Date";
   private static final String TOTALS = "Totals";
-  private static final String YEAR_ORDER = "Years";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

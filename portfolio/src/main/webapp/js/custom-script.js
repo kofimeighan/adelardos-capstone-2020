@@ -565,6 +565,7 @@ async function loadChartData() {
 function drawCharts() {
   google.charts.load('current', {'packages': ['corechart']});
   google.charts.setOnLoadCallback(drawTimeSeriesChart);
+  google.charts.setOnLoadCallback(drawCityBudgetsChart);
   google.charts.setOnLoadCallback(drawInteractiveChart);
 
 
@@ -625,6 +626,40 @@ function drawCharts() {
               document.getElementById('timeseries'));
           chart.draw(data, options);
         });
+  }
+
+  /** Creates a column chart with city budget spending */
+  function drawCityBudgetsChart() {
+    const data = google.visualization.arrayToDataTable([
+      [
+        'Area',
+        'Police',
+        'Public Welfare',
+        'Health',
+        'Housing',
+        'Parks and Rec',
+      ],
+
+      // Data Source:
+      // https://www.businessinsider.com/police-spending-compared-to-other-expenditures-us-cities-2020-6#police-spending-in-philadelphia-was-nearly-430-per-resident-in-2017-5
+      ['Los Angeles, CA', 754, 572, 475, 399, 159],
+      ['New York, NY', 672, 971, 145, 687, 145],
+      ['Boston, MA', 552, 5, 26, 674, 138],
+      ['Philadelphia, PA', 427, 127, 1069, 471, 65],
+      ['Baltimore, MD', 807, 0, 189, 683, 60],
+    ]);
+
+    const options = {
+      vAxis: {title: 'Spending per Capita'},
+      hAxis: {title: 'Cities'},
+      backgroundColor: '#f8f9fa',
+      seriesType: 'bars',
+      colors: ['#581845', '#900c3f', '#c70039', '#ff5733', 'ffc300'],
+    };
+
+    const chart = new google.visualization.ComboChart(
+        document.getElementById('chart_div'));
+    chart.draw(data, options);
   }
 }
 

@@ -93,8 +93,9 @@ public final class InteractiveChartServletTest {
 
     Query query = new Query(TABLE_NAME);
     PreparedQuery results = datastore.prepare(query);
-    List<Entity> singleResult = results.asList(FetchOptions.Builder.withLimit(3));
+    List<Entity> singleResult = results.asList(FetchOptions.Builder.withLimit(2));
 
     assertEquals(TEST_EMOTION_DATA, singleResult.get(0).getProperty(EMOTION_DATA));
+    assertEquals(TEST_TIMESTAMP, singleResult.get(0).getProperty(TIMESTAMP));
   }
 }

@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /**
- * Tests the DataPair class
+ * Tests the DataPair class and if its returning fields properly
  */
 @RunWith(JUnit4.class)
 public final class DataPairTest {

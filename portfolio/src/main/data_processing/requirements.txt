@@ -20,7 +20,7 @@ pytz==2020.1
 Flask==1.1.2
 google-cloud-storage==1.29.0
 requests==2.24.0
-rsa==4.6
+rsa==4.7
 ruamel.yaml==0.16.10
 ruamel.yaml.clib==0.2.0
 six==1.15.0
